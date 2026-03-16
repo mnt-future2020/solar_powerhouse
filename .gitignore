@@ -1,0 +1,26 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Sub-packages dependencies (safety)
+**/node_modules/
+
+# Environment files
+**/.env
+**/.env.local
+**/.env.*.local
+
+# Logs
+**/*.log
+
+# Build outputs
+**/dist/
+**/build/
+**/.next/
+**/out/
