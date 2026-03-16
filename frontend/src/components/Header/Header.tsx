@@ -47,7 +47,6 @@ export default function Header() {
     { name: 'Home', href: '/' },
     { name: 'About Us', href: '/about' },
     { name: 'Services', href: '/services' },
-    { name: 'Schemes', href: '/#schemes' },
     { name: 'Contact', href: '/contact' },
   ];
 
@@ -103,11 +102,6 @@ export default function Header() {
               {theme === 'dark' ? <Sun className="h-5 w-5 text-solar-amber" /> : <Moon className="h-5 w-5 text-solar-teal" />}
             </Button>
           )}
-          
-          <Link href="/login" className="hidden sm:block">
-            <Button variant="ghost" className="font-bold text-sm tracking-wide">Login</Button>
-          </Link>
-          
           <Link href="/contact" className="hidden md:block">
             <Button className="bg-gradient-to-r from-solar-amber to-solar-orange hover:from-solar-orange hover:to-solar-amber text-white font-black px-8 py-6 rounded-2xl shadow-lg shadow-solar-orange/20 transition-all hover:scale-105 active:scale-95">
               GET STARTED

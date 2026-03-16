@@ -170,22 +170,22 @@ export default function AboutPage() {
           </div>
 
           {/* CTA Section */}
-          <div className="mt-40 rounded-[4rem] bg-foreground p-12 lg:p-24 text-background relative overflow-hidden group">
+          <div className="mt-40 rounded-[4rem] bg-zinc-900 dark:bg-white p-12 lg:p-24 text-white dark:text-zinc-900 relative overflow-hidden group border border-zinc-800 dark:border-zinc-200 shadow-2xl">
             <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-solar-amber/10 blur-[120px] rounded-full -mr-32 -mt-32"></div>
             <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12 text-center lg:text-left">
               <div className="space-y-6 max-w-2xl">
-                <h3 className="text-4xl md:text-6xl font-black font-display tracking-tight text-white leading-tight">
+                <h3 className="text-4xl md:text-6xl font-black font-display tracking-tight text-white dark:text-zinc-900 leading-tight">
                   READY TO BUILD YOUR <br />
                   <span className="text-solar-amber">ENERGY FUTURE?</span>
                 </h3>
-                <p className="text-xl text-gray-400 font-medium">
+                <p className="text-xl text-zinc-400 dark:text-zinc-600 font-medium">
                   Connect with our lead architects and start your transition to high-performance energy independence today.
                 </p>
               </div>
               <div className="w-full lg:w-auto">
                 <Button 
                   onClick={() => setIsModalOpen(true)}
-                  className="w-full lg:w-auto bg-solar-amber hover:bg-solar-orange text-white font-black h-24 px-16 rounded-[2.5rem] text-2xl transition-all hover:scale-105 shadow-2xl shadow-solar-amber/30"
+                  className="w-full lg:w-auto bg-solar-amber hover:bg-solar-orange text-white font-black h-24 px-16 rounded-[2.5rem] text-2xl transition-all hover:scale-105 shadow-2xl shadow-solar-amber/30 border-none"
                 >
                   CONSULT NOW
                   <ArrowRight className="ml-3 h-8 w-8" />

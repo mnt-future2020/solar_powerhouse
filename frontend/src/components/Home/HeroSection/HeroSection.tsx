@@ -12,7 +12,7 @@ export default function HeroSection() {
     <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden pt-20">
       {/* Dynamic Background */}
       <div className="absolute inset-0 bg-mesh opacity-30"></div>
-      <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-transparent via-background/50 to-background"></div>
+      <div className="absolute top-0 left-0 w-full h-full bg-linear-to-b from-transparent via-background/50 to-background"></div>
       
       {/* Animated Glow Elements */}
       <div className="absolute top-1/4 -left-20 w-96 h-96 bg-solar-amber/20 blur-[120px] rounded-full animate-pulse-glow"></div>

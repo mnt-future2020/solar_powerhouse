@@ -145,18 +145,18 @@ export default function SchemesSection() {
 
         <div className="mt-20 group">
           <Link href="/contact" className="block">
-            <div className="relative overflow-hidden rounded-[3rem] bg-foreground p-12 lg:p-20 text-background text-center">
+            <div className="relative overflow-hidden rounded-[3rem] bg-zinc-900 dark:bg-white p-12 lg:p-20 text-white dark:text-zinc-900 text-center border border-zinc-800 dark:border-zinc-200 shadow-2xl">
               <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-solar-amber/10 blur-[100px] rounded-full -mr-32 -mt-32"></div>
               <div className="relative z-10 space-y-8">
-                <h3 className="text-4xl md:text-6xl font-black font-display tracking-tight">
+                <h3 className="text-4xl md:text-6xl font-black font-display tracking-tight text-white dark:text-zinc-900">
                   WANT TO SEE THE <br />
                   <span className="text-solar-amber">SAVINGS</span> FOR YOUR ZIP CODE?
                 </h3>
-                <p className="text-xl text-muted-foreground font-medium max-w-2xl mx-auto">
+                <p className="text-xl text-zinc-400 dark:text-zinc-600 font-medium max-w-2xl mx-auto">
                    Our smart algorithm calculates local subsidies and solar potential in seconds.
                 </p>
                 <div className="flex justify-center pt-8">
-                  <Button className="bg-solar-amber hover:bg-solar-orange text-white font-black py-8 px-16 rounded-[2rem] text-2xl transition-all hover:scale-105 shadow-[0_0_50px_rgba(255,191,0,0.3)]">
+                  <Button className="bg-solar-amber hover:bg-solar-orange text-white font-black py-8 px-16 rounded-[2rem] text-2xl transition-all hover:scale-105 shadow-[0_20px_50px_-10px_rgba(217,119,6,0.3)] border-none">
                     CALCULATE ELIGIBILITY
                     <ArrowRight className="ml-3 h-8 w-8" />
                   </Button>

@@ -127,7 +127,7 @@ export default function ServicesPage() {
                   >
                     {/* Visual Asset */}
                     <div className="h-80 overflow-hidden relative">
-                      <div className="absolute inset-0 bg-gradient-to-t from-card via-card/10 to-transparent z-10"></div>
+                      <div className="absolute inset-0 bg-linear-to-t from-card via-card/10 to-transparent z-10"></div>
                       <img 
                         src={serviceImages[index % 3] || '/assets/image/hero_solar.png'} 
                         alt={service.title}

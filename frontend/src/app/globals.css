@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+@theme {
+  --color-solar-yellow: #FBBF24;
+  --color-solar-orange: #F59E0B;
+  --color-solar-amber: #D97706;
+  --color-solar-green: #059669;
+  --color-solar-teal: #0F766E;
+  --color-solar-dark: #0F172A;
+  --color-solar-light: #F8FAFC;
+}
+
 @layer base {
   :root {
     --background: 210 40% 98%;

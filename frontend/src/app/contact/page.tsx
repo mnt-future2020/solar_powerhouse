@@ -164,35 +164,35 @@ export default function ContactPage() {
                   <img src="/assets/image/hero_solar.png" alt="" className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-[20s] linear shadow-inner" />
                 </div>
                 
-                <div className="bg-background/90 backdrop-blur-3xl rounded-[2.5rem] p-10 lg:p-14 h-full border border-white/5 shadow-2xl relative z-10">
-                  <h3 className="text-5xl font-black tracking-tighter mb-10">
+                <div className="bg-white/95 dark:bg-zinc-900/95 backdrop-blur-2xl rounded-[2.5rem] p-10 lg:p-14 h-full border border-zinc-200 dark:border-white/5 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.1)] dark:shadow-2xl relative z-10 transition-colors duration-300">
+                  <h3 className="text-5xl font-black tracking-tighter mb-10 text-zinc-900 dark:text-white">
                     SEND A <br />
                     <span className="text-gradient-solar">MESSAGE</span>
                   </h3>
                   <form className="space-y-8">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                       <div className="space-y-3">
-                        <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Full Identity</label>
-                        <Input placeholder="Engineering Lead" className="bg-white/5 border-white/10 rounded-2xl h-16 pl-6 text-foreground focus:border-solar-amber transition-all shadow-none placeholder:text-muted-foreground/30" />
+                        <label className="text-xs font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-400 ml-1">Full Identity</label>
+                        <Input placeholder="Engineering Lead" className="bg-zinc-50 dark:bg-zinc-950/50 border-zinc-200 dark:border-zinc-800 rounded-2xl h-16 pl-6 text-zinc-900 dark:text-white focus:border-solar-amber transition-all shadow-none placeholder:text-zinc-400 dark:placeholder:text-zinc-600 font-bold" />
                       </div>
                       <div className="space-y-3">
-                        <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Email Node</label>
-                        <Input placeholder="arch@domain.com" className="bg-white/5 border-white/10 rounded-2xl h-16 pl-6 text-foreground focus:border-solar-amber transition-all shadow-none placeholder:text-muted-foreground/30" />
+                        <label className="text-xs font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-400 ml-1">Email Node</label>
+                        <Input placeholder="arch@domain.com" className="bg-zinc-50 dark:bg-zinc-950/50 border-zinc-200 dark:border-zinc-800 rounded-2xl h-16 pl-6 text-zinc-900 dark:text-white focus:border-solar-amber transition-all shadow-none placeholder:text-zinc-400 dark:placeholder:text-zinc-600 font-bold" />
                       </div>
                     </div>
                     <div className="space-y-3">
-                      <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Subject of Inquiry</label>
-                      <Input placeholder="MW Solar Scaling Survey" className="bg-white/5 border-white/10 rounded-2xl h-16 pl-6 text-foreground focus:border-solar-amber transition-all shadow-none placeholder:text-muted-foreground/30" />
+                      <label className="text-xs font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-400 ml-1">Subject of Inquiry</label>
+                      <Input placeholder="MW Solar Scaling Survey" className="bg-zinc-50 dark:bg-zinc-950/50 border-zinc-200 dark:border-zinc-800 rounded-2xl h-16 pl-6 text-zinc-900 dark:text-white focus:border-solar-amber transition-all shadow-none placeholder:text-zinc-400 dark:placeholder:text-zinc-600 font-bold" />
                     </div>
                     <div className="space-y-3">
-                      <label className="text-xs font-black uppercase tracking-widest text-muted-foreground ml-1">Detailed Transcript</label>
+                      <label className="text-xs font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-400 ml-1">Detailed Transcript</label>
                       <textarea 
                         placeholder="Define your energy metrics and consumption blueprints..." 
-                        className="w-full bg-white/5 border border-white/10 rounded-[2rem] p-6 min-h-[180px] text-foreground focus:outline-none focus:border-solar-amber transition-all resize-none shadow-none placeholder:text-muted-foreground/30"
+                        className="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-zinc-800 rounded-[2rem] p-6 min-h-[180px] text-zinc-900 dark:text-white focus:outline-none focus:border-solar-amber transition-all resize-none shadow-none placeholder:text-zinc-400 dark:placeholder:text-zinc-600 font-medium"
                       ></textarea>
                     </div>
                     
-                    <Button className="w-full h-24 bg-gradient-to-r from-solar-amber to-solar-orange hover:from-solar-orange hover:to-solar-amber text-white font-black text-2xl rounded-[2rem] shadow-2xl shadow-solar-amber/20 transition-all hover:scale-[1.02] active:scale-95 group">
+                    <Button className="w-full h-24 bg-gradient-to-r from-solar-amber to-solar-orange hover:from-solar-orange hover:to-solar-amber text-white font-black text-2xl rounded-[2rem] shadow-2xl shadow-solar-amber/20 transition-all hover:scale-[1.02] active:scale-95 group border-none">
                       INITIATE TRANSMISSION
                       <Send className="ml-4 h-8 w-8 group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform duration-500" />
                     </Button>
