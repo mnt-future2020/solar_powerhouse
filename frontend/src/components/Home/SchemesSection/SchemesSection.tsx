@@ -1,169 +1,171 @@
-'use client';
-import { useEffect, useState } from 'react';
-import axios from '@/lib/axios';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Building2, Landmark, Gift, TrendingUp, CheckCircle2, ArrowRight } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import Link from 'next/link';
+"use client";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
+  Home,
+  Zap,
+  Plug,
+  Building,
+  Smartphone,
+  Target,
+  DollarSign,
+  Gift,
+  TrendingUp,
+  Leaf,
+  Battery,
+  TrendingDown,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
 export default function SchemesSection() {
-  const [companyName, setCompanyName] = useState('SolarHouse');
+  const centralScheme = {
+    icon: Home,
+    title: "PM Surya Ghar Muft Bijli Yojana",
+    type: "Central Government Scheme",
+    description: "Government of India's flagship program for rooftop solar installation with comprehensive benefits.",
+    features: [
+      { icon: DollarSign, text: "Government provides financial assistance for rooftop solar installation" },
+      { icon: Zap, text: "Install solar panels on your house or workplace roof" },
+      { icon: Plug, text: "Excess electricity can be sent to the grid and credited to your bill" },
+      { icon: Home, text: "Special benefits for individual households" },
+      { icon: Building, text: "Businesses can install systems with policy support" },
+      { icon: Smartphone, text: "Easy registration through official government portal" },
+    ],
+    color: "green",
+  };
 
-  useEffect(() => {
-    const fetchSettings = async () => {
-      try {
-        const response = await axios.get('/settings');
-        if (response.data.companyName) {
-          setCompanyName(response.data.companyName);
-        }
-      } catch (error) {
-        console.error('Error fetching settings:', error);
-      }
-    };
-    fetchSettings();
-  }, []);
-
-  const schemes = [
-    {
-      icon: Landmark,
-      title: `${companyName} Grant`,
-      type: 'Corporate Initiative',
-      description: `Exclusive grant for early adopters of ${companyName} technology.`,
-      benefits: ['Zero down payment option', 'Up to 20% system discount', 'Priority installation'],
-      color: 'solar-amber',
-      iconColor: 'text-solar-amber',
-    },
-    {
-      icon: Building2,
-      title: 'State Solar Subsidy',
-      type: 'Government Scheme',
-      description: 'Official state-level incentives for residential rooftop installations.',
-      benefits: ['Direct bank transfers', 'Tax credit validation', 'Property tax rebates'],
-      color: 'solar-teal',
-      iconColor: 'text-solar-teal',
-    },
-    {
-      icon: Gift,
-      title: 'Tax Leverage',
-      type: 'Financial Benefit',
-      description: 'Optimize your ROI through accelerated depreciation and GST benefits.',
-      benefits: ['40% accelerated depreciation', 'GST input credit', 'Income tax deductions'],
-      color: 'solar-orange',
-      iconColor: 'text-solar-orange',
-    },
-    {
-      icon: TrendingUp,
-      title: 'Virtual Netting',
-      type: 'Active Income',
-      description: 'Earn credits for every watt generated beyond your consumption.',
-      benefits: ['Bi-directional settlement', 'Energy wallet integration', 'Rollover credits'],
-      color: 'solar-green',
-      iconColor: 'text-solar-green',
-    },
+  const benefits = [
+    { icon: TrendingDown, title: "Reduce Electricity Bills", desc: "Save up to 50–90% on monthly EB charges" },
+    { icon: Gift, title: "Free Electricity (Partial)", desc: "Up to 300 units free power/month based on usage & system size" },
+    { icon: TrendingUp, title: "Long-Term Savings", desc: "Solar panels last 20–25 years → huge return on investment" },
+    { icon: Leaf, title: "Eco-Friendly Energy", desc: "Reduce carbon footprint and support clean energy" },
+    { icon: Battery, title: "Energy Independence", desc: "Less dependency on power cuts and rising tariffs" },
+    { icon: Home, title: "Increase Property Value", desc: "Solar-enabled buildings have higher resale value" },
   ];
 
+  const tamilNaduScheme = {
+    icon: Target,
+    title: "Chief Minister Solar Rooftop Capital Incentive Scheme",
+    type: "Tamil Nadu State Government",
+    description: "Additional state-level benefits for Tamil Nadu residents, managed by TEDA.",
+    features: [
+      "₹20,000 per kW subsidy (extra over central)",
+      "Managed by TEDA",
+      "For homes & small businesses",
+      "Much lower total cost",
+      "Faster installation approval",
+      "Ideal for Madurai houses & shops",
+    ],
+    color: "amber",
+  };
+
   return (
-    <section id="schemes" className="py-32 bg-secondary/30 relative overflow-hidden">
-      <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-solar-amber/5 blur-[120px] rounded-full -mr-64 -mt-64"></div>
-      
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="text-center mb-24 animate-fade-in-up">
-          <Badge className="bg-solar-amber/10 text-solar-amber hover:bg-solar-amber/20 border-solar-amber/20 px-6 py-2 rounded-full mb-8 font-black uppercase tracking-[0.2em] text-[10px]">
-            Financial Acceleration
+    <section id="schemes" className="section-padding bg-linear-to-br from-emerald-600 to-teal-800">
+      <div className="max-w-7xl mx-auto px-6 relative z-10">
+        <div className="text-center mb-16 animate-fade-in-up">
+          <Badge className="bg-green-100 text-green-600 hover:bg-green-200 border-green-200 px-4 py-2 font-semibold mb-6">
+            Government Solar Schemes (India)
           </Badge>
-          <h2 className="text-6xl md:text-8xl font-black font-display tracking-tight text-foreground mb-8">
-            SUBSIDIES & <br />
-            <span className="text-gradient-power">OWNERSHIP</span>
+          <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-tight text-white mb-6">
+            GOVERNMENT <span className="text-gradient-solar">SOLAR</span> <br />
+            SCHEMES
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto font-medium leading-relaxed">
-            We navigate the complex landscape of government incentives to ensure you get the <span className="text-gradient-solar font-bold">absolute lowest entry cost</span> for your solar transition.
+          <p className="text-lg text-green-50 font-medium max-w-3xl mx-auto">
+            Take advantage of government subsidies and incentives to make solar energy more affordable for your home or business.
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8">
-          {schemes.map((scheme, index) => {
-            const Icon = scheme.icon;
-            return (
-              <Card
-                key={index}
-                className={cn(
-                  "group relative overflow-hidden transition-all duration-500 border border-border bg-card/50 backdrop-blur-sm hover:shadow-2xl hover:border-solar-teal/30 hover:-translate-y-1",
-                  "animate-fade-in-up"
-                )}
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div className={cn(
-                  "absolute top-0 right-0 w-48 h-48 opacity-[0.03] -mr-12 -mt-12 rounded-full transition-transform duration-700 group-hover:scale-150",
-                  scheme.color === 'solar-amber' && "bg-solar-amber",
-                  scheme.color === 'solar-teal' && "bg-solar-teal",
-                  scheme.color === 'solar-orange' && "bg-solar-orange",
-                  scheme.color === 'solar-green' && "bg-solar-green"
-                )}></div>
-                
-                <CardHeader className="p-10 pb-6 relative">
-                  <div className="flex items-start justify-between mb-8">
-                    <div className={cn(
-                      "p-5 rounded-3xl border transition-all duration-500 group-hover:rotate-6 shadow-xl shadow-black/5",
-                      scheme.color === 'solar-amber' && "bg-solar-amber/10 border-solar-amber/20 text-solar-amber",
-                      scheme.color === 'solar-teal' && "bg-solar-teal/10 border-solar-teal/20 text-solar-teal",
-                      scheme.color === 'solar-orange' && "bg-solar-orange/10 border-solar-orange/20 text-solar-orange",
-                      scheme.color === 'solar-green' && "bg-solar-green/10 border-solar-green/20 text-solar-green"
-                    )}>
-                      <Icon className="h-8 w-8" />
-                    </div>
-                    <Badge variant="outline" className="font-black text-[10px] uppercase tracking-widest px-4 py-1.5 rounded-full bg-background/50 border-border">
-                      {scheme.type}
-                    </Badge>
-                  </div>
-                  <CardTitle className="text-4xl font-black text-foreground tracking-tight">{scheme.title}</CardTitle>
-                </CardHeader>
-                
-                <CardContent className="p-10 pt-0 space-y-10 relative">
-                  <p className="text-lg text-muted-foreground font-medium leading-relaxed">{scheme.description}</p>
-                  
-                  <div className="grid grid-cols-1 gap-4 pt-8 border-t border-border">
-                    {scheme.benefits.map((benefit, idx) => (
-                      <div key={idx} className="flex items-center gap-4 group/item">
-                        <div className={cn(
-                          "w-2 h-2 rounded-full transition-transform group-hover/item:scale-150",
-                          scheme.color === 'solar-amber' && "bg-solar-amber",
-                          scheme.color === 'solar-teal' && "bg-solar-teal",
-                          scheme.color === 'solar-orange' && "bg-solar-orange",
-                          scheme.color === 'solar-green' && "bg-solar-green"
-                        )}></div>
-                        <span className="text-foreground font-bold tracking-tight">{benefit}</span>
+        {/* Central Government Scheme - Split Layout */}
+        <div className="mb-12">
+          <Card className="card-professional group overflow-hidden border-2 border-green-200 hover:border-green-300">
+            <CardHeader className="p-8 pb-6 bg-linear-to-r from-green-50 to-emerald-50">
+              <div className="flex items-start justify-between mb-6">
+                <div className="bg-green-500 p-4 rounded-2xl shadow-lg">
+                  <centralScheme.icon className="h-8 w-8 text-white" />
+                </div>
+                <Badge className="bg-green-100 text-green-700 border-green-200 font-semibold">
+                  {centralScheme.type}
+                </Badge>
+              </div>
+              <CardTitle className="text-3xl font-black text-gray-900 mb-4">
+                {centralScheme.title}
+              </CardTitle>
+              <p className="text-gray-600 text-lg leading-relaxed">
+                {centralScheme.description}
+              </p>
+            </CardHeader>
+
+            <CardContent className="p-8">
+              <div className="grid lg:grid-cols-2 gap-12">
+                {/* Left Side - Key Features */}
+                <div>
+                  <h4 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                    ⚙️ Key Features
+                  </h4>
+                  <div className="space-y-4">
+                    {centralScheme.features.map((feature, idx) => (
+                      <div key={idx} className="flex items-start gap-3">
+                        <feature.icon className="h-5 w-5 text-green-500 mt-1 shrink-0" />
+                        <span className="text-gray-700 font-medium">{feature.text}</span>
                       </div>
                     ))}
                   </div>
-                </CardContent>
-              </Card>
-            );
-          })}
-        </div>
+                </div>
 
-        <div className="mt-20 group">
-          <Link href="/contact" className="block">
-            <div className="relative overflow-hidden rounded-[3rem] bg-zinc-900 dark:bg-white p-12 lg:p-20 text-white dark:text-zinc-900 text-center border border-zinc-800 dark:border-zinc-200 shadow-2xl">
-              <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-solar-amber/10 blur-[100px] rounded-full -mr-32 -mt-32"></div>
-              <div className="relative z-10 space-y-8">
-                <h3 className="text-4xl md:text-6xl font-black font-display tracking-tight text-white dark:text-zinc-900">
-                  WANT TO SEE THE <br />
-                  <span className="text-solar-amber">SAVINGS</span> FOR YOUR ZIP CODE?
-                </h3>
-                <p className="text-xl text-zinc-400 dark:text-zinc-600 font-medium max-w-2xl mx-auto">
-                   Our smart algorithm calculates local subsidies and solar potential in seconds.
-                </p>
-                <div className="flex justify-center pt-8">
-                  <Button className="bg-solar-amber hover:bg-solar-orange text-white font-black py-8 px-16 rounded-[2rem] text-2xl transition-all hover:scale-105 shadow-[0_20px_50px_-10px_rgba(217,119,6,0.3)] border-none">
-                    CALCULATE ELIGIBILITY
-                    <ArrowRight className="ml-3 h-8 w-8" />
-                  </Button>
+                {/* Right Side - Customer Benefits */}
+                <div>
+                  <h4 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                    🎯 Customer Benefits
+                  </h4>
+                  <div className="space-y-4">
+                    {benefits.map((benefit, idx) => (
+                      <div key={idx} className="flex items-start gap-3">
+                        <benefit.icon className="h-5 w-5 text-orange-500 mt-1 shrink-0" />
+                        <div>
+                          <div className="font-bold text-gray-900 text-sm">{benefit.title}</div>
+                          <div className="text-gray-600 text-sm">{benefit.desc}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
-            </div>
-          </Link>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Tamil Nadu State Scheme */}
+        <div>
+          <Card className="card-professional group overflow-hidden border-2 border-amber-200 hover:border-amber-300">
+            <CardHeader className="p-8 pb-6 bg-linear-to-r from-amber-50 to-orange-50">
+              <div className="flex items-start justify-between mb-6">
+                <div className="bg-amber-500 p-4 rounded-2xl shadow-lg">
+                  <tamilNaduScheme.icon className="h-8 w-8 text-white" />
+                </div>
+                <Badge className="bg-amber-100 text-amber-700 border-amber-200 font-semibold">
+                  {tamilNaduScheme.type}
+                </Badge>
+              </div>
+              <CardTitle className="text-3xl font-black text-gray-900 mb-4">
+                {tamilNaduScheme.title}
+              </CardTitle>
+              <p className="text-gray-600 text-lg leading-relaxed">
+                {tamilNaduScheme.description}
+              </p>
+            </CardHeader>
+
+            <CardContent className="p-8 space-y-6">
+              <h4 className="text-xl font-bold text-gray-900 mb-4">Customer Benefits:</h4>
+              <div className="grid md:grid-cols-2 gap-4">
+                {tamilNaduScheme.features.map((feature, idx) => (
+                  <div key={idx} className="flex items-center gap-3">
+                    <div className="w-2 h-2 bg-amber-500 rounded-full"></div>
+                    <span className="text-gray-700 font-medium">{feature}</span>
+                  </div>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </section>

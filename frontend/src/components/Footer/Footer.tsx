@@ -1,11 +1,10 @@
-'use client';
+"use client";
 
-import { Sun, Mail, Phone, MapPin, Facebook, Twitter, Instagram, Linkedin, Send, Zap, ArrowUp } from 'lucide-react';
-import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import axios from '@/lib/axios';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Mail, Phone, MapPin, Zap, ArrowUp } from "lucide-react";
+import Link from "next/link";
+import { useState, useEffect } from "react";
+import axios from "@/lib/axios";
+import Image from "next/image";
 
 interface Settings {
   companyName: string;
@@ -24,18 +23,19 @@ interface Settings {
 
 export default function Footer() {
   const [settings, setSettings] = useState<Settings>({
-    companyName: 'Solar Power House',
-    logo: '',
-    description: 'Pioneering energy independence through high-performance solar architectures and smart grid technologies.',
-    email: 'hello@solarpowerhouse.com',
-    phone: '+91 98765 43210',
+    companyName: "Solar Power House",
+    logo: "",
+    description:
+      "Professional solar energy solutions for residential and commercial properties. Maximizing efficiency and ROI.",
+    email: "hello@solarpowerhouse.com",
+    phone: "+91 98765 43210",
     address: {
-      street: 'Solar Innovation Tower',
-      city: 'Green City',
-      state: 'Sustainability State',
-      zipCode: '560001',
-      country: 'India'
-    }
+      street: "Solar Innovation Tower",
+      city: "Green City",
+      state: "Sustainability State",
+      zipCode: "560001",
+      country: "India",
+    },
   });
 
   useEffect(() => {
@@ -44,111 +44,150 @@ export default function Footer() {
 
   const fetchSettings = async () => {
     try {
-      const response = await axios.get('/settings');
+      const response = await axios.get("/settings");
       setSettings(response.data);
     } catch (error) {
-      console.error('Failed to load settings:', error);
+      console.error("Failed to load settings:", error);
     }
   };
 
-  const formatAddress = () => {
-    const { street, city, state, zipCode } = settings.address;
-    return `${street}, ${city}, ${state} ${zipCode}`;
-  };
-
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (
-    <footer className="bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 pt-32 pb-12 overflow-hidden relative border-t border-zinc-200 dark:border-zinc-800">
-      {/* Decorative Gradients */}
-      <div className="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-zinc-200 dark:via-zinc-800 to-transparent"></div>
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-solar-amber/5 blur-[120px] rounded-full -mt-64"></div>
-      
-      <div className="container mx-auto px-4 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-24">
-          
-          {/* Brand Column */}
-          <div className="lg:col-span-4 space-y-10">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="bg-gradient-to-br from-solar-amber to-solar-orange p-2 rounded-2xl shadow-lg shadow-solar-amber/20">
-                <Zap className="h-6 w-6 text-white" />
+    <footer className="bg-linear-to-r from-emerald-900 to-teal-900 text-white py-16 relative">
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 mb-5">
+          {/* Section 1: Logo, Name, and Description */}
+          <div className="space-y-6">
+            <Link href="/" className="inline-flex items-center gap-4">
+              {settings.logo ? (
+                <Image
+                  width={128}
+                  height={128}
+                  src={settings.logo}
+                  alt={settings.companyName}
+                  priority
+                  className="h-32 w-32 rounded-xl object-contain shadow-lg"
+                />
+              ) : (
+                <div className="bg-linear-to-br from-orange-500 to-amber-500 p-4 rounded-xl shadow-lg">
+                  <Zap className="h-8 w-8 text-white" />
+                </div>
+              )}
+              <div>
+                <span className="text-2xl font-black tracking-tight text-white uppercase block">
+                  {settings.companyName}
+                </span>
+                <span className="text-sm font-bold uppercase tracking-[0.2em] text-emerald-200">
+                  Powering Future
+                </span>
               </div>
-              <span className="text-3xl font-black tracking-tighter uppercase text-zinc-900 dark:text-white">
-                {settings.companyName.split(' ')[0]}<span className="text-gradient-solar">{settings.companyName.split(' ').slice(1).join('')}</span>
-              </span>
             </Link>
-            <p className="text-lg text-zinc-600 dark:text-zinc-400 font-medium leading-relaxed">
+            <p className="text-emerald-100 leading-relaxed max-w-sm">
               {settings.description}
             </p>
-            <div className="flex gap-4">
-              {[Facebook, Twitter, Instagram, Linkedin].map((Icon, i) => (
-                <Link key={i} href="#" className="w-12 h-12 rounded-2xl bg-zinc-200/50 dark:bg-white/5 flex items-center justify-center hover:bg-solar-amber hover:text-white transition-all duration-300 border border-zinc-300 dark:border-white/5 hover:border-solar-amber/30 group">
-                  <Icon className="h-5 w-5 opacity-60 group-hover:opacity-100 text-zinc-900 dark:text-white" />
-                </Link>
-              ))}
-            </div>
           </div>
 
-          {/* Nav Columns */}
-          <div className="lg:col-span-2">
-            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-solar-teal mb-10">Ecosystem</h3>
-            <ul className="space-y-6 text-lg font-bold text-zinc-600 dark:text-zinc-400">
-              <li><Link href="/" className="hover:text-solar-amber dark:hover:text-white transition-colors">Platform</Link></li>
-              <li><Link href="/services" className="hover:text-solar-amber dark:hover:text-white transition-colors">Residential</Link></li>
-              <li><Link href="/services" className="hover:text-solar-amber dark:hover:text-white transition-colors">Industrial</Link></li>
-              <li><Link href="/about" className="hover:text-solar-amber dark:hover:text-white transition-colors">Company</Link></li>
-            </ul>
+          {/* Section 2: Navigation Menu */}
+          <div className="space-y-6">
+            <h3 className="text-xl font-bold text-white mb-6">Quick Links</h3>
+            <nav className="space-y-4">
+              <Link
+                href="/"
+                className="block text-emerald-100 hover:text-white font-semibold transition-colors duration-300 relative group"
+              >
+                Home
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full" />
+              </Link>
+              <Link
+                href="/about"
+                className="block text-emerald-100 hover:text-white font-semibold transition-colors duration-300 relative group"
+              >
+                About Us
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full" />
+              </Link>
+              <Link
+                href="/services"
+                className="block text-emerald-100 hover:text-white font-semibold transition-colors duration-300 relative group"
+              >
+                Services
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full" />
+              </Link>
+              <Link
+                href="/contact"
+                className="block text-emerald-100 hover:text-white font-semibold transition-colors duration-300 relative group"
+              >
+                Contact
+                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-white transition-all duration-300 group-hover:w-full" />
+              </Link>
+            </nav>
           </div>
 
-          <div className="lg:col-span-2">
-            <h3 className="text-xs font-black uppercase tracking-[0.2em] text-solar-amber mb-10">Resources</h3>
-            <ul className="space-y-6 text-lg font-bold text-zinc-600 dark:text-zinc-400">
-              <li><Link href="/#schemes" className="hover:text-solar-amber dark:hover:text-white transition-colors">Incentives</Link></li>
-              <li><Link href="/contact" className="hover:text-solar-amber dark:hover:text-white transition-colors">Contact</Link></li>
-              <li><Link href="#" className="hover:text-solar-amber dark:hover:text-white transition-colors">Technical Support</Link></li>
-              <li><Link href="#" className="hover:text-solar-amber dark:hover:text-white transition-colors">Solar Blog</Link></li>
-            </ul>
-          </div>
+          {/* Section 3: Contact Information */}
+          <div className="space-y-4">
+            <h3 className="text-xl font-bold text-white mb-6">Contact Info</h3>
+            <div className="space-y-4">
+              <div className="flex items-start gap-3">
+                <MapPin className="h-5 w-5 text-emerald-200 mt-1 shrink-0" />
+                <div>
+                  <p className="text-white font-semibold mb-1">Address</p>
+                  <p className="text-emerald-100 text-sm leading-relaxed">
+                    {settings.address.street}
+                    <br />
+                    {settings.address.city}, {settings.address.state}
+                    <br />
+                    {settings.address.zipCode}, {settings.address.country}
+                  </p>
+                </div>
+              </div>
 
-          {/* Newsletter / Contact */}
-          <div className="lg:col-span-4 space-y-10">
-            <div className="p-8 rounded-[2.5rem] bg-zinc-200/30 dark:bg-white/5 border border-zinc-300 dark:border-white/5 space-y-6">
-              <h3 className="text-xl font-black text-zinc-900 dark:text-white">Stay Empowered</h3>
-              <p className="text-sm text-zinc-600 dark:text-zinc-400 font-medium">Monthly dose of tech updates and green ROI tips.</p>
-              <div className="relative">
-                <Input 
-                  placeholder="name@energy.com" 
-                  className="bg-white dark:bg-zinc-900/50 border-zinc-300 dark:border-zinc-800 rounded-2xl h-16 pl-6 pr-16 text-zinc-900 dark:text-white focus:border-solar-amber transition-all" 
-                />
-                <button className="absolute right-2 top-2 h-12 w-12 bg-solar-amber rounded-xl flex items-center justify-center text-white hover:bg-solar-orange transition-all shadow-lg shadow-solar-amber/20">
-                  <Send className="h-5 w-5" />
-                </button>
+              <div className="flex items-start gap-3">
+                <Mail className="h-5 w-5 text-emerald-200 mt-1 shrink-0" />
+                <div>
+                  <p className="text-white font-semibold mb-1">Email</p>
+                  <a
+                    href={`mailto:${settings.email}`}
+                    className="text-emerald-100 text-sm hover:text-white transition-colors"
+                  >
+                    {settings.email}
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <Phone className="h-5 w-5 text-emerald-200 mt-1 shrink-0" />
+                <div>
+                  <p className="text-white font-semibold mb-1">Phone</p>
+                  <a
+                    href={`tel:${settings.phone}`}
+                    className="text-emerald-100 text-sm hover:text-white transition-colors"
+                  >
+                    {settings.phone}
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-12 border-t border-zinc-200 dark:border-zinc-800 flex flex-col md:flex-row justify-between items-center gap-8 text-zinc-500 dark:text-zinc-500 font-bold text-sm">
-          <div className="flex flex-col md:flex-row items-center gap-8">
-            <p>&copy; {new Date().getFullYear()} {settings.companyName}</p>
-            <div className="flex gap-8">
-              <Link href="#" className="hover:text-zinc-900 dark:hover:text-white">Privacy Architecture</Link>
-              <Link href="#" className="hover:text-zinc-900 dark:hover:text-white">Legal Terms</Link>
-            </div>
-          </div>
-          <button 
-            onClick={scrollToTop}
-            className="flex items-center gap-3 text-solar-teal hover:text-solar-amber dark:hover:text-white transition-colors group"
-          >
-            BACK TO TOP
-            <div className="w-10 h-10 rounded-full border border-solar-teal/30 flex items-center justify-center group-hover:bg-solar-teal group-hover:text-white dark:group-hover:text-zinc-950 transition-all">
-              <ArrowUp className="h-4 w-4" />
-            </div>
-          </button>
+        {/* Copyright */}
+        <div className="pt-4 border-t border-emerald-500/30 text-center">
+          <p className="text-emerald-100 text-sm">
+            © {new Date().getFullYear()} {settings.companyName}. All Rights
+            Reserved.
+          </p>
         </div>
+
+        {/* Back to Top Button */}
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 w-12 h-12 bg-orange-500 hover:bg-orange-600 rounded-full flex items-center justify-center text-white shadow-lg transition-all duration-300 hover:scale-110 z-50"
+          aria-label="Back to top"
+        >
+          <ArrowUp className="h-5 w-5" />
+        </button>
       </div>
     </footer>
   );

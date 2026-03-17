@@ -1,19 +1,14 @@
 import type { Metadata } from "next";
-import { Inter, Outfit } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import SessionProvider from "@/components/providers/SessionProvider";
 import MetadataProvider from "@/components/providers/MetadataProvider";
-import { ThemeProvider } from "@/components/ThemeProvider";
 
-const inter = Inter({ 
+const montserrat = Montserrat({ 
   subsets: ["latin"],
-  variable: "--font-inter",
-});
-
-const outfit = Outfit({
-  subsets: ["latin"],
-  variable: "--font-outfit",
+  variable: "--font-montserrat",
+  weight: ["300", "400", "500", "600", "700", "800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -27,22 +22,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${outfit.variable} font-sans antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <SessionProvider>
-            <MetadataProvider />
-            <main className="min-h-screen">
-              {children}
-            </main>
-            <Toaster />
-          </SessionProvider>
-        </ThemeProvider>
+    <html lang="en">
+      <body className={`${montserrat.variable} font-sans antialiased bg-white text-gray-900`}>
+        <SessionProvider>
+          <MetadataProvider />
+          <main className="min-h-screen">
+            {children}
+          </main>
+          <Toaster />
+        </SessionProvider>
       </body>
     </html>
   );

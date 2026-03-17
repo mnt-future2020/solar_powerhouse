@@ -10,9 +10,6 @@ import { Button } from '@/components/ui/button';
 import { 
   Zap, 
   ArrowRight, 
-  Home, 
-  Building, 
-  Settings, 
   CheckCircle2,
   TrendingUp,
   BatteryCharging
@@ -35,7 +32,6 @@ const serviceImages: Record<number, string> = {
   2: '/assets/image/services/maintenance.png',
 };
 
-const serviceIcons = [Home, Building, Settings];
 const serviceColors = ['solar-amber', 'solar-teal', 'solar-green'];
 
 export default function ServicesPage() {
@@ -70,151 +66,130 @@ export default function ServicesPage() {
         <div className="container mx-auto px-4 relative z-10">
           
           {/* Header Section */}
-          <div className="max-w-4xl mb-24 animate-fade-in-up">
-            <Badge className="bg-solar-teal/10 text-solar-teal hover:bg-solar-teal/20 border-solar-teal/20 px-6 py-2 rounded-full mb-8 font-black uppercase tracking-[0.2em] text-[10px]">
-              Engineered Solutions
+          <div className="max-w-4xl mx-auto mb-20 animate-fade-in-up text-center">
+            <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-200 border-amber-200 px-6 py-2 rounded-full mb-6 font-bold uppercase tracking-wider text-xs">
+              Our Solar Solutions
             </Badge>
-            <h1 className="text-7xl md:text-9xl font-black font-display tracking-tight text-foreground leading-[0.85] mb-8">
-              ENERGY <br />
-              <span className="text-gradient-solar">ARCHITECTURES</span>
+            <h1 className="text-5xl md:text-7xl font-black tracking-tight text-gray-900 leading-tight mb-6">
+              SOLAR <span className="text-gradient-solar">SERVICES</span>
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground font-medium max-w-2xl leading-relaxed">
-              We specialize in modular, high-performance solar ecosystems. 
-              Each installation is a custom energy plant designed for <span className="text-foreground font-bold italic">maximum self-consumption</span> and grid independence.
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Discover our comprehensive range of solar solutions designed to meet your energy needs. 
+              From residential installations to commercial projects, we have the expertise to power your future.
             </p>
           </div>
 
           {/* Statistics Strip */}
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 mb-32 child:glass-card child:p-8 child:rounded-3xl animate-fade-in-up">
-            <div className="group">
-              <TrendingUp className="h-6 w-6 text-solar-amber mb-4 group-hover:scale-110 transition-transform" />
-              <div className="text-3xl font-black">₹32M+</div>
-              <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Total Client Savings</div>
-            </div>
-            <div className="group">
-              <BatteryCharging className="h-6 w-6 text-solar-teal mb-4 group-hover:scale-110 transition-transform" />
-              <div className="text-3xl font-black">98.5%</div>
-              <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Grid Efficiency</div>
-            </div>
-            <div className="group">
-              <Zap className="h-6 w-6 text-solar-orange mb-4 group-hover:scale-110 transition-transform" />
-              <div className="text-3xl font-black">15GW+</div>
-              <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Clean Power Gen</div>
-            </div>
-            <div className="group">
-              <CheckCircle2 className="h-6 w-6 text-solar-green mb-4 group-hover:scale-110 transition-transform" />
-              <div className="text-3xl font-black">Tier-1</div>
-              <div className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest mt-1">Hardware Grade</div>
-            </div>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16 animate-fade-in-up">
+            {[
+              { icon: TrendingUp, value: "500+", label: "Projects Completed", color: "text-amber-600" },
+              { icon: BatteryCharging, value: "98%", label: "Customer Satisfaction", color: "text-teal-600" },
+              { icon: Zap, value: "₹2Cr+", label: "Savings Generated", color: "text-orange-600" },
+              { icon: CheckCircle2, value: "25+", label: "Years Warranty", color: "text-emerald-600" }
+            ].map((stat, index) => (
+              <div key={index} className="bg-white rounded-2xl p-6 shadow-lg hover:shadow-xl transition-all hover:-translate-y-1 group">
+                <stat.icon className={`h-8 w-8 ${stat.color} mb-4 group-hover:scale-110 transition-transform`} />
+                <div className="text-3xl font-bold text-gray-900">{stat.value}</div>
+                <div className="text-sm text-gray-600 font-medium mt-1">{stat.label}</div>
+              </div>
+            ))}
           </div>
 
           {/* Services Grid */}
           {loading ? (
             <div className="text-center py-40">
               <div className="inline-block animate-spin rounded-full h-16 w-16 border-t-4 border-solar-amber"></div>
-              <p className="mt-6 text-xl font-bold text-muted-foreground animate-pulse">Synchronizing Data Nodes...</p>
+              <p className="mt-6 text-xl font-bold text-muted-foreground animate-pulse">Loading our solar solutions...</p>
             </div>
           ) : services.length > 0 ? (
-            <div className="grid lg:grid-cols-3 gap-10">
+            <div className="grid lg:grid-cols-3 gap-8">
               {services.map((service, index) => {
-                const Icon = serviceIcons[index % 3];
                 const color = serviceColors[index % 3];
                 return (
                   <div
                     key={service._id}
-                    className="group relative overflow-hidden rounded-[3.5rem] border border-border bg-card transition-all duration-700 hover:shadow-2xl hover:border-solar-amber/20 animate-fade-in-up"
+                    className="group relative overflow-hidden rounded-3xl bg-white shadow-lg hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 animate-fade-in-up border border-gray-100"
                     style={{ animationDelay: `${index * 0.1}s` }}
                   >
-                    {/* Visual Asset */}
-                    <div className="h-80 overflow-hidden relative">
-                      <div className="absolute inset-0 bg-linear-to-t from-card via-card/10 to-transparent z-10"></div>
+                    {/* Image Section */}
+                    <div className="h-64 overflow-hidden relative">
                       <img 
                         src={serviceImages[index % 3] || '/assets/image/hero_solar.png'} 
                         alt={service.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                       />
-                      <div className={cn(
-                        "absolute top-8 left-8 z-20 w-16 h-16 rounded-[1.25rem] flex items-center justify-center border backdrop-blur-md transition-all duration-500 group-hover:rotate-6 shadow-xl",
-                        color === 'solar-amber' && "bg-solar-amber/20 border-solar-amber/30 text-solar-amber",
-                        color === 'solar-teal' && "bg-solar-teal/20 border-solar-teal/30 text-solar-teal",
-                        color === 'solar-green' && "bg-solar-green/20 border-solar-green/30 text-solar-green"
-                      )}>
-                        <Icon className="h-8 w-8" />
-                      </div>
-                      <div className="absolute bottom-10 left-10 z-20">
-                        <span className="text-3xl font-black text-white">₹{service.price.toLocaleString()}</span>
-                        <span className="text-[10px] font-bold text-white/50 uppercase tracking-widest block mt-1">Architectural Base</span>
+                      <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/20 to-transparent"></div>
+                      
+                      {/* Service Badge */}
+                      <div className="absolute top-6 left-6">
+                        <Badge className={cn(
+                          "px-4 py-2 rounded-full font-bold text-xs uppercase tracking-wider border-0",
+                          color === 'solar-amber' && "bg-amber-500/90 text-white",
+                          color === 'solar-teal' && "bg-teal-600/90 text-white",
+                          color === 'solar-green' && "bg-emerald-600/90 text-white"
+                        )}>
+                          Premium Solution
+                        </Badge>
                       </div>
                     </div>
 
-                    {/* Content Matrix */}
-                    <div className="p-12 space-y-10 relative z-20 -mt-10">
+                    {/* Content Section */}
+                    <div className="p-8 space-y-6">
                       <div className="space-y-4">
-                        <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest px-4 py-1.5 bg-background/50 rounded-full">
-                          Deployment Package
-                        </Badge>
-                        <h3 className="text-4xl font-black text-foreground tracking-tight leading-none">{service.title}</h3>
+                        <h3 className="text-2xl font-bold text-gray-900 leading-tight group-hover:text-amber-600 transition-colors">
+                          {service.title}
+                        </h3>
+                        <p className="text-gray-600 leading-relaxed">
+                          {service.description}
+                        </p>
                       </div>
-                      
-                      <p className="text-lg text-muted-foreground font-medium leading-relaxed">
-                        {service.description}
-                      </p>
 
-                      <div className="space-y-5 pt-8 border-t border-border">
-                        {service.features.map((feature, i) => (
-                          <div key={i} className="flex items-center gap-4">
+                      {/* Features List */}
+                      <div className="space-y-3">
+                        {service.features.slice(0, 4).map((feature, i) => (
+                          <div key={i} className="flex items-start gap-3">
                             <CheckCircle2 className={cn(
-                              "h-5 w-5",
-                              color === 'solar-amber' && "text-solar-amber",
-                              color === 'solar-teal' && "text-solar-teal",
-                              color === 'solar-green' && "text-solar-green"
+                              "h-5 w-5 mt-0.5 shrink-0",
+                              color === 'solar-amber' && "text-amber-500",
+                              color === 'solar-teal' && "text-teal-600",
+                              color === 'solar-green' && "text-emerald-600"
                             )} />
-                            <span className="text-[15px] font-bold text-foreground/80 tracking-tight">{feature}</span>
+                            <span className="text-gray-700 font-medium text-sm leading-relaxed">{feature}</span>
                           </div>
                         ))}
+                        {service.features.length > 4 && (
+                          <div className="text-sm text-gray-500 font-medium">
+                            +{service.features.length - 4} more features
+                          </div>
+                        )}
                       </div>
 
-                      <Link href={`/services/${service._id}`} className="block pt-4">
-                        <Button className="w-full h-20 rounded-3xl bg-secondary/50 hover:bg-solar-amber hover:text-white text-foreground font-black text-lg transition-all group-hover:scale-[1.02] active:scale-95 shadow-lg group-hover:shadow-solar-amber/20">
-                          EXPLORE DEPLOYMENT
-                          <ArrowRight className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1" />
-                        </Button>
-                      </Link>
+                      {/* CTA Button */}
+                      <div className="pt-4">
+                        <Link href={`/services/${service._id}`} className="block">
+                          <Button className={cn(
+                            "w-full h-12 rounded-xl font-bold text-white transition-all hover:scale-105 shadow-lg hover:shadow-xl",
+                            color === 'solar-amber' && "bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600",
+                            color === 'solar-teal' && "bg-linear-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700",
+                            color === 'solar-green' && "bg-linear-to-r from-emerald-600 to-green-600 hover:from-emerald-700 hover:to-green-700"
+                          )}>
+                            Learn More
+                            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                          </Button>
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 );
               })}
             </div>
           ) : (
-            <div className="text-center py-40 glass-card p-20 rounded-[4rem]">
-              <p className="text-gray-500 text-2xl font-black tracking-tight">System Offline: No Service Nodes Detected.</p>
+            <div className="text-center py-40 bg-white rounded-3xl shadow-lg p-20">
+              <p className="text-gray-500 text-xl font-medium">No services available at the moment.</p>
             </div>
           )}
         </div>
       </main>
-
-      {/* Global CTA */}
-      <section className="bg-foreground text-background py-32 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-solar-amber/10 blur-[150px] rounded-full -mr-64 -mt-64"></div>
-        <div className="container mx-auto px-4 text-center relative z-10 space-y-12">
-          <h2 className="text-6xl md:text-8xl font-black font-display tracking-tight text-white leading-none">
-            READY TO <span className="text-solar-amber">TRANSCEND</span> <br />
-            THE GRID?
-          </h2>
-          <p className="text-2xl text-gray-400 max-w-2xl mx-auto font-medium leading-relaxed">
-            Connect with our system architects for a high-fidelity survey and ROI roadmap.
-          </p>
-          <div className="flex justify-center pt-8">
-            <Button 
-              onClick={() => setIsModalOpen(true)}
-              className="bg-solar-amber hover:bg-solar-orange text-white font-black h-24 px-16 rounded-[2.5rem] text-2xl transition-all hover:scale-105 shadow-2xl shadow-solar-amber/30 group"
-            >
-              INITIALIZE CONSULTATION
-              <ArrowRight className="ml-4 h-8 w-8 group-hover:translate-x-2 transition-transform" />
-            </Button>
-          </div>
-        </div>
-      </section>
 
       <Footer />
       

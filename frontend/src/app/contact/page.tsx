@@ -2,16 +2,17 @@
 
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
-import { Mail, Phone, MapPin, Send, MessageSquare, Zap, Clock } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Mail, Phone, MapPin, Send, MessageSquare, Clock, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { useState, useEffect } from 'react';
 import axios from '@/lib/axios';
-import { cn } from '@/lib/utils';
+import { useToast } from '@/components/ui/use-toast';
+import Dropdown from '@/components/ui/dropdown-menu';
 
 interface Settings {
+  companyName: string;
   email: string;
   phone: string;
   address: {
@@ -23,185 +24,431 @@ interface Settings {
   };
 }
 
+interface Service {
+  _id: string;
+  title: string;
+  description: string;
+  features: string[];
+}
+
 export default function ContactPage() {
   const [settings, setSettings] = useState<Settings>({
-    email: 'hello@solarpowerhouse.com',
-    phone: '+91 99448 88170',
+    companyName: 'Solar Power House',
+    email: 'accounts@solarpowerhouse.com',
+    phone: '+91 98765 43210',
     address: {
-      street: 'Solar Power House 34/1, Idhyarajapuram 2nd Street, Sellur',
-      city: 'Madurai',
+      street: 'No 15/A, LMA Courtyard',
+      city: 'Chennai',
       state: 'Tamil Nadu',
-      zipCode: '625002',
+      zipCode: '600031',
       country: 'India'
     }
   });
 
+  const [services, setServices] = useState<Service[]>([]);
+  const [formData, setFormData] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    city: '',
+    propertyType: '',
+    monthlyBill: '',
+    service: '',
+    message: '',
+    source: 'Contact Page'
+  });
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const { toast } = useToast();
+
   useEffect(() => {
     fetchSettings();
+    fetchServices();
   }, []);
 
   const fetchSettings = async () => {
     try {
       const response = await axios.get('/settings');
       if (response.data) {
-        setSettings({
-          ...settings,
-          ...response.data
-        });
+        setSettings(response.data);
       }
     } catch (error) {
       console.error('Failed to load settings:', error);
     }
   };
 
-  const contactOptions = [
-    {
-      icon: Mail,
-      title: 'Email Ecosystem',
-      value: settings.email,
-      description: 'Expect a response within 24 hours from our technical team.',
-      color: 'solar-yellow',
-      gradient: 'from-solar-yellow to-solar-orange'
-    },
-    {
-      icon: Phone,
-      title: 'Direct Concierge',
-      value: settings.phone,
-      description: 'Mon-Sat, 9AM to 7PM. Immediate assistance for urgent surveys.',
-      color: 'solar-teal',
-      gradient: 'from-solar-teal to-solar-green'
-    },
-    {
-      icon: MapPin,
-      title: 'Innovation Hub',
-      value: `${settings.address.street}, ${settings.address.city}, ${settings.address.state}`,
-      description: 'Visit our experience center to see next-gen panels in action.',
-      color: 'solar-orange',
-      gradient: 'from-solar-orange to-solar-amber'
+  const fetchServices = async () => {
+    try {
+      const response = await axios.get('/services');
+      setServices(response.data);
+    } catch (error) {
+      console.error('Failed to load services:', error);
     }
-  ];
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      await axios.post('/contacts', formData);
+      toast({
+        title: 'Success!',
+        description: 'Your message has been sent successfully. We\'ll get back to you within 24 hours.',
+      });
+      setFormData({
+        name: '',
+        phone: '',
+        email: '',
+        city: '',
+        propertyType: '',
+        monthlyBill: '',
+        service: '',
+        message: '',
+        source: 'Contact Page'
+      });
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to send message. Please try again.',
+        variant: 'destructive',
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    });
+  };
+
+  const handleDropdownChange = (name: string, value: string | string[]) => {
+    setFormData({
+      ...formData,
+      [name]: Array.isArray(value) ? value[0] || '' : value
+    });
+  };
 
   return (
-    <div className="min-h-screen flex flex-col bg-background selection:bg-solar-amber/30">
+    <div className="min-h-screen flex flex-col bg-gray-50">
       <Header />
       
-      <main className="flex-1 pt-40 pb-20 relative overflow-hidden">
-        {/* Background Effects */}
-        <div className="absolute top-0 left-0 w-full h-full bg-mesh opacity-20 pointer-events-none"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-solar-amber/20 blur-[150px] rounded-full opacity-30 pointer-events-none"></div>
-
-        <div className="container mx-auto px-4 relative z-10">
+      <main className="flex-1 pt-40 pb-20">
+        <div className="container mx-auto px-4">
+          
           {/* Header Section */}
-          <div className="max-w-4xl mb-24 animate-fade-in-up">
-            <Badge className="bg-solar-amber/10 text-solar-amber hover:bg-solar-amber/20 border-solar-amber/20 px-6 py-2 rounded-full mb-8 font-black uppercase tracking-[0.2em] text-[10px]">
-              Global Communications
+          <div className="text-center mb-16">
+            <Badge className="bg-amber-100 text-amber-700 hover:bg-amber-200 border-amber-200 px-6 py-2 rounded-full mb-6 font-bold uppercase tracking-wider text-xs">
+              Get In Touch
             </Badge>
-            <h1 className="text-7xl md:text-9xl font-black font-display tracking-tighter text-foreground mb-8 leading-[0.85]">
-              GET IN <br />
-              <span className="text-gradient-solar">TOUCH</span>
+            <h1 className="text-5xl md:text-7xl font-black tracking-tight text-gray-900 leading-tight mb-6">
+              CONTACT <span className="text-gradient-solar">US</span>
             </h1>
-            <p className="text-xl md:text-2xl text-muted-foreground font-medium max-w-2xl leading-relaxed">
-              Whether you're looking for a residential quote or industrial scaling, our solar architects are ready to design your <span className="text-foreground font-bold">energy future.</span>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+              Ready to start your solar journey? Get in touch with our experts for a free consultation 
+              and personalized solar solution for your property.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-            
-            {/* Contact Cards */}
-            <div className="lg:col-span-5 space-y-6">
-              {contactOptions.map((opt, i) => (
-                <Card 
-                  key={i} 
-                  className="glass-card group overflow-hidden animate-fade-in-up relative" 
-                  style={{ animationDelay: `${i * 0.15}s` }}
-                >
-                  <CardHeader className="p-8 pb-4">
-                    <div className="grid grid-cols-[1fr_auto] gap-4 items-start">
-                      <div>
-                        <Badge variant="outline" className="mb-4 text-[10px] font-black uppercase tracking-widest bg-white/5 border-white/10">
-                          {opt.title.split(' ')[0]} Node
-                        </Badge>
-                        <CardTitle className="text-3xl font-black tracking-tight">{opt.title}</CardTitle>
-                      </div>
-                      <div className={cn(
-                        "w-16 h-16 rounded-[1.5rem] flex items-center justify-center border transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 shadow-xl shadow-black/20",
-                        opt.color === 'solar-yellow' && "bg-solar-yellow/10 border-solar-yellow/20 text-solar-yellow",
-                        opt.color === 'solar-teal' && "bg-solar-teal/10 border-solar-teal/20 text-solar-teal",
-                        opt.color === 'solar-orange' && "bg-solar-orange/10 border-solar-orange/20 text-solar-orange"
-                      )}>
-                        <opt.icon className="h-8 w-8" />
+          {/* Main Content */}
+          <div className="max-w-7xl mx-auto">
+            <div className="bg-white rounded-3xl shadow-2xl overflow-hidden">
+              <div className="grid lg:grid-cols-5">
+                
+                {/* Left Panel - Company Info */}
+                <div className="lg:col-span-2 bg-linear-to-br from-amber-500 to-orange-600 p-8 lg:p-12 text-white">
+                  <div className="space-y-8">
+                    <div>
+                      <h3 className="text-2xl lg:text-3xl font-bold mb-4 text-orange-100">
+                        Let's Start Your
+                      </h3>
+                      <h2 className="text-3xl lg:text-4xl font-black mb-6">
+                        Solar Journey
+                      </h2>
+                      <p className="text-orange-100 leading-relaxed">
+                        Our solar experts are ready to help you reduce your electricity bills and 
+                        contribute to a sustainable future. Get in touch today!
+                      </p>
+                    </div>
+
+                    <div className="space-y-6 pt-8 border-t border-orange-400">
+                      <p className="text-orange-200 font-semibold">Contact Information</p>
+                      
+                      <div className="space-y-6">
+                        <div className="flex items-start gap-4">
+                          <div className="w-12 h-12 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
+                            <Mail className="h-6 w-6 text-orange-200" />
+                          </div>
+                          <div>
+                            <p className="font-bold text-orange-100 mb-1">Email Us</p>
+                            <p className="text-orange-200 break-all">{settings.email}</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-4">
+                          <div className="w-12 h-12 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
+                            <Phone className="h-6 w-6 text-orange-200" />
+                          </div>
+                          <div>
+                            <p className="font-bold text-orange-100 mb-1">Call Us</p>
+                            <p className="text-orange-200">{settings.phone}</p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-4">
+                          <div className="w-12 h-12 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
+                            <MapPin className="h-6 w-6 text-orange-200" />
+                          </div>
+                          <div>
+                            <p className="font-bold text-orange-100 mb-1">Visit Us</p>
+                            <p className="text-orange-200">
+                              {settings.address.street},<br />
+                              {settings.address.city}, {settings.address.state} - {settings.address.zipCode}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-start gap-4">
+                          <div className="w-12 h-12 rounded-xl bg-white/10 border border-white/20 flex items-center justify-center shrink-0">
+                            <Clock className="h-6 w-6 text-orange-200" />
+                          </div>
+                          <div>
+                            <p className="font-bold text-orange-100 mb-1">Business Hours</p>
+                            <p className="text-orange-200">Mon - Sat: 9:00 AM - 7:00 PM</p>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </CardHeader>
-                  <CardContent className="p-8 pt-0 space-y-4">
-                    <p className="text-xl font-bold text-foreground transition-all group-hover:text-solar-amber group-hover:translate-x-1 duration-300 break-all">{opt.value}</p>
-                    <p className="text-sm text-muted-foreground font-medium leading-relaxed max-w-[85%]">{opt.description}</p>
-                  </CardContent>
-                  <div className={cn("absolute bottom-0 left-0 h-1 bg-gradient-to-r transition-all duration-500 w-0 group-hover:w-full", opt.gradient)}></div>
-                </Card>
-              ))}
 
-              {/* Business Hours Card */}
-              <div className="p-8 rounded-[2.5rem] bg-foreground text-background relative overflow-hidden group animate-fade-in-up" style={{ animationDelay: '0.45s' }}>
-                <div className="absolute top-0 right-0 w-48 h-48 bg-solar-amber/30 blur-[60px] rounded-full -mr-24 -mt-24 group-hover:scale-150 transition-transform duration-1000"></div>
-                <div className="relative z-10 flex items-center gap-6">
-                  <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center border border-white/10">
-                    <Clock className="h-7 w-7 text-solar-amber animate-pulse" />
-                  </div>
-                  <div>
-                    <h4 className="font-black text-xs uppercase tracking-widest text-solar-amber/80">Active Frequency</h4>
-                    <p className="text-2xl font-black">Mon-Sat | 09:00 - 19:00</p>
+                    {/* Trust Indicators */}
+                    <div className="grid grid-cols-2 gap-4 pt-8 border-t border-orange-400">
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-white">24hrs</div>
+                        <div className="text-xs text-orange-200">Response Time</div>
+                      </div>
+                      <div className="text-center">
+                        <div className="text-2xl font-bold text-white">500+</div>
+                        <div className="text-xs text-orange-200">Happy Customers</div>
+                      </div>
+                    </div>
                   </div>
                 </div>
+
+                {/* Right Panel - Contact Form */}
+                <div className="lg:col-span-3 p-8 lg:p-12">
+                  <div className="max-w-2xl">
+                    <h3 className="text-2xl lg:text-3xl font-bold text-gray-900 mb-8">
+                      Send Us a Message
+                    </h3>
+
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                      {/* Name and Phone */}
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            FULL NAME *
+                          </label>
+                          <div className="relative">
+                            <Input
+                              type="text"
+                              name="name"
+                              value={formData.name}
+                              onChange={handleInputChange}
+                              placeholder="Your full name"
+                              required
+                              className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all"
+                              disabled={isSubmitting}
+                            />
+                            <MessageSquare className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            PHONE NUMBER *
+                          </label>
+                          <div className="relative">
+                            <Input
+                              type="tel"
+                              name="phone"
+                              value={formData.phone}
+                              onChange={handleInputChange}
+                              placeholder="+91 XXXXX XXXXX"
+                              required
+                              className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all"
+                              disabled={isSubmitting}
+                            />
+                            <Phone className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Email and City */}
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            EMAIL ADDRESS *
+                          </label>
+                          <div className="relative">
+                            <Input
+                              type="email"
+                              name="email"
+                              value={formData.email}
+                              onChange={handleInputChange}
+                              placeholder="you@example.com"
+                              required
+                              className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all"
+                              disabled={isSubmitting}
+                            />
+                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                          </div>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            CITY *
+                          </label>
+                          <div className="relative">
+                            <Input
+                              type="text"
+                              name="city"
+                              value={formData.city}
+                              onChange={handleInputChange}
+                              placeholder="e.g. Chennai"
+                              required
+                              className="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all"
+                              disabled={isSubmitting}
+                            />
+                            <MapPin className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Property Type and Monthly Bill */}
+                      <div className="grid md:grid-cols-2 gap-4">
+                        <div>
+                          <Dropdown
+                            label="PROPERTY TYPE *"
+                            value={formData.propertyType}
+                            options={[
+                              "Home / Villa",
+                              "Apartment Complex", 
+                              "Commercial Building",
+                              "Hospital / Clinic",
+                              "School / College",
+                              "Manufacturing / Factory",
+                              "Small Industry / SME"
+                            ]}
+                            placeholder="Select property type"
+                            onChange={(value) => handleDropdownChange('propertyType', value)}
+                            disabled={isSubmitting}
+                          />
+                        </div>
+                        <div>
+                          <Dropdown
+                            label="MONTHLY ELECTRICITY BILL *"
+                            value={formData.monthlyBill}
+                            options={[
+                              "Below ₹2,000",
+                              "₹2,000 - ₹5,000",
+                              "₹5,000 - ₹10,000", 
+                              "₹10,000 - ₹50,000",
+                              "Above ₹50,000"
+                            ]}
+                            placeholder="Select bill range"
+                            onChange={(value) => handleDropdownChange('monthlyBill', value)}
+                            disabled={isSubmitting}
+                          />
+                        </div>
+                      </div>
+
+                      {/* Service Selection */}
+                      <div>
+                        <Dropdown
+                          label="INTERESTED SERVICE"
+                          value={formData.service}
+                          options={services.map(service => service.title)}
+                          placeholder="Select a service (optional)"
+                          onChange={(value) => handleDropdownChange('service', value)}
+                          disabled={isSubmitting}
+                        />
+                      </div>
+
+                      {/* Message */}
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          MESSAGE *
+                        </label>
+                        <textarea
+                          name="message"
+                          rows={5}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-amber-500 focus:border-amber-500 transition-all resize-none"
+                          value={formData.message}
+                          onChange={handleInputChange}
+                          placeholder="Tell us about your energy requirements, questions, or how we can help you..."
+                          required
+                          disabled={isSubmitting}
+                        />
+                      </div>
+
+                      {/* Submit Button */}
+                      <Button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="w-full h-14 bg-linear-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white font-bold text-lg rounded-xl shadow-lg hover:shadow-xl transition-all hover:scale-[1.02] active:scale-[0.98]"
+                      >
+                        {isSubmitting ? (
+                          <span className="flex items-center gap-3">
+                            <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                            Sending Message...
+                          </span>
+                        ) : (
+                          <span className="flex items-center justify-center gap-3">
+                            Send Message
+                            <Send className="h-5 w-5" />
+                          </span>
+                        )}
+                      </Button>
+
+                      <p className="text-xs text-gray-500 text-center">
+                        🔒 Your information is private and will never be shared.
+                      </p>
+                    </form>
+                  </div>
+                </div>
+
               </div>
             </div>
-
-            {/* Contact Form */}
-            <div className="lg:col-span-7">
-              <Card className="glass-card h-full p-2 animate-fade-in-up overflow-hidden relative group" style={{ animationDelay: '0.3s' }}>
-                {/* Visual Background Asset for Form */}
-                <div className="absolute inset-0 opacity-[0.05] group-hover:opacity-10 transition-opacity duration-1000 pointer-events-none">
-                  <img src="/assets/image/hero_solar.png" alt="" className="w-full h-full object-cover scale-110 group-hover:scale-100 transition-transform duration-[20s] linear shadow-inner" />
-                </div>
-                
-                <div className="bg-white/95 dark:bg-zinc-900/95 backdrop-blur-2xl rounded-[2.5rem] p-10 lg:p-14 h-full border border-zinc-200 dark:border-white/5 shadow-[0_20px_50px_-15px_rgba(0,0,0,0.1)] dark:shadow-2xl relative z-10 transition-colors duration-300">
-                  <h3 className="text-5xl font-black tracking-tighter mb-10 text-zinc-900 dark:text-white">
-                    SEND A <br />
-                    <span className="text-gradient-solar">MESSAGE</span>
-                  </h3>
-                  <form className="space-y-8">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                      <div className="space-y-3">
-                        <label className="text-xs font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-400 ml-1">Full Identity</label>
-                        <Input placeholder="Engineering Lead" className="bg-zinc-50 dark:bg-zinc-950/50 border-zinc-200 dark:border-zinc-800 rounded-2xl h-16 pl-6 text-zinc-900 dark:text-white focus:border-solar-amber transition-all shadow-none placeholder:text-zinc-400 dark:placeholder:text-zinc-600 font-bold" />
-                      </div>
-                      <div className="space-y-3">
-                        <label className="text-xs font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-400 ml-1">Email Node</label>
-                        <Input placeholder="arch@domain.com" className="bg-zinc-50 dark:bg-zinc-950/50 border-zinc-200 dark:border-zinc-800 rounded-2xl h-16 pl-6 text-zinc-900 dark:text-white focus:border-solar-amber transition-all shadow-none placeholder:text-zinc-400 dark:placeholder:text-zinc-600 font-bold" />
-                      </div>
-                    </div>
-                    <div className="space-y-3">
-                      <label className="text-xs font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-400 ml-1">Subject of Inquiry</label>
-                      <Input placeholder="MW Solar Scaling Survey" className="bg-zinc-50 dark:bg-zinc-950/50 border-zinc-200 dark:border-zinc-800 rounded-2xl h-16 pl-6 text-zinc-900 dark:text-white focus:border-solar-amber transition-all shadow-none placeholder:text-zinc-400 dark:placeholder:text-zinc-600 font-bold" />
-                    </div>
-                    <div className="space-y-3">
-                      <label className="text-xs font-black uppercase tracking-widest text-zinc-500 dark:text-zinc-400 ml-1">Detailed Transcript</label>
-                      <textarea 
-                        placeholder="Define your energy metrics and consumption blueprints..." 
-                        className="w-full bg-zinc-50 dark:bg-zinc-950/50 border border-zinc-200 dark:border-zinc-800 rounded-[2rem] p-6 min-h-[180px] text-zinc-900 dark:text-white focus:outline-none focus:border-solar-amber transition-all resize-none shadow-none placeholder:text-zinc-400 dark:placeholder:text-zinc-600 font-medium"
-                      ></textarea>
-                    </div>
-                    
-                    <Button className="w-full h-24 bg-gradient-to-r from-solar-amber to-solar-orange hover:from-solar-orange hover:to-solar-amber text-white font-black text-2xl rounded-[2rem] shadow-2xl shadow-solar-amber/20 transition-all hover:scale-[1.02] active:scale-95 group border-none">
-                      INITIATE TRANSMISSION
-                      <Send className="ml-4 h-8 w-8 group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform duration-500" />
-                    </Button>
-                  </form>
-                </div>
-              </Card>
-            </div>
-
           </div>
+
+          {/* Additional Info Section */}
+          <div className="mt-16 grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            <div className="text-center p-6 bg-white rounded-2xl shadow-lg">
+              <div className="w-16 h-16 bg-amber-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <CheckCircle className="h-8 w-8 text-amber-600" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Free Consultation</h3>
+              <p className="text-gray-600 text-sm">Get expert advice on solar solutions at no cost</p>
+            </div>
+            
+            <div className="text-center p-6 bg-white rounded-2xl shadow-lg">
+              <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Clock className="h-8 w-8 text-teal-600" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Quick Response</h3>
+              <p className="text-gray-600 text-sm">We respond to all inquiries within 24 hours</p>
+            </div>
+            
+            <div className="text-center p-6 bg-white rounded-2xl shadow-lg">
+              <div className="w-16 h-16 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <MapPin className="h-8 w-8 text-emerald-600" />
+              </div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">Local Experts</h3>
+              <p className="text-gray-600 text-sm">Experienced team serving your local area</p>
+            </div>
+          </div>
+
         </div>
       </main>
 

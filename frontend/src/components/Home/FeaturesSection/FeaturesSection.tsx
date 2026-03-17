@@ -130,7 +130,7 @@ export default function FeaturesSection() {
                 </div>
 
                 {/* Decorative Elements */}
-                <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-solar-amber/5 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                <div className="absolute top-0 right-0 w-32 h-32 bg-linear-to-br from-solar-amber/5 to-transparent rounded-bl-full opacity-0 group-hover:opacity-100 transition-opacity" />
               </div>
             );
           })}
