@@ -47,8 +47,8 @@ export default function MetadataProvider() {
       if (seoSettings.favicon) {
         updateFavicon(seoSettings.favicon);
       }
-    } catch (error) {
-      console.error('Failed to update metadata:', error);
+    } catch {
+      // Non-critical — site works fine without dynamic metadata
     }
   };
 
