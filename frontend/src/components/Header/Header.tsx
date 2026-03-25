@@ -58,7 +58,7 @@ export default function Header() {
   return (
     <nav 
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-white border-b border-gray-200 shadow-lg",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-[#000c15] border-b border-gray-200 shadow-lg",
         isScrolled ? "py-4" : "py-6"
       )}
     >
@@ -72,11 +72,11 @@ export default function Header() {
             <div className="flex flex-col">
               <span className="text-xl font-semibold leading-none text-gradient-solar uppercase">
                 {settings.companyName.split(' ')[0]}
-                <span className="text-gradient-power ml-1">
+                <span className="text-teal-100 ml-1">
                   {settings.companyName.split(' ').slice(1).join(' ')}
                 </span>
               </span>
-              <span className="text-sm font-medium uppercase tracking-[0.2em] text-teal-700">Powering Future</span>
+              <span className="text-sm font-medium uppercase tracking-[0.2em] text-teal-50">Powering Future</span>
             </div>
           </Link>
 
@@ -86,7 +86,7 @@ export default function Header() {
               <Link 
                 key={link.name}
                 href={link.href} 
-                className="text-base font-bold text-gray-900 hover:text-orange-500 transition-colors relative group py-2"
+                className="text-base font-bold text-white hover:text-orange-500 transition-colors relative group py-2"
               >
                 {link.name}
                 <span className={cn(

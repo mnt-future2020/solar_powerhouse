@@ -3,9 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ImageUpload } from '@/components/ui/ImageUpload';
+import ImageUpload from '@/components/ui/ImageUpload';
 import { useToast } from '@/components/ui/use-toast';
-import { Save, Building, Mail, Phone, MapPin } from 'lucide-react';
+import { Save, Building, Mail, Phone, MapPin, Share2 } from 'lucide-react';
 import axios from '@/lib/axios';
 
 interface AddressInfo {
@@ -16,6 +16,13 @@ interface AddressInfo {
   country: string;
 }
 
+interface SocialLinks {
+  facebook?: string;
+  twitter?: string;
+  instagram?: string;
+  linkedin?: string;
+}
+
 interface GeneralSettings {
   companyName: string;
   logo: string;
@@ -24,6 +31,7 @@ interface GeneralSettings {
   email: string;
   phone: string;
   address: AddressInfo;
+  socialLinks?: SocialLinks;
 }
 
 export default function GeneralSettingsPage() {
@@ -43,6 +51,12 @@ export default function GeneralSettingsPage() {
       state: '',
       zipCode: '',
       country: ''
+    },
+    socialLinks: {
+      facebook: '',
+      twitter: '',
+      instagram: '',
+      linkedin: ''
     }
   });
 
@@ -102,6 +116,16 @@ export default function GeneralSettingsPage() {
     }));
   };
 
+  const handleSocialLinkChange = (field: string, value: string) => {
+    setSettings(prev => ({
+      ...prev,
+      socialLinks: {
+        ...(prev.socialLinks || {}),
+        [field]: value
+      }
+    }));
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -138,7 +162,7 @@ export default function GeneralSettingsPage() {
               </label>
               <ImageUpload
                 value={settings.logo}
-                onChange={(url) => handleInputChange('logo', url)}
+                onChange={(url: string) => handleInputChange('logo', url)}
                 className="w-full h-32"
               />
             </div>
@@ -221,8 +245,9 @@ export default function GeneralSettingsPage() {
         </Card>
       </div>
 
-      {/* Address Information */}
-      <Card className="p-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+        {/* Address Information */}
+        <Card className="p-6">
         <div className="flex items-center gap-2 mb-4">
           <MapPin className="h-5 w-5 text-blue-600" />
           <h2 className="text-lg font-semibold">Address Information</h2>
@@ -280,7 +305,6 @@ export default function GeneralSettingsPage() {
               placeholder="Enter ZIP/postal code"
             />
           </div>
-
           <div className="md:col-span-2">
             <label className="block text-sm font-medium text-gray-700 mb-2">
               Country
@@ -295,6 +319,34 @@ export default function GeneralSettingsPage() {
           </div>
         </div>
       </Card>
+
+      {/* Social Links Information */}
+      <Card className="p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <Share2 className="h-5 w-5 text-blue-600" />
+          <h2 className="text-lg font-semibold">Social Media Links</h2>
+        </div>
+        
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Facebook URL</label>
+            <input type="url" value={settings.socialLinks?.facebook || ''} onChange={(e) => handleSocialLinkChange('facebook', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="https://facebook.com/..." />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Twitter URL</label>
+            <input type="url" value={settings.socialLinks?.twitter || ''} onChange={(e) => handleSocialLinkChange('twitter', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="https://twitter.com/..." />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">Instagram URL</label>
+            <input type="url" value={settings.socialLinks?.instagram || ''} onChange={(e) => handleSocialLinkChange('instagram', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="https://instagram.com/..." />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">LinkedIn URL</label>
+            <input type="url" value={settings.socialLinks?.linkedin || ''} onChange={(e) => handleSocialLinkChange('linkedin', e.target.value)} className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" placeholder="https://linkedin.com/..." />
+          </div>
+        </div>
+      </Card>
+      </div>
     </div>
   );
 }

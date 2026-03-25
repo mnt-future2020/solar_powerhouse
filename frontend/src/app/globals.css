@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -8,6 +9,9 @@
   --color-solar-teal: #0F766E;
   --color-solar-dark: #0F172A;
   --color-solar-light: #F8FAFC;
+
+  --font-family-sans: "Montserrat", sans-serif;
+  --font-family-display: "Montserrat", sans-serif;
 }
 
 @layer base {
@@ -18,7 +22,7 @@
   body {
     background-color: #ffffff;
     color: #111827;
-    font-family: var(--font-montserrat), Montserrat, sans-serif;
+    font-family: "Montserrat", sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
@@ -153,4 +157,146 @@
 
 .container-professional {
   @apply max-w-7xl mx-auto;
+}
+
+/* Custom Range Slider Styles */
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.slider::-webkit-slider-track {
+  background: rgba(255, 255, 255, 0.2);
+  height: 8px;
+  border-radius: 4px;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  background: linear-gradient(135deg, #F59E0B, #FBBF24);
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 2px solid white;
+}
+
+.slider::-moz-range-track {
+  background: rgba(255, 255, 255, 0.2);
+  height: 8px;
+  border-radius: 4px;
+  border: none;
+}
+
+.slider::-moz-range-thumb {
+  background: linear-gradient(135deg, #F59E0B, #FBBF24);
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border: 2px solid white;
+}
+
+.slider:focus {
+  outline: none;
+}
+
+.slider:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3);
+}
+
+.slider:focus::-moz-range-thumb {
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3);
+}
+
+/* Light Range Slider Styles for white backgrounds */
+.slider-light {
+  -webkit-appearance: none;
+  appearance: none;
+  background: transparent;
+  cursor: pointer;
+}
+
+.slider-light::-webkit-slider-track {
+  background: #e5e7eb;
+  height: 8px;
+  border-radius: 4px;
+}
+
+.slider-light::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  background: linear-gradient(135deg, #F59E0B, #FBBF24);
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 2px solid white;
+}
+
+.slider-light::-moz-range-track {
+  background: #e5e7eb;
+  height: 8px;
+  border-radius: 4px;
+  border: none;
+}
+
+.slider-light::-moz-range-thumb {
+  background: linear-gradient(135deg, #F59E0B, #FBBF24);
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border: 2px solid white;
+}
+
+.slider-light:focus {
+  outline: none;
+}
+
+.slider-light:focus::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3);
+}
+
+.slider-light:focus::-moz-range-thumb {
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3);
+}
+
+/* Tariff range slider inline-styled thumb */
+input[type="range"].tariff-slider {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  outline: none;
+}
+
+input[type="range"].tariff-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #f59e0b;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+input[type="range"].tariff-slider::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #f59e0b;
+  cursor: pointer;
+  border: 2px solid white;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.2);
 }

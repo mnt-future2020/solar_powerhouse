@@ -1,97 +1,103 @@
 'use client';
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Sun, Zap, ArrowRight, Star, Globe, ShieldCheck } from 'lucide-react';
-import Link from 'next/link';
+import { useState, useEffect } from 'react';
+import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
 import ConsultationModal from '@/components/ui/ConsultationModal';
+
+const slides = [
+  {
+    src: '/assets/image/banner/hero1.jpg',
+    title: 'Solar Power for Every Rooftop',
+    desc: 'Bring clean energy home with our tailored residential solar installations. Built for your roof, designed for your savings.',
+    btn: 'Start Today',
+  },
+  {
+    src: '/assets/image/banner/hero2.jpg',
+    title: 'Cut Your Energy Bills with Solar',
+    desc: 'Harness the sun to slash electricity costs. Our smart solar systems deliver real savings from the very first day.',
+    btn: 'Start Saving with Us',
+  },
+  {
+    src: '/assets/image/banner/hero3.jpg',
+    title: 'Industrial-Scale Solar Solutions',
+    desc: 'Power your facility with high-capacity solar systems engineered for industrial and commercial demands.',
+    btn: 'Get Started',
+  },
+];
 
 export default function HeroSection() {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [current, setCurrent] = useState(0);
+
+  const prev = () => setCurrent((c) => (c - 1 + slides.length) % slides.length);
+  const next = () => setCurrent((c) => (c + 1) % slides.length);
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrent((c) => (c + 1) % slides.length), 9000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const slide = slides[current];
+  const counter = `${String(current + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}`;
 
   return (
-    <section className="relative min-h-screen flex items-center justify-center overflow-hidden pt-20 bg-linear-to-br from-green-800 via-green-700 to-green-900">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-linear-to-tl from-emerald-700 via-green-800 to-teal-900"></div>
+    <section className="relative w-full h-screen flex flex-col overflow-hidden">
+      {/* Backgrounds */}
+      {slides.map((s, i) => (
+        <div
+          key={i}
+          className={`absolute inset-0 transition-opacity duration-1000 ${
+            i === current ? 'opacity-100' : 'opacity-0 pointer-events-none'
+          }`}
+        >
+          <img src={s.src} alt="" className="w-full h-full object-cover" />
+          <div className="absolute inset-0 bg-black/55" />
+        </div>
+      ))}
 
-      {/* Subtle Glow Elements */}
-
-      <div className="max-w-7xl mx-auto px-6 section-padding relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Left Content */}
-          <div className="space-y-8 animate-fade-in-up">
-            {/* Main Headline */}
-            <h1 className="text-4xl md:text-6xl font-semibold text-white">
-              PURE <span className="text-amber-400">ENERGY</span><br /> FOR A
-              <span className="bg-linear-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent"> SOLAR</span> <br />
-              REAL <span className="bg-linear-to-r from-green-400 to-emerald-300 bg-clip-text text-transparent">POWER</span>
-            </h1>
-            
-            {/* Description */}
-            <p className="text-xl text-green-100 leading-relaxed max-w-xl font-medium">
-               Professional solar energy solutions engineered for maximum efficiency. 
-               Trusted by <span className="bg-linear-to-r from-amber-400 to-orange-400 bg-clip-text text-transparent font-bold">Solar Power House</span> for <span className="text-white font-semibold">guaranteed ROI</span>.
-            </p>
-
-            {/* Stats */}
-            <div className="flex flex-wrap gap-8 py-6">
-              <div className="text-center">
-                <div className="text-4xl font-black text-green-400">500+</div>
-                <div className="text-sm font-semibold text-green-200 uppercase tracking-wide">Installations</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-black text-amber-400">80%</div>
-                <div className="text-sm font-semibold text-green-200 uppercase tracking-wide">Bill Savings</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-black text-orange-400">10+ yrs</div>
-                <div className="text-sm font-semibold text-green-200 uppercase tracking-wide">Solar Experience</div>
-              </div>
-            </div>
-
-            {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 pt-4">
-              <Button 
-                onClick={() => setIsModalOpen(true)}
-                className="bg-linear-to-r from-orange-500 to-amber-500 px-12 py-6 hover:from-green-600 hover:to-emerald-600 text-white font-semibold text-lg shadow-lg transition-all duration-300 hover:shadow-xl hover:-translate-y-1 group"
-              >
-                CONSULT EXPERT
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-              </Button>
-              <Link href="/services">
-                <Button 
-                  variant="outline" 
-                  className="border border-white text-white hover:bg-yellow-400 font-semibold text-lg px-12 py-6 rounded-md transition-all duration-300"
-                >
-                  VIEW SOLUTIONS
-                </Button>
-              </Link>
-            </div>
-          </div>
-
-          {/* Right Content - Solar Panel Image */}
-          <div className="relative hidden lg:block">
-            <div className="relative w-full aspect-square flex items-center justify-center p-8">
-              {/* Decorative Border */}
-              <div className="absolute inset-0 rounded-[3rem] border-2 border-dashed border-green-400/30 animate-[spin_60s_linear_infinite]"></div>
-              
-              {/* Main Image Container */}
-              <div className="relative w-full h-full bg-linear-to-br from-green-600/20 to-amber-600/20 backdrop-blur-sm rounded-[2.5rem] p-1 overflow-hidden group border border-green-400/20">
-                <div className="absolute inset-0 bg-linear-to-br from-amber-400/10 to-orange-400/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <img 
-                  src="/assets/image/hero_solar.png" 
-                  alt="Professional Solar Installation"
-                  className="w-full h-full object-cover rounded-[2.3rem] group-hover:scale-105 transition-transform duration-700"
-                />
-              </div>
-
-              {/* Floating Elements */}
-              <div className="absolute -top-4 -right-4 w-20 h-20 bg-linear-to-br from-amber-500 to-orange-500 rounded-2xl flex items-center justify-center shadow-lg animate-float" style={{ animationDelay: '0.5s' }}>
-                <Sun className="h-8 w-8 text-white" />
-              </div>
-            </div>
-          </div>
+      {/* Top-left content — sits just below header */}
+      <div className="relative z-10 flex-1 flex flex-col justify-start pt-24">
+        <div className="max-w-7xl mx-auto px-6 w-full">
+        <div className="max-w-xl space-y-4 mt-6">
+          <h2 className="text-5xl font-semibold text-white leading-snug">
+            {slide.title}
+          </h2>
+          <p className="text-base text-white/80 leading-relaxed">
+            {slide.desc}
+          </p>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="inline-flex items-center gap-2 border border-white text-white text-sm font-semibold px-6 py-3 hover:bg-amber-500 hover:border-amber-500 transition-all duration-300 group mt-2"
+          >
+            {slide.btn}
+            <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
+          </button>
+        </div>
         </div>
       </div>
+
+      {/* Bottom-left: counter + square arrows */}
+      <div className="relative z-10 pb-8">
+        <div className="max-w-7xl mx-auto px-6 w-full flex items-center gap-3">
+        <span className="text-white font-semibold text-sm tracking-widest mr-1">
+          {counter}
+        </span>
+        <button
+          onClick={prev}
+          aria-label="Previous slide"
+          className="w-9 h-9 border border-white/60 hover:border-amber-400 flex items-center justify-center text-white hover:text-amber-400 transition-all duration-200"
+        >
+          <ChevronLeft className="h-4 w-4" />
+        </button>
+        <button
+          onClick={next}
+          aria-label="Next slide"
+          className="w-9 h-9 border border-white/60 hover:border-amber-400 flex items-center justify-center text-white hover:text-amber-400 transition-all duration-200"
+        >
+          <ChevronRight className="h-4 w-4" />
+        </button>
+        </div>
+      </div>
+
       <ConsultationModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </section>
   );

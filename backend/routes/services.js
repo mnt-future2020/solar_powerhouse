@@ -1,6 +1,5 @@
 const express = require('express');
 const Service = require('../models/Service');
-const { auth, adminAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -27,8 +26,8 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// Create service (admin only)
-router.post('/', [auth, adminAuth], async (req, res) => {
+// Create service (admin panel only)
+router.post('/', async (req, res) => {
   try {
     const service = new Service(req.body);
     await service.save();
@@ -38,8 +37,8 @@ router.post('/', [auth, adminAuth], async (req, res) => {
   }
 });
 
-// Update service (admin only)
-router.put('/:id', [auth, adminAuth], async (req, res) => {
+// Update service (admin panel only)
+router.put('/:id', async (req, res) => {
   try {
     const service = await Service.findByIdAndUpdate(req.params.id, req.body, { new: true });
     if (!service) {
@@ -51,8 +50,8 @@ router.put('/:id', [auth, adminAuth], async (req, res) => {
   }
 });
 
-// Delete service (admin only)
-router.delete('/:id', [auth, adminAuth], async (req, res) => {
+// Delete service (admin panel only)
+router.delete('/:id', async (req, res) => {
   try {
     const service = await Service.findByIdAndDelete(req.params.id);
     if (!service) {

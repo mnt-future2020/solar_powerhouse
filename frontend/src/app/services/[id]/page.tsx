@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Header from '@/components/Header/Header';
 import Footer from '@/components/Footer/Footer';
-import Service from '@/components/Service/Service';
+import ServiceDetail from '@/components/Service/ServiceDetail';
 import { Button } from '@/components/ui/button';
 import axios from '@/lib/axios';
 
@@ -14,6 +14,11 @@ interface ServiceType {
   price: number;
   features: string[];
   image?: string;
+  bannerImage?: string;
+  detailTitle?: string;
+  detailDescription?: string;
+  detailFeatures?: string[];
+  workProcess?: string;
 }
 
 export default function ServiceDetailPage() {
@@ -68,12 +73,10 @@ export default function ServiceDetailPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[#000c15]">
       <Header />
-      <main className="flex-1 bg-gradient-to-br from-gray-50 to-blue-50 py-12">
-        <div className="container mx-auto px-4">
-          <Service service={service} variant="detailed" />
-        </div>
+      <main className="flex-1 pt-24">
+        <ServiceDetail service={service} />
       </main>
       <Footer />
     </div>

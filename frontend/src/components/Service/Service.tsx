@@ -1,183 +1,213 @@
-'use client';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Check, ArrowRight } from 'lucide-react';
-import Link from 'next/link';
-import Image from 'next/image';
+"use client";
 
-interface ServiceProps {
-  service: {
-    _id: string;
-    title: string;
-    description: string;
-    price: number;
-    features: string[];
-    image?: string;
-  };
-  variant?: 'card' | 'detailed';
+import { useEffect, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { motion, Variants } from "framer-motion";
+import { Zap, ArrowRight, CheckCircle2, TrendingUp, BatteryCharging } from "lucide-react";
+import axios from "@/lib/axios";
+
+interface ServiceType {
+  _id: string;
+  title: string;
+  description: string;
+  price: number;
+  features: string[];
+  image?: string;
 }
 
-export default function Service({ service, variant = 'card' }: ServiceProps) {
-  if (variant === 'detailed') {
-    return (
-      <div className="max-w-6xl mx-auto">
-        <Card className="overflow-hidden border-none shadow-2xl">
-          {service.image && (
-            <div className="relative h-96 w-full bg-gradient-to-br from-blue-50 to-green-50">
-              <img
-                src={service.image}
-                alt={service.title}
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = 'https://via.placeholder.com/1200x400?text=Solar+Service';
-                }}
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
-              <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
-                <h1 className="text-4xl md:text-5xl font-bold mb-2">{service.title}</h1>
-                <p className="text-xl text-blue-100">Premium Solar Solution</p>
-              </div>
-            </div>
-          )}
+const serviceImages: Record<number, string> = {
+  0: "/assets/image/services/residential.png",
+  1: "/assets/image/services/commercial.png",
+  2: "/assets/image/services/maintenance.png",
+};
 
-          <CardContent className="p-8 md:p-12">
-            <div className="grid md:grid-cols-2 gap-12">
-              {/* Left Column - Description & Price */}
-              <div className="space-y-6">
-                <div>
-                  <h2 className="text-2xl font-bold mb-4">About This Service</h2>
-                  <p className="text-gray-700 leading-relaxed text-lg">
-                    {service.description}
-                  </p>
-                </div>
+const fadeUpVariant: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
+};
 
-                <div className="bg-gradient-to-br from-blue-50 to-green-50 p-6 rounded-2xl">
-                  <div className="text-sm text-gray-600 mb-2">Starting from</div>
-                  <div className="text-4xl font-bold text-blue-600 mb-2">
-                    ₹{service.price.toLocaleString()}
-                  </div>
-                  <div className="text-sm text-gray-600">
-                    *Price may vary based on requirements
-                  </div>
-                </div>
+const staggerContainer: Variants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+};
 
-                <div className="flex flex-col sm:flex-row gap-4">
-                  <Link href="/contact" className="flex-1">
-                    <Button size="lg" className="w-full group">
-                      Get Quote
-                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                  </Link>
-                  <Link href="/services" className="flex-1">
-                    <Button size="lg" variant="outline" className="w-full">
-                      View All Services
-                    </Button>
-                  </Link>
-                </div>
-              </div>
+export default function Service() {
+  const [services, setServices] = useState<ServiceType[]>([]);
+  const [loading, setLoading] = useState(true);
 
-              {/* Right Column - Features */}
-              <div>
-                <h2 className="text-2xl font-bold mb-6">Key Features & Benefits</h2>
-                <ul className="space-y-4">
-                  {service.features.map((feature, index) => (
-                    <li
-                      key={index}
-                      className="flex items-start gap-3 p-4 bg-white rounded-lg border border-gray-100 hover:border-blue-200 hover:shadow-md transition-all"
-                    >
-                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-green-100 flex items-center justify-center mt-0.5">
-                        <Check className="h-4 w-4 text-green-600" />
-                      </div>
-                      <span className="text-gray-700 leading-relaxed">{feature}</span>
-                    </li>
-                  ))}
-                </ul>
+  useEffect(() => {
+    fetchServices();
+  }, []);
 
-                <div className="mt-8 p-6 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl">
-                  <h3 className="font-bold text-lg mb-2">Why Choose This Service?</h3>
-                  <ul className="space-y-2 text-sm text-gray-700">
-                    <li>✓ Professional installation by certified technicians</li>
-                    <li>✓ 25-year performance warranty</li>
-                    <li>✓ Government subsidy assistance</li>
-                    <li>✓ Free site inspection & consultation</li>
-                    <li>✓ Post-installation support & maintenance</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  const fetchServices = async () => {
+    try {
+      const response = await axios.get("/services");
+      setServices(response.data);
+    } catch (error) {
+      console.error("Error fetching services:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  // Card variant (for grid display)
   return (
-    <Card className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 border-none overflow-hidden h-full flex flex-col">
-      {service.image && (
-        <div className="relative h-48 w-full overflow-hidden bg-gradient-to-br from-blue-50 to-green-50">
-          <img
-            src={service.image}
-            alt={service.title}
-            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-            onError={(e) => {
-              (e.target as HTMLImageElement).src = 'https://via.placeholder.com/400x300?text=Solar+Service';
-            }}
-          />
-          <div className="absolute top-4 right-4 bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-bold">
-            ₹{(service.price / 1000).toFixed(0)}K+
+    <section className="relative py-10 lg:py-16 min-h-screen overflow-hidden bg-linear-to-br from-[#002654] to-[#000c15]">
+      {/* Decorative Background Elements */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.8 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+          className="absolute top-[-10%] right-[-5%] w-[60%] h-[60%] rounded-full bg-amber-400/10 blur-[150px]" 
+        />
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.8 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
+          className="absolute bottom-[-10%] left-[-5%] w-[50%] h-[50%] rounded-full bg-teal-400/10 blur-[150px]" 
+        />
+        <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-5" />
+      </div>
+
+      <div className="max-w-7xl mx-auto px-6 relative z-10 w-full space-y-12">
+        
+        {/* Header Section */}
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-50px" }}
+          variants={fadeUpVariant}
+          className="text-center max-w-3xl mx-auto space-y-4"
+        >
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-sm mx-auto">
+             <span className="flex h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
+             <span className="text-xs font-semibold tracking-wide text-white/90 uppercase">
+               Our Solar Solutions
+             </span>
           </div>
-        </div>
-      )}
+          <h1 className="text-3xl lg:text-4xl font-extrabold tracking-tight text-white leading-tight">
+            COMPREHENSIVE <span className="text-transparent bg-clip-text bg-linear-to-r from-orange-400 to-amber-300">SERVICES</span>
+          </h1>
+          <p className="text-sm lg:text-base text-white/70 leading-relaxed">
+            Discover our comprehensive range of solar solutions designed to guarantee your energy independence. 
+            From residential grids to large scale industrial ecosystems.
+          </p>
+        </motion.div>
 
-      <div className="h-2 bg-gradient-to-r from-yellow-400 to-orange-500"></div>
-
-      <CardHeader>
-        <CardTitle className="text-xl group-hover:text-blue-600 transition-colors">
-          {service.title}
-        </CardTitle>
-      </CardHeader>
-
-      <CardContent className="space-y-4 flex-1 flex flex-col">
-        <p className="text-gray-600 text-sm line-clamp-3 flex-1">
-          {service.description}
-        </p>
-
-        <div className="space-y-2">
-          <div className="text-sm font-semibold text-gray-700">Key Features:</div>
-          <ul className="space-y-1">
-            {service.features.slice(0, 3).map((feature, idx) => (
-              <li key={idx} className="flex items-start gap-2 text-sm">
-                <Check className="h-4 w-4 text-green-600 flex-shrink-0 mt-0.5" />
-                <span className="text-gray-600 line-clamp-1">{feature}</span>
-              </li>
-            ))}
-            {service.features.length > 3 && (
-              <li className="text-xs text-gray-500 pl-6">
-                +{service.features.length - 3} more features
-              </li>
-            )}
-          </ul>
-        </div>
-
-        <div className="pt-4 border-t">
-          <div className="flex items-center justify-between mb-3">
-            <div>
-              <div className="text-xs text-gray-500">Starting from</div>
-              <div className="text-2xl font-bold text-blue-600">
-                ₹{service.price.toLocaleString()}
+        {/* Statistics Strip */}
+        <motion.div 
+          variants={staggerContainer}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="grid grid-cols-2 lg:grid-cols-4 gap-4"
+        >
+          {[
+            { icon: TrendingUp, value: "1,200+", label: "Projects Completed", color: "text-amber-400", bg: "bg-amber-500/20", border: "border-amber-500/30" },
+            { icon: BatteryCharging, value: "99.9%", label: "Grid Reliability", color: "text-teal-400", bg: "bg-teal-500/20", border: "border-teal-500/30" },
+            { icon: Zap, value: "50 MW+", label: "Capacity Installed", color: "text-orange-400", bg: "bg-orange-500/20", border: "border-orange-500/30" },
+            { icon: CheckCircle2, value: "25+", label: "Years Warranty", color: "text-emerald-400", bg: "bg-emerald-500/20", border: "border-emerald-500/30" }
+          ].map((stat, index) => (
+            <motion.div 
+              key={index} 
+              variants={fadeUpVariant}
+              className="bg-white/5 backdrop-blur-md border border-white/10 rounded-2xl p-5 flex flex-col items-center justify-center text-center shadow-lg group hover:bg-white/10 transition-colors"
+            >
+              <div className={`h-10 w-10 rounded-xl ${stat.bg} ${stat.border} border flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
+                 <stat.icon className={`h-5 w-5 ${stat.color}`} />
               </div>
-            </div>
-          </div>
+              <div className="text-2xl font-black text-white mb-1">{stat.value}</div>
+              <div className="text-[11px] font-bold tracking-wider uppercase text-white/50">{stat.label}</div>
+            </motion.div>
+          ))}
+        </motion.div>
 
-          <Link href={`/services/${service._id}`} className="block">
-            <Button className="w-full group">
-              Learn More
-              <ArrowRight className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </Link>
-        </div>
-      </CardContent>
-    </Card>
+        {/* Services Grid */}
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-20">
+            <div className="h-10 w-10 rounded-full border-t-2 border-r-2 border-amber-400 animate-spin" />
+            <p className="mt-4 text-sm font-bold text-white/60 animate-pulse">Loading solutions schema...</p>
+          </div>
+        ) : services.length > 0 ? (
+          <motion.div 
+            variants={staggerContainer}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-4"
+          >
+            {services.map((service, index) => (
+              <motion.div
+                key={service._id}
+                variants={fadeUpVariant}
+                className="group relative flex flex-col bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl overflow-hidden hover:bg-white/10 hover:border-white/20 transition-all duration-300 shadow-xl"
+              >
+                {/* Compact Image Section */}
+                <div className="relative w-full h-44 overflow-hidden border-b border-white/10">
+                  <Image 
+                    src={serviceImages[index % 3] || '/assets/image/placeholder.svg'} 
+                    fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
+                    className="object-cover group-hover:scale-110 transition-transform duration-700"
+                    alt={service.title}
+                  />
+                  <div className="absolute inset-0 bg-linear-to-t from-[#000c15] via-[#000c15]/50 to-transparent" />
+                  
+                  {/* Premium Badge */}
+                  <div className="absolute bottom-3 left-4">
+                     <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-black/40 backdrop-blur-md border border-white/20 text-white font-bold text-[10px] uppercase tracking-wide">
+                        <Zap className="h-3 w-3 text-amber-400" /> Premium
+                     </span>
+                  </div>
+                </div>
+
+                {/* Compact Content Section */}
+                <div className="flex flex-col flex-1 p-5">
+                  <div className="mb-4">
+                    <h3 className="text-xl font-bold text-white mb-2 leading-tight group-hover:text-amber-400 transition-colors">
+                      {service.title}
+                    </h3>
+                    <p className="text-xs text-white/60 leading-relaxed line-clamp-3">
+                      {service.description}
+                    </p>
+                  </div>
+
+                  {/* Features List */}
+                  <div className="space-y-2 mb-6 mt-auto">
+                    {service.features.slice(0, 3).map((feature, i) => (
+                      <div key={i} className="flex items-start gap-2">
+                        <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400 shrink-0 mt-0.5" />
+                        <span className="text-white/80 font-medium text-xs leading-relaxed">{feature}</span>
+                      </div>
+                    ))}
+                    {service.features.length > 3 && (
+                      <div className="text-[10px] text-white/40 font-bold uppercase tracking-wide pt-1">
+                        + {service.features.length - 3} Additional Specs
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Lean CTA Button */}
+                  <Link href={`/services/${service._id}`} className="block mt-auto w-full">
+                    <button className="w-full relative inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl font-bold overflow-hidden transition-all bg-linear-to-r from-white/10 to-white/5 border border-white/20 text-white hover:bg-white/20 hover:border-amber-500/50 group:hover:shadow-xl group:hover:shadow-amber-500/10 group-2">
+                      <span className="relative z-10 flex items-center gap-2 text-xs uppercase tracking-wide">
+                        Explore System <ArrowRight className="h-3.5 w-3.5 group-hover:translate-x-1 transition-transform text-amber-400" />
+                      </span>
+                    </button>
+                  </Link>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        ) : (
+          <div className="text-center py-20 bg-white/5 backdrop-blur-md rounded-3xl border border-white/10 p-10">
+            <p className="text-white/60 text-sm font-medium">No service algorithms currently mapped.</p>
+          </div>
+        )}
+      </div>
+    </section>
   );
 }

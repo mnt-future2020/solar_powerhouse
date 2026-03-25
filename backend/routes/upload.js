@@ -1,7 +1,6 @@
 const express = require('express');
 const multer = require('multer');
 const cloudinary = require('../config/cloudinary');
-const { auth } = require('../middleware/auth');
 
 const router = express.Router();
 
@@ -21,8 +20,8 @@ const upload = multer({
   },
 });
 
-// Upload image to Cloudinary
-router.post('/image', auth, upload.single('image'), async (req, res) => {
+// Upload image to Cloudinary (no auth required — admin panel only)
+router.post('/image', upload.single('image'), async (req, res) => {
   try {
     if (!req.file) {
       return res.status(400).json({ message: 'No image file provided' });
@@ -63,7 +62,7 @@ router.post('/image', auth, upload.single('image'), async (req, res) => {
 });
 
 // Delete image from Cloudinary
-router.delete('/image/:publicId', auth, async (req, res) => {
+router.delete('/image/:publicId', async (req, res) => {
   try {
     const { publicId } = req.params;
     

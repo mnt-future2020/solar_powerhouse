@@ -24,6 +24,7 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/services', require('./routes/services'));
 app.use('/api/contacts', require('./routes/contacts'));
+app.use('/api/consultations', require('./routes/consultations'));
 app.use('/api/settings', require('./routes/settings'));
 
 // Only load upload route if dependencies are available
