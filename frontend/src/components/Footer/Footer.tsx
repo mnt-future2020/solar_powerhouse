@@ -97,15 +97,15 @@ export default function Footer() {
 
       <div className="max-w-7xl mx-auto px-6 relative z-10">
 
-        {/* Main Footer Content - Four Sections in One Row */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+        {/* Main Footer Content - Three Sections in One Row */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
           
           {/* Section 1: Brand & Company Info */}
           <div className="space-y-6">
             <Link href="/" className="inline-flex items-center gap-3 group">
-              {settings.logo ? (
-                <div className="relative h-12 w-12 overflow-hidden rounded-xl border border-teal-900/50 shadow-lg group-hover:border-orange-500/50 transition-colors">
-                  <Image fill src={settings.logo} alt={settings.companyName} priority className="object-cover" />
+              {settings.logo || true ? (
+                <div className="relative h-12 w-12 overflow-hidden rounded-xl border border-teal-900/50 shadow-lg group-hover:border-orange-500/50 transition-colors bg-white">
+                  <Image fill src={settings.logo || '/assets/image/logo/logo.jpg'} alt={settings.companyName} priority className="object-contain p-0.5" />
                 </div>
               ) : (
                 <div className="bg-linear-to-br from-orange-500 to-amber-500 p-2 rounded-xl shadow-lg shadow-orange-500/20 group-hover:scale-105 transition-transform duration-300">
@@ -152,6 +152,8 @@ export default function Footer() {
                 { name: "Home", path: "/" },
                 { name: "About Us", path: "/about" },
                 { name: "Our Services", path: "/services" },
+                { name: "Solar Calculator", path: "/solar-calculator" },
+                { name: "Financing Options", path: "/financing" },
                 { name: "Contact", path: "/contact" }
               ].map((link, idx) => (
                 <Link
@@ -166,31 +168,7 @@ export default function Footer() {
             </nav>
           </div>
 
-          {/* Section 3: Quick Links */}
-          <div className="space-y-6">
-            <h3 className="text-lg font-semibold text-white uppercase tracking-wider">Quick Links</h3>
-            <nav className="flex flex-col gap-3">
-              {[
-                { name: "Solar Calculator", path: "/solar-calculator" },
-                { name: "Financing Options", path: "/services" },
-                { name: "Energy Solutions", path: "/services" },
-                { name: "Dealer Locator", path: "/contact" },
-                { name: "Solar Residential Leaflet", path: "/services" },
-                { name: "Talk to Us", path: "/contact" }
-              ].map((link, idx) => (
-                <Link
-                  key={idx}
-                  href={link.path}
-                  className="group flex items-center text-teal-50/70 hover:text-orange-500 font-medium transition-colors text-sm"
-                >
-                  <ArrowRight className="h-3 w-3 mr-2 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  {link.name}
-                </Link>
-              ))}
-            </nav>
-          </div>
-
-          {/* Section 4: Contact Details */}
+          {/* Section 3: Contact Details */}
           <div className="space-y-6">
             <h3 className="text-lg font-semibold text-white uppercase tracking-wider">Connect</h3>
             <div className="space-y-4">
@@ -214,19 +192,24 @@ export default function Footer() {
                 </div>
               </a>
 
-              <div className="flex items-start gap-3">
-                <div className="p-2 bg-[#001220] rounded-lg border border-teal-900/30 shrink-0">
+              <a
+                href="https://www.google.com/maps/place/SOLAR+POWER+HOUSE/@9.9343002,78.1196993,17z"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-start gap-3 hover:text-orange-500 transition-colors group"
+              >
+                <div className="p-2 bg-[#001220] rounded-lg border border-teal-900/30 group-hover:border-orange-500/30 transition-colors shrink-0">
                   <MapPin className="h-4 w-4 text-orange-500" />
                 </div>
                 <div>
                   <p className="text-xs text-teal-50/50 font-semibold uppercase tracking-wider mb-1">Visit</p>
-                  <p className="text-teal-50/80 text-xs leading-relaxed">
+                  <p className="text-teal-50/80 group-hover:text-orange-500 transition-colors text-xs leading-relaxed">
                     {settings.address.street}, {settings.address.city}<br />
                     {settings.address.state}, {settings.address.zipCode}<br />
                     {settings.address.country}
                   </p>
                 </div>
-              </div>
+              </a>
             </div>
           </div>
         </div>

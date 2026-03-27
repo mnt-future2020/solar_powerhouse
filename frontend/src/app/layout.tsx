@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
-import SessionProvider from "@/components/providers/SessionProvider";
+import { AuthProvider } from "@/contexts/AuthContext";
 import MetadataProvider from "@/components/providers/MetadataProvider";
 
 export const metadata: Metadata = {
@@ -17,13 +17,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased bg-white text-gray-900">
-        <SessionProvider>
+        <AuthProvider>
           <MetadataProvider />
           <main className="min-h-screen">
             {children}
           </main>
           <Toaster />
-        </SessionProvider>
+        </AuthProvider>
       </body>
     </html>
   );

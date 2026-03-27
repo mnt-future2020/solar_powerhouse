@@ -11,6 +11,7 @@ const serviceSchema = new mongoose.Schema({
   detailDescription: { type: String },
   detailFeatures: [String],
   workProcess: { type: String },
+  benefits: [String],
   createdAt: { type: Date, default: Date.now }
 });
 

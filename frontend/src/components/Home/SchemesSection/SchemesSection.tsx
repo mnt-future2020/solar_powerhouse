@@ -11,7 +11,6 @@ import {
   CheckCircle2,
   Sun,
   TrendingDown,
-  ArrowRight,
   ShieldCheck
 } from "lucide-react";
 
@@ -93,14 +92,8 @@ export default function SchemesSection() {
               Transform your rooftop into a power source. Eliminate electricity bills and earn from your solar setup with comprehensive government subsidies and collateral-free financing.
             </motion.p>
 
-            <motion.div variants={fadeUpVariant} className="flex flex-col sm:flex-row gap-4 pt-2">
-              <button className="group relative inline-flex items-center justify-center gap-2 px-6 py-3 bg-white text-[#000c15] rounded-full font-semibold overflow-hidden transition-transform hover:scale-105 shadow-md">
-                <div className="absolute inset-0 bg-linear-to-r from-orange-400 to-amber-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <span className="relative z-10 flex items-center gap-2 group-hover:text-white transition-colors duration-300">
-                  Apply for Subsidy <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform" />
-                </span>
-              </button>
-            </motion.div>
+
+
           </motion.div>
           
           {/* Hero Image / Graphic */}

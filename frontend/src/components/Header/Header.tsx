@@ -1,7 +1,8 @@
 'use client';
 
 import Link from 'next/link';
-import { Zap, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+import Image from 'next/image';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
@@ -58,7 +59,7 @@ export default function Header() {
   return (
     <nav 
       className={cn(
-        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-[#000c15] border-b border-gray-200 shadow-lg",
+        "fixed top-0 left-0 right-0 z-50 transition-all duration-300 bg-[#000c15]",
         isScrolled ? "py-4" : "py-6"
       )}
     >
@@ -66,8 +67,14 @@ export default function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="bg-linear-to-br from-orange-500 to-amber-500 p-3 rounded-xl shadow-lg group-hover:scale-110 transition-transform duration-300">
-              <Zap className="h-6 w-6 text-white" />
+            <div className="relative h-10 w-10 rounded-lg overflow-hidden shadow-lg group-hover:scale-110 transition-transform duration-300 shrink-0 bg-white">
+              <Image
+                src={settings.logo || '/assets/image/logo/logo.jpg'}
+                alt={settings.companyName}
+                fill
+                className="object-contain p-0.5"
+                priority
+              />
             </div>
             <div className="flex flex-col">
               <span className="text-xl font-semibold leading-none text-gradient-solar uppercase">

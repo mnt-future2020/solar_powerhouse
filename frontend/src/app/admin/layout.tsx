@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Sidebar from '@/components/admin/Sidebar';
+import Sidebar from '@/components/Admin/Sidebar/Sidebar';
 import { Bell, Search, User } from 'lucide-react';
 
 export default function AdminLayout({

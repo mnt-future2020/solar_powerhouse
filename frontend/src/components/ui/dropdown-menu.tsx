@@ -17,9 +17,10 @@ interface DropdownProps {
   onChange: (value: string | string[]) => void;
   multiple?: boolean;
   disabled?: boolean;
+  error?: boolean;
 }
 
-export default function Dropdown({ id, label, value, options, placeholder, onChange, multiple, disabled }: DropdownProps) {
+export default function Dropdown({ id, label, value, options, placeholder, onChange, multiple, disabled, error }: DropdownProps) {
   const normalized = options.map(opt => {
     if (typeof opt === 'string' || typeof opt === 'number') {
       return { value: String(opt), label: String(opt) };
@@ -123,10 +124,12 @@ export default function Dropdown({ id, label, value, options, placeholder, onCha
             setOpen(true);
           }
         }}
-        className={`w-full text-left px-4 py-2.5 lg:py-3 border border-gray-300 rounded-lg flex items-center justify-between text-sm transition-all ${
+        className={`w-full text-left px-4 py-2.5 lg:py-3 border rounded-lg flex items-center justify-between text-sm transition-all ${
           disabled 
-            ? 'bg-gray-100 text-gray-500 cursor-not-allowed' 
-            : 'bg-white cursor-pointer hover:border-gray-400 focus:ring-2 focus:ring-amber-500 focus:border-amber-500'
+            ? 'bg-gray-100 text-gray-500 cursor-not-allowed border-gray-300' 
+            : error
+              ? 'bg-white cursor-pointer border-red-500 focus:ring-2 focus:ring-red-500 focus:border-red-500'
+              : 'bg-white cursor-pointer border-gray-300 hover:border-gray-400 focus:ring-2 focus:ring-amber-500 focus:border-amber-500'
         }`}
       >
         <span className={Array.isArray(value) ? (value.length ? 'text-gray-900' : 'text-gray-500') : (value ? 'text-gray-900' : 'text-gray-500')}>

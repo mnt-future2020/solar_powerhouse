@@ -1,61 +1,43 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { signIn } from 'next-auth/react';
+import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
-import { Zap, Mail, Lock, ArrowRight, Loader2, User, ShieldCheck, CheckCircle2, BarChart3, Globe2 } from 'lucide-react';
+import { Mail, Lock, ArrowRight, Loader2, User, ShieldCheck, BarChart3, Globe2 } from 'lucide-react';
+import Image from 'next/image';
+import axios from '@/lib/axios';
 
 export default function LoginPage() {
   const router = useRouter();
   const { toast } = useToast();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
+  const [logo, setLogo] = useState('');
+
+  useEffect(() => {
+    axios.get('/settings').then(r => setLogo(r.data?.logo || '')).catch(() => {});
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const result = await signIn('credentials', {
-        email: formData.email,
-        password: formData.password,
-        redirect: false,
-      });
-
-      if (result?.error) {
-        toast({ 
-          title: 'Authentication Failed', 
-          description: 'The credentials you entered are incorrect.', 
-          variant: 'destructive' 
-        });
-      } else {
-        try {
-          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(formData),
-          });
-          const data = await response.json();
-          if (data.token) {
-            localStorage.setItem('token', data.token);
-          }
-        } catch (err) {
-          console.error('Legacy token sync failed', err);
-        }
-        
-        toast({ 
-          title: 'Welcome Back!', 
-          description: 'Access granted. Redirecting to admin dashboard...', 
-          variant: 'success' 
-        });
-        router.push('/admin/dashboard');
-      }
-    } catch (error) {
+      await login(formData.email, formData.password);
+      
       toast({ 
-        title: 'Error', 
-        description: 'An unexpected error occurred.', 
+        title: 'Welcome Back!', 
+        description: 'Access granted. Redirecting to admin dashboard...', 
+        variant: 'success' 
+      });
+      router.push('/admin/dashboard');
+    } catch (error: any) {
+      toast({ 
+        title: 'Authentication Failed', 
+        description: error.response?.data?.message || 'The credentials you entered are incorrect.', 
         variant: 'destructive' 
       });
     } finally {
@@ -69,10 +51,16 @@ export default function LoginPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24 items-center">
           
           {/* Left Column: Branding & Content */}
-          <div className="flex flex-col space-y-8 animate-in fade-in slide-in-from-left-8 duration-1000">
+          <div className="flex flex-col items-center text-center space-y-8 animate-in fade-in slide-in-from-left-8 duration-1000">
             <div className="space-y-6">
-              <div className="inline-flex bg-gradient-to-br from-solar-amber to-solar-orange p-3.5 rounded-2xl shadow-xl shadow-solar-amber/20 border border-white/20 animate-float w-fit">
-                <Zap className="h-10 w-10 text-white fill-white/10" />
+              <div className="relative h-24 w-24 rounded-2xl overflow-hidden shadow-xl border border-white/20 bg-white mx-auto">
+                <Image
+                  src={logo || '/assets/image/logo/logo.jpg'}
+                  alt="Solar Power House"
+                  fill
+                  className="object-contain p-1"
+                  priority
+                />
               </div>
               <div className="space-y-4">
                 <h1 className="text-5xl lg:text-7xl font-black tracking-tighter text-foreground uppercase leading-[0.9]">
@@ -105,20 +93,20 @@ export default function LoginPage() {
             </div>
 
             <p className="text-[10px] uppercase tracking-[0.5em] text-foreground font-black opacity-30 pt-8">
-              © 2024 SOLAR POWER HOUSE INC.
+              © {new Date().getFullYear()} SOLAR POWER HOUSE INC.
             </p>
           </div>
 
           {/* Right Column: Form Card */}
           <div className="relative group animate-in fade-in slide-in-from-right-8 duration-1000">
             {/* Symmetrical Outer Glow */}
-            <div className="absolute -inset-[1px] bg-gradient-to-r from-solar-orange via-solar-amber to-solar-green rounded-[3rem] blur opacity-20 group-hover:opacity-40 transition duration-700"></div>
+            <div className="absolute -inset-px bg-linear-to-r from-solar-orange via-solar-amber to-solar-green rounded-[3rem] blur opacity-20 group-hover:opacity-40 transition duration-700"></div>
             
             <div className="relative bg-white text-black dark:bg-gray-900 dark:text-white border border-border/50 rounded-[3rem] overflow-hidden shadow-[0_32px_64px_-16px_rgba(0,0,0,0.2)]">
               <div className="p-10 md:p-14">
                 <div className="mb-12">
                   <h2 className="text-3xl font-black mb-3">Admin Login</h2>
-                  <div className="h-1.5 w-16 bg-gradient-to-r from-solar-amber to-solar-orange rounded-full mb-4" />
+                  <div className="h-1.5 w-16 bg-linear-to-r from-solar-amber to-solar-orange rounded-full mb-4" />
                   <p className="text-muted-foreground dark:text-gray-400 text-sm font-medium">Please enter your secure access key.</p>
                 </div>
 
@@ -171,7 +159,7 @@ export default function LoginPage() {
 
                   <Button 
                     type="submit" 
-                    className="w-full bg-black text-white dark:bg-white dark:text-black hover:opacity-90 font-black h-16 rounded-2xl shadow-2xl transition-all hover:translate-y-[-2px] active:translate-y-[1px] mt-4 flex items-center justify-center gap-4 group/btn" 
+                    className="w-full bg-black text-white dark:bg-white dark:text-black hover:opacity-90 font-black h-16 rounded-2xl shadow-2xl transition-all hover:translate-y-[-2px] active:translate-y-px mt-4 flex items-center justify-center gap-4 group/btn" 
                     disabled={loading}
                   >
                     {loading ? (

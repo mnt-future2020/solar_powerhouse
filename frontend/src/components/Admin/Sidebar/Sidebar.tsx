@@ -13,7 +13,9 @@ import {
   MessageSquare,
   ShieldCheck,
   LayoutGrid,
-  Bell
+  Bell,
+  SearchCheck,
+  Share2
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState, useCallback, useEffect } from 'react';
@@ -34,15 +36,11 @@ export interface NavigationItem {
 const navigation: NavigationItem[] = [
   { title: 'Dashboard', icon: LayoutDashboard, href: '/admin/dashboard' },
   { title: 'Services', icon: LayoutGrid, href: '/admin/services' },
+  { title: 'Bank Partners', icon: ShieldCheck, href: '/admin/bank-partners' },
   { title: 'Consultations', icon: MessageSquare, href: '/admin/consultations' },
-  {
-    title: 'Settings',
-    icon: Settings,
-    subItems: [
-      { title: 'General Info', href: '/admin/settings/general' },
-      { title: 'SEO Config', href: '/admin/settings/seo' }
-    ]
-  },
+  { title: 'Settings', icon: Settings, href: '/admin/settings/general' },
+  { title: 'SEO Config', icon: SearchCheck, href: '/admin/settings/seo' },
+  { title: 'Social Links', icon: Share2, href: '/admin/settings/social' },
 ];
 
 export default function Sidebar() {
@@ -52,6 +50,8 @@ export default function Sidebar() {
 
   const isMainItemActive = useCallback((href: string) => {
     if (href === '/admin/dashboard') return pathname === href;
+    if (href === '/admin/settings/general') return pathname === href || pathname.startsWith('/admin/settings/general');
+    if (href === '/admin/settings/seo') return pathname === href || pathname.startsWith('/admin/settings/seo');
     return pathname.startsWith(href);
   }, [pathname]);
 
@@ -89,7 +89,7 @@ export default function Sidebar() {
       {/* Branding Header */}
       <div className="p-8 border-b border-white/5">
         <Link href="/admin/dashboard" className="flex items-center gap-3 group">
-          <div className="bg-gradient-to-br from-solar-amber to-solar-orange p-2 rounded-xl shadow-lg shadow-solar-amber/20 group-hover:scale-110 transition-transform duration-300">
+          <div className="bg-linear-to-br from-solar-amber to-solar-orange p-2 rounded-xl shadow-lg shadow-solar-amber/20 group-hover:scale-110 transition-transform duration-300">
             <Zap className="h-5 w-5 text-white" />
           </div>
           <div className="flex flex-col">

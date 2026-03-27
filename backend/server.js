@@ -1,8 +1,10 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bcrypt = require('bcryptjs');
-require('dotenv').config();
+const session = require('express-session');
+const passport = require('./config/passport');
 
 const app = express();
 
@@ -15,6 +17,21 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
+
+// Session configuration for OAuth
+app.use(session({
+  secret: process.env.JWT_SECRET,
+  resave: false,
+  saveUninitialized: false,
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    maxAge: 24 * 60 * 60 * 1000 // 24 hours
+  }
+}));
+
+// Initialize Passport
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Root route — fixes "Cannot GET /" on Vercel
 app.get('/', (req, res) => {
@@ -42,6 +59,7 @@ app.use('/api/services', require('./routes/services'));
 app.use('/api/contacts', require('./routes/contacts'));
 app.use('/api/consultations', require('./routes/consultations'));
 app.use('/api/settings', require('./routes/settings'));
+app.use('/api/bank-partners', require('./routes/bankPartners'));
 
 // Only load upload route if dependencies are available
 try {
@@ -129,6 +147,50 @@ const initializeSampleServices = async () => {
   }
 };
 
+// Initialize sample bank partners on startup
+const initializeSampleBankPartners = async () => {
+  try {
+    const BankPartner = require('./models/BankPartner');
+    
+    // Check if bank partners exist
+    const bankPartnersCount = await BankPartner.countDocuments();
+    
+    if (bankPartnersCount === 0) {
+      await BankPartner.insertMany([
+        {
+          name: 'State Bank of India',
+          image: '/images/banks/sbi-logo.png'
+        },
+        {
+          name: 'Punjab National Bank',
+          image: '/images/banks/pnb-logo.png'
+        },
+        {
+          name: 'Canara Bank',
+          image: '/images/banks/canara-logo.png'
+        },
+        {
+          name: 'Union Bank of India',
+          image: '/images/banks/union-logo.png'
+        },
+        {
+          name: 'Bank of India',
+          image: '/images/banks/boi-logo.png'
+        },
+        {
+          name: 'Bank of Baroda',
+          image: '/images/banks/bob-logo.png'
+        }
+      ]);
+      console.log('✅ Sample bank partners created successfully');
+    } else {
+      console.log(`✅ Bank partners already exist (${bankPartnersCount} partners)`);
+    }
+  } catch (error) {
+    console.error('❌ Error initializing bank partners:', error.message);
+  }
+};
+
 // MongoDB Connection — runs on both local and Vercel cold start
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => {
@@ -136,6 +198,7 @@ mongoose.connect(process.env.MONGODB_URI)
     console.log(`   Database: ${mongoose.connection.name}`);
     initializeAdmin();
     initializeSampleServices();
+    initializeSampleBankPartners();
   })
   .catch(err => console.error('❌ MongoDB connection error:', err));
 
