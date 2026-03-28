@@ -165,6 +165,8 @@ export default function PortfolioPage() {
   const [activeFilter, setActiveFilter] = useState('All');
   const [loading, setLoading] = useState(true);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [visibleCount, setVisibleCount] = useState(9);
+  const LOAD_MORE = 6;
 
   useEffect(() => {
     axios.get('/portfolio')
@@ -275,7 +277,7 @@ export default function PortfolioPage() {
               {filterCategories.map(cat => (
                 <button
                   key={cat}
-                  onClick={() => setActiveFilter(cat)}
+                  onClick={() => { setActiveFilter(cat); setVisibleCount(9); }}
                   className={`px-5 py-2.5 rounded-full text-sm font-semibold transition-all duration-200 ${
                     activeFilter === cat
                       ? 'bg-navy text-white shadow-md shadow-navy/10'
@@ -304,8 +306,9 @@ export default function PortfolioPage() {
                 <p className="text-charcoal/25 text-base font-medium">No projects in this category yet.</p>
               </div>
             ) : (
+              <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {filtered.map((item, index) => (
+                {filtered.slice(0, visibleCount).map((item, index) => (
                   <motion.div
                     key={item._id}
                     initial={{ opacity: 0, y: 20 }}
@@ -366,6 +369,19 @@ export default function PortfolioPage() {
                   </motion.div>
                 ))}
               </div>
+
+              {/* Load More */}
+              {visibleCount < filtered.length && (
+                <div className="text-center mt-12">
+                  <button
+                    onClick={() => setVisibleCount(prev => prev + LOAD_MORE)}
+                    className="px-8 py-3 rounded-full bg-navy text-white text-sm font-semibold hover:bg-navy-light transition-colors shadow-md shadow-navy/10"
+                  >
+                    Load More ({filtered.length - visibleCount} remaining)
+                  </button>
+                </div>
+              )}
+              </>
             )}
           </div>
         </section>

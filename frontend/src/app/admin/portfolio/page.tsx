@@ -1,11 +1,12 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, X, Save, Loader2, Image as ImageIcon, AlertTriangle, Eye, EyeOff } from 'lucide-react';
+import { Plus, Edit, Trash2, X, Save, Loader2, Image as ImageIcon, AlertTriangle, Eye, EyeOff, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
 import axios from '@/lib/axios';
+import { cn } from '@/lib/utils';
 
 interface PortfolioItem {
   _id: string;
@@ -230,6 +231,8 @@ export default function PortfolioAdmin() {
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState<PortfolioItem | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<PortfolioItem | null>(null);
+  const [page, setPage] = useState(1);
+  const LIMIT = 9;
 
   useEffect(() => { fetchItems(); }, []);
 
@@ -317,8 +320,9 @@ export default function PortfolioAdmin() {
             </CardContent>
           </Card>
         ) : (
+          <>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-            {items.map(item => (
+            {items.slice((page - 1) * LIMIT, page * LIMIT).map(item => (
               <Card key={item._id} className="border-0 shadow-md overflow-hidden group hover:shadow-lg transition-all duration-300">
                 {/* Image */}
                 <div className="relative h-48 bg-gray-100">
@@ -371,6 +375,32 @@ export default function PortfolioAdmin() {
               </Card>
             ))}
           </div>
+
+          {Math.ceil(items.length / LIMIT) > 1 && (
+            <div className="flex items-center justify-between mt-6">
+              <p className="text-xs text-gray-400">
+                Showing {(page - 1) * LIMIT + 1}–{Math.min(page * LIMIT, items.length)} of {items.length}
+              </p>
+              <div className="flex items-center gap-1">
+                <button onClick={() => setPage(p => p - 1)} disabled={page <= 1}
+                  className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                  <ChevronLeft className="h-4 w-4" />
+                </button>
+                {Array.from({ length: Math.ceil(items.length / LIMIT) }, (_, i) => i + 1).map(p => (
+                  <button key={p} onClick={() => setPage(p)}
+                    className={cn('w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold transition-colors',
+                      p === page ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-200')}>
+                    {p}
+                  </button>
+                ))}
+                <button onClick={() => setPage(p => p + 1)} disabled={page >= Math.ceil(items.length / LIMIT)}
+                  className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                  <ChevronRight className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          )}
+          </>
         )}
       </div>
     </>

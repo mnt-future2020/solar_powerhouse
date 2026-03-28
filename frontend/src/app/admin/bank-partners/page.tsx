@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, X, Save, Loader2, ShieldCheck, AlertTriangle, Building2, ImageOff } from 'lucide-react';
+import { Plus, Edit, Trash2, X, Save, Loader2, ShieldCheck, AlertTriangle, Building2, ImageOff, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
@@ -186,6 +186,8 @@ export default function BankPartnersAdmin() {
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState<BankPartner | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<BankPartner | null>(null);
+  const [page, setPage] = useState(1);
+  const LIMIT = 12;
 
   useEffect(() => { fetchPartners(); }, []);
 
@@ -263,30 +265,55 @@ export default function BankPartnersAdmin() {
             </CardContent>
           </Card>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-            {partners.map(partner => (
-              <Card key={partner._id} className="border-0 shadow-md overflow-hidden group hover:shadow-lg transition-all duration-300">
-                {/* Logo area */}
-                <div className="relative h-32 bg-gray-50 border-b border-gray-100 flex items-center justify-center">
-                  <LogoImage src={partner.image} alt={partner.name} />
-                </div>
-                {/* Card footer */}
-                <div className="px-4 py-3 bg-slate-950">
-                  <p className="text-xs font-bold text-white uppercase tracking-wider truncate mb-3">{partner.name}</p>
-                  <div className="flex gap-2">
-                    <button onClick={() => { setEditing(partner); setShowModal(true); }}
-                      className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-colors">
-                      <Edit className="h-3 w-3" />Edit
-                    </button>
-                    <button onClick={() => setDeleteTarget(partner)}
-                      className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-red-500/20 hover:bg-red-500/40 text-red-400 text-xs font-bold transition-colors">
-                      <Trash2 className="h-3 w-3" />Delete
-                    </button>
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+              {partners.slice((page - 1) * LIMIT, page * LIMIT).map(partner => (
+                <Card key={partner._id} className="border-0 shadow-md overflow-hidden group hover:shadow-lg transition-all duration-300">
+                  <div className="relative h-32 bg-gray-50 border-b border-gray-100 flex items-center justify-center">
+                    <LogoImage src={partner.image} alt={partner.name} />
                   </div>
+                  <div className="px-4 py-3 bg-slate-950">
+                    <p className="text-xs font-bold text-white uppercase tracking-wider truncate mb-3">{partner.name}</p>
+                    <div className="flex gap-2">
+                      <button onClick={() => { setEditing(partner); setShowModal(true); }}
+                        className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-colors">
+                        <Edit className="h-3 w-3" />Edit
+                      </button>
+                      <button onClick={() => setDeleteTarget(partner)}
+                        className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-red-500/20 hover:bg-red-500/40 text-red-400 text-xs font-bold transition-colors">
+                        <Trash2 className="h-3 w-3" />Delete
+                      </button>
+                    </div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+
+            {Math.ceil(partners.length / LIMIT) > 1 && (
+              <div className="flex items-center justify-between mt-6">
+                <p className="text-xs text-gray-400">
+                  Showing {(page - 1) * LIMIT + 1}–{Math.min(page * LIMIT, partners.length)} of {partners.length}
+                </p>
+                <div className="flex items-center gap-1">
+                  <button onClick={() => setPage(p => p - 1)} disabled={page <= 1}
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                  {Array.from({ length: Math.ceil(partners.length / LIMIT) }, (_, i) => i + 1).map(p => (
+                    <button key={p} onClick={() => setPage(p)}
+                      className={cn('w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold transition-colors',
+                        p === page ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-200')}>
+                      {p}
+                    </button>
+                  ))}
+                  <button onClick={() => setPage(p => p + 1)} disabled={page >= Math.ceil(partners.length / LIMIT)}
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
                 </div>
-              </Card>
-            ))}
-          </div>
+              </div>
+            )}
+          </>
         )}
       </div>
     </>

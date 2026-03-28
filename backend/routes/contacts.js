@@ -15,11 +15,30 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Get all contacts (admin only)
+// Get contacts (admin only) — supports pagination
 router.get('/', [auth, adminAuth], async (req, res) => {
   try {
-    const contacts = await Contact.find().sort({ createdAt: -1 });
-    res.json(contacts);
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const status = req.query.status;
+    const search = req.query.search;
+
+    const filter = {};
+    if (status && status !== 'all') filter.status = status;
+    if (search) {
+      filter.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+        { message: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    const [contacts, total] = await Promise.all([
+      Contact.find(filter).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit),
+      Contact.countDocuments(filter),
+    ]);
+
+    res.json({ data: contacts, total, page, limit, totalPages: Math.ceil(total / limit) });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }

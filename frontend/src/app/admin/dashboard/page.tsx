@@ -79,8 +79,14 @@ export default function AdminDashboard() {
         if (svc.status === 'fulfilled') setServices({ length: svc.value.data.length });
         if (bp.status === 'fulfilled') setBankPartners({ length: bp.value.data.length });
         if (port.status === 'fulfilled') setPortfolio(port.value.data);
-        if (con.status === 'fulfilled') setContacts(con.value.data);
-        if (consult.status === 'fulfilled') setConsultations(consult.value.data);
+        if (con.status === 'fulfilled') {
+          const d = con.value.data;
+          setContacts(Array.isArray(d) ? d : d.data || []);
+        }
+        if (consult.status === 'fulfilled') {
+          const d = consult.value.data;
+          setConsultations(Array.isArray(d) ? d : d.data || []);
+        }
       } catch { }
       finally { setLoading(false); }
     };

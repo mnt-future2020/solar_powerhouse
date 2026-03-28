@@ -15,11 +15,31 @@ router.post('/', async (req, res) => {
   }
 });
 
-// Get all consultations (admin only)
+// Get consultations (admin only) — supports pagination
 router.get('/', [auth, adminAuth], async (req, res) => {
   try {
-    const consultations = await Consultation.find().sort({ createdAt: -1 });
-    res.json(consultations);
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit) || 20));
+    const status = req.query.status;
+    const search = req.query.search;
+
+    const filter = {};
+    if (status && status !== 'all') filter.status = status;
+    if (search) {
+      filter.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { email: { $regex: search, $options: 'i' } },
+        { phone: { $regex: search, $options: 'i' } },
+        { city: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    const [consultations, total] = await Promise.all([
+      Consultation.find(filter).sort({ createdAt: -1 }).skip((page - 1) * limit).limit(limit),
+      Consultation.countDocuments(filter),
+    ]);
+
+    res.json({ data: consultations, total, page, limit, totalPages: Math.ceil(total / limit) });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }

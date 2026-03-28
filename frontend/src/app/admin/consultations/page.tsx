@@ -1,12 +1,12 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import {
   Eye, Mail, Phone, Calendar, X, Save, Search, Loader2,
-  MessageSquare, MapPin, Home, Zap
+  MessageSquare, MapPin, Home, Zap, ChevronLeft, ChevronRight
 } from 'lucide-react';
 import axios from '@/lib/axios';
 import { cn } from '@/lib/utils';
@@ -73,7 +73,6 @@ function DetailModal({
       <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
         onClick={e => e.stopPropagation()}>
 
-        {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 bg-slate-950 rounded-t-2xl">
           <div className="flex items-center gap-3">
             <div className="p-2 rounded-lg bg-white/10">
@@ -87,7 +86,6 @@ function DetailModal({
         </div>
 
         <div className="p-6 space-y-5">
-          {/* Contact info */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-3">
               <div>
@@ -134,11 +132,10 @@ function DetailModal({
             </div>
           </div>
 
-          {/* Service + Date */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {consultation.service && (
               <div>
-                <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Service Interested In</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1">Service</p>
                 <span className="px-3 py-1 bg-amber-50 border border-amber-200 text-amber-700 text-xs font-bold rounded-full">
                   {consultation.service}
                 </span>
@@ -155,7 +152,6 @@ function DetailModal({
             </div>
           </div>
 
-          {/* Status */}
           <div>
             <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1.5">Status</p>
             <select value={status} onChange={e => setStatus(e.target.value as Consultation['status'])}
@@ -166,7 +162,6 @@ function DetailModal({
             </select>
           </div>
 
-          {/* Notes */}
           <div>
             <p className="text-[10px] font-black uppercase tracking-widest text-gray-400 mb-1.5">Notes</p>
             <textarea value={notes} onChange={e => setNotes(e.target.value)} rows={3}
@@ -174,7 +169,6 @@ function DetailModal({
               placeholder="Add your notes here..." />
           </div>
 
-          {/* Actions */}
           <div className="flex gap-3 pt-1">
             <Button variant="outline" onClick={onClose} disabled={saving} className="flex-1 border-gray-200 text-gray-600">
               Cancel
@@ -191,43 +185,120 @@ function DetailModal({
   );
 }
 
+// ── Pagination ────────────────────────────────────────────────────────────────
+function Pagination({ page, totalPages, total, limit, onPageChange }: {
+  page: number; totalPages: number; total: number; limit: number;
+  onPageChange: (p: number) => void;
+}) {
+  if (totalPages <= 1) return null;
+
+  const from = (page - 1) * limit + 1;
+  const to = Math.min(page * limit, total);
+
+  // Build page numbers to show
+  const pages: (number | 'dots')[] = [];
+  for (let i = 1; i <= totalPages; i++) {
+    if (i === 1 || i === totalPages || (i >= page - 1 && i <= page + 1)) {
+      pages.push(i);
+    } else if (pages[pages.length - 1] !== 'dots') {
+      pages.push('dots');
+    }
+  }
+
+  return (
+    <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <p className="text-xs text-gray-400">
+        Showing <span className="font-semibold text-gray-600">{from}–{to}</span> of <span className="font-semibold text-gray-600">{total}</span>
+      </p>
+      <div className="flex items-center gap-1">
+        <button onClick={() => onPageChange(page - 1)} disabled={page <= 1}
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+          <ChevronLeft className="h-4 w-4" />
+        </button>
+        {pages.map((p, i) =>
+          p === 'dots' ? (
+            <span key={`dots-${i}`} className="w-8 h-8 flex items-center justify-center text-gray-300 text-xs">...</span>
+          ) : (
+            <button key={p} onClick={() => onPageChange(p)}
+              className={cn(
+                'w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold transition-colors',
+                p === page ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-200'
+              )}>
+              {p}
+            </button>
+          )
+        )}
+        <button onClick={() => onPageChange(page + 1)} disabled={page >= totalPages}
+          className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+          <ChevronRight className="h-4 w-4" />
+        </button>
+      </div>
+    </div>
+  );
+}
+
 // ── Main Page ─────────────────────────────────────────────────────────────────
 export default function ConsultationsPage() {
   const { toast } = useToast();
   const [consultations, setConsultations] = useState<Consultation[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
+  const [searchInput, setSearchInput] = useState('');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [selected, setSelected] = useState<Consultation | null>(null);
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
+  const LIMIT = 15;
 
-  useEffect(() => { fetchConsultations(); }, []);
-
-  const fetchConsultations = async () => {
+  const fetchConsultations = useCallback(async () => {
     try {
       setLoading(true);
-      const r = await axios.get('/consultations');
-      setConsultations(r.data);
+      const params: Record<string, string | number> = { page, limit: LIMIT };
+      if (search) params.search = search;
+      if (statusFilter !== 'all') params.status = statusFilter;
+
+      const r = await axios.get('/consultations', { params });
+      const d = r.data;
+
+      // Handle both paginated and legacy array responses
+      if (Array.isArray(d)) {
+        setConsultations(d);
+        setTotal(d.length);
+        setTotalPages(1);
+      } else {
+        setConsultations(d.data);
+        setTotal(d.total);
+        setTotalPages(d.totalPages);
+      }
     } catch {
       toast({ title: 'Error', description: 'Failed to load consultations', variant: 'destructive' });
     } finally {
       setLoading(false);
     }
+  }, [page, search, statusFilter, toast]);
+
+  useEffect(() => { fetchConsultations(); }, [fetchConsultations]);
+
+  // Debounced search
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearch(searchInput);
+      setPage(1);
+    }, 400);
+    return () => clearTimeout(timer);
+  }, [searchInput]);
+
+  const handleUpdate = (id: string, updates: Partial<Consultation>) => {
+    setConsultations(prev => prev.map(c => c._id === id ? { ...c, ...updates } : c));
   };
 
-  const handleUpdate = (id: string, updates: Partial<Consultation>) =>
-    setConsultations(prev => prev.map(c => c._id === id ? { ...c, ...updates } : c));
+  const handleStatusFilter = (s: string) => {
+    setStatusFilter(s);
+    setPage(1);
+  };
 
-  const filtered = consultations.filter(c => {
-    const q = search.toLowerCase();
-    return (
-      c.name.toLowerCase().includes(q) ||
-      c.email.toLowerCase().includes(q) ||
-      c.phone.toLowerCase().includes(q) ||
-      c.city.toLowerCase().includes(q) ||
-      (c.propertyType || '').toLowerCase().includes(q)
-    );
-  });
-
-  if (loading) {
+  if (loading && consultations.length === 0) {
     return (
       <div className="flex items-center justify-center h-64">
         <Loader2 className="h-8 w-8 animate-spin text-amber-500" />
@@ -238,11 +309,7 @@ export default function ConsultationsPage() {
   return (
     <>
       {selected && (
-        <DetailModal
-          consultation={selected}
-          onClose={() => setSelected(null)}
-          onUpdate={handleUpdate}
-        />
+        <DetailModal consultation={selected} onClose={() => setSelected(null)} onUpdate={handleUpdate} />
       )}
 
       <div className="space-y-6">
@@ -250,25 +317,43 @@ export default function ConsultationsPage() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div>
             <h1 className="text-2xl font-black tracking-tight text-gray-900 uppercase">Consultations</h1>
-            <p className="text-sm text-gray-500 mt-0.5">
-              {consultations.filter(c => c.status === 'new').length} new requests pending
-            </p>
+            <p className="text-sm text-gray-500 mt-0.5">{total} total requests</p>
           </div>
           <div className="flex items-center gap-2 px-3 py-2.5 bg-white border border-gray-200 rounded-xl shadow-sm w-full sm:w-72 focus-within:border-amber-400 focus-within:ring-2 focus-within:ring-amber-500/20 transition-all">
             <Search className="h-4 w-4 text-gray-400 shrink-0" />
             <input
               type="text"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
+              value={searchInput}
+              onChange={e => setSearchInput(e.target.value)}
               placeholder="Search by name, email, city..."
               className="flex-1 text-sm bg-transparent outline-none text-gray-700 placeholder-gray-400"
             />
-            {search && (
-              <button onClick={() => setSearch('')} className="text-gray-400 hover:text-gray-600">
+            {searchInput && (
+              <button onClick={() => { setSearchInput(''); setSearch(''); }} className="text-gray-400 hover:text-gray-600">
                 <X className="h-3.5 w-3.5" />
               </button>
             )}
           </div>
+        </div>
+
+        {/* Status filter tabs */}
+        <div className="flex flex-wrap gap-2">
+          {[
+            { key: 'all', label: 'All' },
+            { key: 'new', label: 'New' },
+            { key: 'contacted', label: 'Contacted' },
+            { key: 'closed', label: 'Closed' },
+          ].map(tab => (
+            <button key={tab.key} onClick={() => handleStatusFilter(tab.key)}
+              className={cn(
+                'px-4 py-1.5 rounded-full text-xs font-bold transition-colors',
+                statusFilter === tab.key
+                  ? 'bg-gray-900 text-white'
+                  : 'bg-gray-100 text-gray-500 hover:bg-gray-200'
+              )}>
+              {tab.label}
+            </button>
+          ))}
         </div>
 
         {/* Table */}
@@ -285,17 +370,17 @@ export default function ConsultationsPage() {
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-100">
-                {filtered.length === 0 ? (
+                {consultations.length === 0 ? (
                   <tr>
                     <td colSpan={7} className="px-6 py-16 text-center">
                       <MessageSquare className="h-10 w-10 text-gray-200 mx-auto mb-3" />
                       <p className="text-sm font-semibold text-gray-400">
-                        {search ? 'No results match your search' : 'No consultation requests yet'}
+                        {search || statusFilter !== 'all' ? 'No results match your filters' : 'No consultation requests yet'}
                       </p>
                     </td>
                   </tr>
                 ) : (
-                  filtered.map((item, i) => (
+                  consultations.map((item, i) => (
                     <tr key={item._id}
                       className={cn('hover:bg-amber-50/40 transition-colors', i % 2 === 0 ? 'bg-white' : 'bg-gray-50/50')}>
                       <td className="px-5 py-4">
@@ -334,12 +419,7 @@ export default function ConsultationsPage() {
             </table>
           </div>
 
-          {filtered.length > 0 && (
-            <div className="px-6 py-3 bg-gray-50 border-t border-gray-100 text-xs text-gray-400 font-medium">
-              Showing {filtered.length} of {consultations.length} consultations
-              {search && <span className="ml-1">for &ldquo;<span className="text-amber-600">{search}</span>&rdquo;</span>}
-            </div>
-          )}
+          <Pagination page={page} totalPages={totalPages} total={total} limit={LIMIT} onPageChange={setPage} />
         </Card>
       </div>
     </>

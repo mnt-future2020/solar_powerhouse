@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Plus, Edit, Trash2, Image as ImageIcon, CheckCircle2, Search, X, AlertTriangle } from 'lucide-react';
+import { Plus, Edit, Trash2, Image as ImageIcon, CheckCircle2, Search, X, AlertTriangle, ChevronLeft, ChevronRight } from 'lucide-react';
 import axios from '@/lib/axios';
 import { useToast } from '@/components/ui/use-toast';
 import { cn } from '@/lib/utils';
@@ -179,10 +179,19 @@ export default function ServicesManagement() {
     setShowForm(false);
   };
 
+  const [page, setPage] = useState(1);
+  const LIMIT = 9;
+
   const filtered = services.filter(s =>
     s.title.toLowerCase().includes(search.toLowerCase()) ||
     s.description.toLowerCase().includes(search.toLowerCase())
   );
+
+  const totalPages = Math.ceil(filtered.length / LIMIT);
+  const paginated = filtered.slice((page - 1) * LIMIT, page * LIMIT);
+
+  // Reset page when search changes
+  useEffect(() => { setPage(1); }, [search]);
 
   return (
     <>
@@ -250,7 +259,7 @@ export default function ServicesManagement() {
           <CardContent className="p-6">
             {filtered.length > 0 ? (
               <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-5">
-                {filtered.map((service, index) => (
+                {paginated.map((service, index) => (
                   <Card key={service._id} className="overflow-hidden hover:shadow-lg transition-all duration-300 border shadow-sm">
                     {service.image && (
                       <div className="h-40 overflow-hidden bg-gray-100 relative">
@@ -315,6 +324,32 @@ export default function ServicesManagement() {
                     <Plus className="h-4 w-4 mr-2" />Add Your First Service
                   </Button>
                 )}
+              </div>
+            )}
+
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between mt-6 pt-4 border-t border-gray-100">
+                <p className="text-xs text-gray-400">
+                  Showing {(page - 1) * LIMIT + 1}–{Math.min(page * LIMIT, filtered.length)} of {filtered.length}
+                </p>
+                <div className="flex items-center gap-1">
+                  <button onClick={() => setPage(p => p - 1)} disabled={page <= 1}
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                    <ChevronLeft className="h-4 w-4" />
+                  </button>
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
+                    <button key={p} onClick={() => setPage(p)}
+                      className={cn('w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold transition-colors',
+                        p === page ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-200')}>
+                      {p}
+                    </button>
+                  ))}
+                  <button onClick={() => setPage(p => p + 1)} disabled={page >= totalPages}
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                    <ChevronRight className="h-4 w-4" />
+                  </button>
+                </div>
               </div>
             )}
           </CardContent>
