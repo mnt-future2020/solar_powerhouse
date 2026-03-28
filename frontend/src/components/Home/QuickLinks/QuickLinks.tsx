@@ -1,116 +1,82 @@
 'use client';
-import { useState } from 'react';
-import { ChevronLeft, ChevronRight, Layers, Headphones, TrendingDown, Sun, ShieldCheck, Zap } from 'lucide-react';
+import { Layers, Headphones, TrendingDown, Sun, ShieldCheck, Zap, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 const advantages = [
-  { icon: Layers,       title: 'Customized rooftop solutions for your needs' },
-  { icon: Headphones,   title: 'Superior customer service for a seamless transition' },
-  { icon: TrendingDown, title: 'Maximized savings on electricity bills' },
-  { icon: Sun,          title: 'High-efficiency panels with proven performance' },
-  { icon: ShieldCheck,  title: '25-year warranty with certified installation' },
-  { icon: Zap,          title: 'Fast installation with minimal disruption' },
+  { icon: Layers,       title: 'Customized rooftop solutions', accent: 'bg-amber-500/10 text-amber-500' },
+  { icon: Headphones,   title: 'Superior customer service', accent: 'bg-teal-500/10 text-teal-600' },
+  { icon: TrendingDown, title: 'Maximized bill savings', accent: 'bg-emerald-500/10 text-emerald-600' },
+  { icon: Sun,          title: 'High-efficiency panels', accent: 'bg-orange-500/10 text-orange-500' },
+  { icon: ShieldCheck,  title: '25-year certified warranty', accent: 'bg-sky-500/10 text-sky-600' },
+  { icon: Zap,          title: 'Fast, minimal-disruption install', accent: 'bg-rose-500/10 text-rose-500' },
 ];
 
-// Responsive visible count per breakpoint handled via CSS, slider logic uses 3 for desktop
-const VISIBLE = 3;
-
 export default function QuickLinks() {
-  const [start, setStart] = useState(0);
-
-  const prev = () => setStart(s => Math.max(0, s - 1));
-  const next = () => setStart(s => Math.min(advantages.length - VISIBLE, s + 1));
-
-  const visible = advantages.slice(start, start + VISIBLE);
-
   return (
-    <section className="bg-[#0a0f1e] text-white py-8 sm:py-10 lg:py-14 px-4 sm:px-6 lg:px-16">
-      <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-10 items-start">
+    <section className="bg-[#0c1117] text-white py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-16">
+      <div className="max-w-7xl mx-auto space-y-12">
 
-        {/* LEFT — Advantages slider */}
+        {/* Top row — advantages as a horizontal strip, not cards */}
         <div>
-          <div className="flex items-center justify-between mb-4 sm:mb-6">
-            <h2 className="text-base sm:text-lg lg:text-xl font-bold text-white">Solar Power House advantage</h2>
-            <div className="flex gap-2">
-              <button
-                onClick={prev}
-                disabled={start === 0}
-                className="w-8 h-8 border border-white/30 hover:border-amber-400 flex items-center justify-center text-white hover:text-amber-400 disabled:opacity-30 transition-all rounded-sm"
-                aria-label="Previous"
-              >
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-              <button
-                onClick={next}
-                disabled={start >= advantages.length - VISIBLE}
-                className="w-8 h-8 border border-white/30 hover:border-amber-400 flex items-center justify-center text-white hover:text-amber-400 disabled:opacity-30 transition-all rounded-sm"
-                aria-label="Next"
-              >
-                <ChevronRight className="h-4 w-4" />
-              </button>
-            </div>
-          </div>
-
-          {/* Mobile: show all in 2-col grid, Tablet+: slider with 3 visible */}
-          <div className="grid grid-cols-2 gap-3 sm:hidden">
-            {advantages.map(({ icon: Icon, title }) => (
-              <div
-                key={title}
-                className="border border-white/10 hover:border-amber-500/50 rounded-lg p-3 space-y-2 transition-all duration-300 hover:bg-white/5"
-              >
-                <Icon className="h-5 w-5 text-amber-500" />
-                <p className="text-xs text-white/80 leading-snug">{title}</p>
-              </div>
-            ))}
-          </div>
-
-          <div className="hidden sm:grid grid-cols-3 gap-3">
-            {visible.map(({ icon: Icon, title }) => (
-              <div
-                key={title}
-                className="border border-white/10 hover:border-amber-500/50 rounded-lg p-4 space-y-3 transition-all duration-300 hover:bg-white/5"
-              >
-                <Icon className="h-6 w-6 text-amber-500" />
-                <p className="text-sm text-white/80 leading-snug">{title}</p>
+          <p className="text-xs font-semibold tracking-[0.15em] uppercase text-white/40 mb-6">
+            The Solar Power House Advantage
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-x-6 gap-y-5">
+            {advantages.map(({ icon: Icon, title, accent }) => (
+              <div key={title} className="flex items-start gap-3 group">
+                <div className={`shrink-0 w-8 h-8 rounded-lg flex items-center justify-center ${accent} transition-transform duration-200 group-hover:scale-110`}>
+                  <Icon className="h-4 w-4" />
+                </div>
+                <p className="text-sm text-white/70 leading-snug font-medium group-hover:text-white/90 transition-colors duration-200">
+                  {title}
+                </p>
               </div>
             ))}
           </div>
         </div>
 
-        {/* RIGHT — Action Buttons */}
-        <div className="flex flex-col gap-4 sm:gap-6">
-          <h2 className="text-base sm:text-lg lg:text-xl font-bold text-white">Quick Actions</h2>
-
-          {/* Stack on mobile, side-by-side on sm+ */}
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
-
-            {/* Solar Calculator */}
-            <Link href="/solar-calculator" className="group flex-1">
-              <div className="bg-linear-to-br from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 rounded-xl p-4 sm:p-5 lg:p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-orange-500/20">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-sm sm:text-base lg:text-lg font-bold text-white mb-1">Solar Calculator</h3>
-                    <p className="text-white/80 text-xs sm:text-sm leading-relaxed">Calculate your solar savings</p>
-                  </div>
-                  <Sun className="h-7 w-7 sm:h-8 sm:w-8 text-white ml-3 shrink-0 group-hover:scale-110 transition-transform" />
+        {/* Bottom row — two balanced action cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Solar Calculator */}
+          <Link href="/solar-calculator" className="group">
+            <div className="relative overflow-hidden bg-linear-to-br from-amber-500/15 to-orange-500/10 border border-amber-500/20 rounded-2xl p-6 sm:p-8 h-full transition-all duration-300 hover:border-amber-500/40 hover:bg-amber-500/15">
+              <div className="relative z-10 flex items-end justify-between gap-4 h-full">
+                <div className="space-y-2">
+                  <p className="text-amber-400/70 text-xs font-semibold tracking-[0.15em] uppercase">Calculate</p>
+                  <h3 className="text-xl sm:text-2xl font-bold text-white leading-tight"
+                      style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
+                    Solar Savings Calculator
+                  </h3>
+                  <p className="text-white/50 text-sm max-w-sm">
+                    Find out how much you can save based on your rooftop size and energy consumption.
+                  </p>
+                </div>
+                <div className="shrink-0 w-10 h-10 rounded-xl bg-amber-500/15 flex items-center justify-center group-hover:bg-amber-500/25 transition-colors">
+                  <ArrowRight className="h-4 w-4 text-amber-400 group-hover:translate-x-0.5 transition-transform duration-200" />
                 </div>
               </div>
-            </Link>
+            </div>
+          </Link>
 
-            {/* Financing Options */}
-            <Link href="/financing" className="group flex-1">
-              <div className="bg-linear-to-tr from-[#2b1166] to-[#2b2147] hover:from-teal-700 hover:to-cyan-700 rounded-xl p-4 sm:p-5 lg:p-6 transition-all duration-300 hover:scale-[1.02] hover:shadow-xl hover:shadow-teal-500/20">
-                <div className="flex items-center justify-between">
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-sm sm:text-base lg:text-lg font-bold text-white mb-1">Financing Options</h3>
-                    <p className="text-white/80 text-xs sm:text-sm leading-relaxed">Explore payment plans</p>
-                  </div>
-                  <Zap className="h-7 w-7 sm:h-8 sm:w-8 text-white ml-3 shrink-0 group-hover:scale-110 transition-transform" />
+          {/* Financing */}
+          <Link href="/financing" className="group">
+            <div className="relative overflow-hidden bg-linear-to-br from-teal-500/15 to-emerald-500/10 border border-teal-500/20 rounded-2xl p-6 sm:p-8 h-full transition-all duration-300 hover:border-teal-500/40 hover:bg-teal-500/15">
+              <div className="relative z-10 space-y-3">
+                <p className="text-teal-400/70 text-xs font-semibold tracking-[0.15em] uppercase">Explore</p>
+                <h3 className="text-xl sm:text-2xl font-bold text-white leading-tight"
+                    style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
+                  Financing Options
+                </h3>
+                <p className="text-white/50 text-sm">
+                  Flexible payment plans with government-backed subsidies.
+                </p>
+                <div className="flex items-center gap-2 pt-2 text-teal-400 text-sm font-medium group-hover:gap-3 transition-all duration-200">
+                  <span>View Plans</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
                 </div>
               </div>
-            </Link>
-
-          </div>
+            </div>
+          </Link>
         </div>
 
       </div>

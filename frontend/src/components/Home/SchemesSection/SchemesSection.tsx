@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import { motion, Variants } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Home,
   Zap,
@@ -9,25 +9,9 @@ import {
   Banknote,
   Percent,
   CheckCircle2,
-  Sun,
   TrendingDown,
   ShieldCheck
 } from "lucide-react";
-
-const fadeUpVariant: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } }
-};
-
-const staggerContainer: Variants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-};
 
 export default function SchemesSection() {
   const householdSubsidy = [
@@ -37,119 +21,91 @@ export default function SchemesSection() {
   ];
 
   const capacityGuide = [
-    { consumption: "0-150 Units", capacity: "1-2 kW", color: "from-emerald-400 to-emerald-200" },
-    { consumption: "150-300 Units", capacity: "2-3 kW", color: "from-sky-400 to-sky-200" },
-    { consumption: ">300 Units", capacity: "Above 3 kW", color: "from-orange-400 to-amber-200" },
+    { consumption: "0-150 Units", capacity: "1-2 kW", pct: 33, color: "bg-emerald-500" },
+    { consumption: "150-300 Units", capacity: "2-3 kW", pct: 66, color: "bg-sky-500" },
+    { consumption: ">300 Units", capacity: "Above 3 kW", pct: 100, color: "bg-amber-500" },
   ];
 
   return (
-    <section id="schemes" className="relative py-16 lg:py-20 overflow-hidden bg-linear-to-br from-[#003f49] to-[#000c15]">
-      {/* Abstract Background Design */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.5, ease: "easeOut" }}
-          className="absolute top-[-10%] right-[-5%] w-[60%] h-[60%] rounded-full bg-orange-400/10 blur-[120px]" 
-        />
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.8 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 1.5, ease: "easeOut", delay: 0.2 }}
-          className="absolute bottom-[-10%] left-[-5%] w-[50%] h-[50%] rounded-full bg-sky-400/10 blur-[120px]" 
-        />
-        <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-5" />
-      </div>
-
+    <section id="schemes" className="relative py-20 lg:py-28 overflow-hidden bg-[#0c1117]">
       <div className="max-w-7xl mx-auto px-6 relative z-10">
-        
-        {/* Header Section */}
-        <div className="flex flex-col lg:flex-row items-center justify-between gap-10 mb-12">
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
+
+        {/* Header */}
+        <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-10 mb-16">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
-            variants={staggerContainer}
-            className="flex-1 space-y-5"
+            transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="flex-1 space-y-4 max-w-2xl"
           >
-            <motion.div variants={fadeUpVariant} className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 shadow-sm">
-              <span className="flex h-2 w-2 rounded-full bg-orange-500 animate-pulse" />
-              <span className="text-xs font-semibold tracking-wide text-white/90 uppercase">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-px bg-amber-400" />
+              <p className="text-amber-400/70 text-xs font-semibold tracking-[0.15em] uppercase">
                 Government Flagship Scheme
-              </span>
-            </motion.div>
-            
-            <motion.h2 variants={fadeUpVariant} className="text-3xl lg:text-4xl font-extrabold tracking-tight text-white leading-tight">
-              PM Surya Ghar <br />
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-orange-400 to-amber-300">
-                Muft Bijli Yojana
-              </span>
-            </motion.h2>
-            
-            <motion.p variants={fadeUpVariant} className="text-base text-white/80 max-w-2xl leading-relaxed">
-              Transform your rooftop into a power source. Eliminate electricity bills and earn from your solar setup with comprehensive government subsidies and collateral-free financing.
-            </motion.p>
+              </p>
+            </div>
 
+            <h2
+              className="text-3xl lg:text-5xl font-bold text-white leading-tight"
+              style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
+            >
+              PM Surya Ghar<br />
+              <span className="text-amber-400">Muft Bijli Yojana</span>
+            </h2>
 
-
+            <p className="text-sm text-white/45 max-w-xl leading-relaxed">
+              Transform your rooftop into a power source. Eliminate electricity bills and earn from
+              your solar setup with comprehensive government subsidies and collateral-free financing.
+            </p>
           </motion.div>
-          
-          {/* Hero Image / Graphic */}
-          <motion.div 
-            initial={{ opacity: 0, x: 50 }}
+
+          {/* Hero Image */}
+          <motion.div
+            initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true, margin: "-50px" }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="flex-1 w-full max-w-md relative lg:ml-auto"
+            transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="flex-1 w-full max-w-sm relative lg:ml-auto"
           >
-            <div className="relative aspect-square rounded-3xl overflow-hidden shadow-2xl shadow-black/50 border border-white/10">
-              <div className="absolute inset-0 bg-linear-to-t from-[#000c15]/80 via-transparent to-transparent z-10" />
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                transition={{ duration: 0.7 }}
-                className="w-full h-full relative"
-              >
-                <Image 
-                  src="/images/pm-surya-ghar.png" 
-                  alt="PM Surya Ghar Muft Bijli Yojana" 
-                  width={500}
-                  height={500}
-                  className="w-full h-full object-cover"
-                />
-              </motion.div>
-              <div className="absolute bottom-4 left-4 right-4 z-20">
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.5, duration: 0.5 }}
-                  className="bg-white/10 backdrop-blur-xl border border-white/20 p-3 rounded-xl flex items-center gap-3"
-                >
-                  <div className="bg-emerald-500 text-white p-2 rounded-full">
-                    <ShieldCheck className="h-5 w-5" />
+            <div className="relative aspect-square overflow-hidden border border-white/8">
+              <Image
+                src="/images/pm-surya-ghar.png"
+                alt="PM Surya Ghar Muft Bijli Yojana"
+                width={500}
+                height={500}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-linear-to-t from-[#0c1117]/70 via-transparent to-transparent" />
+
+              {/* Badge */}
+              <div className="absolute bottom-4 left-4 right-4">
+                <div className="bg-[#0c1117]/80 border border-white/8 p-3 flex items-center gap-3">
+                  <div className="bg-emerald-500 text-white p-1.5">
+                    <ShieldCheck className="h-4 w-4" />
                   </div>
                   <div>
-                    <h4 className="text-white font-bold text-sm">100% Guaranteed</h4>
-                    <p className="text-white/80 text-xs">Govt. approved installation</p>
+                    <p className="text-white font-semibold text-sm">100% Guaranteed</p>
+                    <p className="text-white/40 text-xs">Govt. approved installation</p>
                   </div>
-                </motion.div>
+                </div>
               </div>
             </div>
-            
-            {/* Floating Elements */}
-            <motion.div 
-              animate={{ y: [0, -10, 0] }}
-              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-              className="absolute -top-4 -right-4 bg-white/10 backdrop-blur-md p-3 rounded-xl shadow-xl shadow-black/50 border border-white/20"
+
+            {/* Floating savings badge */}
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.4, duration: 0.5 }}
+              className="absolute -top-3 -right-3 bg-[#0c1117] border border-white/8 p-3 shadow-lg"
             >
               <div className="flex items-center gap-2">
-                <div className="bg-emerald-500/20 p-1.5 rounded-lg">
-                  <TrendingDown className="h-5 w-5 text-emerald-400" />
+                <div className="bg-emerald-500/10 p-1.5">
+                  <TrendingDown className="h-4 w-4 text-emerald-400" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-white/70 font-medium">Potential Savings</p>
+                  <p className="text-[10px] text-white/40 font-medium">Potential Savings</p>
                   <p className="text-base font-bold text-white">₹25,000/yr</p>
                 </div>
               </div>
@@ -158,181 +114,164 @@ export default function SchemesSection() {
         </div>
 
         {/* 3 Value Pillars */}
-        <motion.div 
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-50px" }}
-          variants={staggerContainer}
-          className="grid md:grid-cols-3 gap-6 mb-16 relative z-20"
-        >
+        <div className="grid md:grid-cols-3 gap-px bg-white/8 mb-16">
           {[
             {
               icon: Banknote,
               title: "Government Subsidy",
               desc: "Get upfront financial support up to ₹78,000 for your residential rooftop installation.",
-              color: "text-amber-400",
-              bgColor: "bg-amber-500/20 border border-amber-500/30"
+              accent: "text-amber-400",
+              bg: "bg-amber-500/10",
             },
             {
               icon: TrendingDown,
               title: "Massive Savings",
               desc: "Save approximately ₹25,000 annually on electricity bills, paying for itself in years.",
-              color: "text-emerald-400",
-              bgColor: "bg-emerald-500/20 border border-emerald-500/30"
+              accent: "text-emerald-400",
+              bg: "bg-emerald-500/10",
             },
             {
               icon: Percent,
               title: "Easy Financing",
               desc: "Access collateral-free loans at an attractive 6.75% interest rate with swift processing.",
-              color: "text-sky-400",
-              bgColor: "bg-sky-500/20 border border-sky-500/30"
+              accent: "text-sky-400",
+              bg: "bg-sky-500/10",
             }
           ].map((feature, idx) => (
-            <motion.div 
-              key={idx} 
-              variants={fadeUpVariant}
-              whileHover={{ y: -4 }}
-              className="group p-6 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-lg hover:bg-white/15 hover:border-white/30 transition-all duration-300"
+            <motion.div
+              key={idx}
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: idx * 0.08, ease: [0.25, 0.46, 0.45, 0.94] }}
+              className="p-6 bg-[#0c1117] hover:bg-white/3 transition-colors duration-300"
             >
-              <div className={`w-12 h-12 rounded-xl ${feature.bgColor} flex items-center justify-center mb-4 origin-center group-hover:scale-110 transition-transform duration-300`}>
-                <feature.icon className={`h-6 w-6 ${feature.color}`} />
+              <div className={`w-10 h-10 ${feature.bg} flex items-center justify-center mb-4`}>
+                <feature.icon className={`h-5 w-5 ${feature.accent}`} />
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">{feature.title}</h3>
-              <p className="text-sm text-white/70 leading-relaxed">{feature.desc}</p>
+              <h3 className="text-lg font-bold text-white mb-2">{feature.title}</h3>
+              <p className="text-sm text-white/40 leading-relaxed">{feature.desc}</p>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
 
-        {/* Details Section */}
+        {/* Details: Subsidies + Capacity Guide */}
         <div className="grid lg:grid-cols-2 gap-8">
-          
-          {/* Left Column - Subsidies */}
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
+
+          {/* Left — Subsidies */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
-            variants={staggerContainer}
-            className="space-y-6"
+            transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="space-y-5"
           >
-            <motion.h3 variants={fadeUpVariant} className="text-2xl font-bold text-white flex items-center gap-3">
-              <Home className="h-6 w-6 text-orange-400" />
+            <h3 className="text-lg font-bold text-white flex items-center gap-2.5">
+              <Home className="h-5 w-5 text-amber-400" />
               Household Benefits
-            </motion.h3>
-            
-            <motion.div variants={fadeUpVariant} className="bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 shadow-xl overflow-hidden">
+            </h3>
+
+            <div className="border border-white/8 overflow-hidden">
               <div className="p-6">
-                <p className="text-white/60 mb-4 font-medium tracking-wide uppercase text-xs">Subsidy Structure</p>
-                <div className="space-y-3">
+                <p className="text-white/30 mb-4 font-medium tracking-wide uppercase text-xs">Subsidy Structure</p>
+                <div className="space-y-2">
                   {householdSubsidy.map((item, idx) => (
-                    <div key={idx} className="group relative flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl bg-black/20 border border-white/10 hover:border-orange-500/50 hover:bg-white/5 transition-all">
-                      <span className="text-base font-semibold text-white mb-1 sm:mb-0">{item.range}</span>
+                    <div key={idx} className="flex flex-col sm:flex-row sm:items-center justify-between p-4 bg-white/3 border border-white/5 hover:border-amber-500/20 transition-colors duration-200">
+                      <span className="text-sm font-semibold text-white mb-1 sm:mb-0">{item.range}</span>
                       <div className="flex flex-col sm:items-end">
-                        <span className="text-xl font-bold text-orange-400">{item.amount}</span>
-                        <span className="text-xs text-white/50">{item.perKw ? "per kW" : item.suffix}</span>
+                        <span className="text-lg font-bold text-amber-400">{item.amount}</span>
+                        <span className="text-xs text-white/30">{item.perKw ? "per kW" : item.suffix}</span>
                       </div>
                     </div>
                   ))}
                 </div>
-                
-                <div className="mt-4 flex items-start gap-4 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30">
-                  <Info className="h-5 w-5 text-amber-400 shrink-0" />
-                  <p className="text-xs text-amber-100 leading-relaxed">
-                    <strong className="block text-amber-400 mb-1">Special States Quota:</strong> 
-                    An additional 10% Subsidy will be applicable per kW for designated states.
+
+                <div className="mt-4 flex items-start gap-3 p-4 bg-amber-500/5 border border-amber-500/15">
+                  <Info className="h-4 w-4 text-amber-400 shrink-0 mt-0.5" />
+                  <p className="text-xs text-amber-200/60 leading-relaxed">
+                    <strong className="text-amber-400">Special States:</strong>{" "}
+                    An additional 10% subsidy per kW for designated states.
                   </p>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div variants={fadeUpVariant} className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 shadow-xl p-5 flex flex-col sm:flex-row gap-4 items-start sm:items-center relative overflow-hidden group hover:bg-white/15 transition-all">
-              <div className="absolute inset-0 bg-linear-to-r from-sky-400/0 via-sky-400/10 to-sky-400/0 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="w-12 h-12 rounded-xl bg-sky-500/20 border border-sky-500/30 flex items-center justify-center shrink-0 relative z-10">
-                <Building className="h-6 w-6 text-sky-400" />
+            <div className="border border-white/8 p-5 flex flex-col sm:flex-row gap-4 items-start sm:items-center hover:border-sky-500/15 transition-colors duration-200">
+              <div className="w-10 h-10 bg-sky-500/10 flex items-center justify-center shrink-0">
+                <Building className="h-5 w-5 text-sky-400" />
               </div>
-              <div className="relative z-10 w-full flex-1">
-                <div className="flex justify-between items-center sm:items-start float-none sm:float-right ml-4 mb-2 sm:mb-0">
-                  <div className="inline-block px-3 py-1 rounded-lg bg-black/30 border border-white/10 font-bold text-sky-400 text-sm">
-                    Rs. 18,000 / kW
+              <div className="flex-1">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h4 className="text-base font-bold text-white mb-0.5">GHS / RWA Subsidies</h4>
+                    <p className="text-white/30 text-xs leading-relaxed">
+                      For common facilities like EV Charging up to 500 kW.
+                    </p>
                   </div>
+                  <span className="text-sky-400 font-bold text-sm bg-sky-500/10 px-3 py-1 shrink-0 ml-4">
+                    Rs. 18,000/kW
+                  </span>
                 </div>
-                <h4 className="text-lg font-bold text-white mb-1">GHS / RWA Subsidies</h4>
-                <p className="text-white/70 text-xs leading-relaxed max-w-[280px]">
-                  For common facilities like EV Charging up to 500 kW capacity.
-                </p>
               </div>
-            </motion.div>
+            </div>
           </motion.div>
 
-          {/* Right Column - Capacity Guide */}
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
+          {/* Right — Capacity Guide */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-50px" }}
-            variants={staggerContainer}
-            className="space-y-6"
+            transition={{ duration: 0.5, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="space-y-5"
           >
-            <motion.h3 variants={fadeUpVariant} className="text-2xl font-bold text-white flex items-center gap-3">
-              <Zap className="h-6 w-6 text-emerald-400" />
+            <h3 className="text-lg font-bold text-white flex items-center gap-2.5">
+              <Zap className="h-5 w-5 text-emerald-400" />
               Capacity Guide
-            </motion.h3>
+            </h3>
 
-            <motion.div variants={fadeUpVariant} className="bg-white/10 backdrop-blur-md rounded-3xl border border-white/20 shadow-xl overflow-hidden z-10 relative">
+            <div className="border border-white/8 overflow-hidden">
               <div className="p-6">
-                <p className="text-white/60 mb-4 font-medium tracking-wide uppercase text-xs">Recommended Specifications</p>
-                
-                <div className="space-y-3">
+                <p className="text-white/30 mb-4 font-medium tracking-wide uppercase text-xs">Recommended Specifications</p>
+
+                <div className="space-y-5">
                   {capacityGuide.map((row, idx) => (
-                    <div key={idx} className="relative overflow-hidden rounded-xl border border-white/10 bg-black/20 p-4 flex items-center justify-between group hover:border-white/30 transition-all">
-                      <div className="relative z-10">
-                        <p className="text-xs text-white/50 mb-0.5">Monthly Consumption</p>
-                        <p className="text-base font-bold text-white">{row.consumption}</p>
+                    <div key={idx} className="space-y-2">
+                      <div className="flex items-center justify-between">
+                        <p className="text-sm text-white/50">{row.consumption}</p>
+                        <p className="text-sm font-bold text-white">{row.capacity}</p>
                       </div>
-                      <div className="relative z-10 text-right">
-                        <p className="text-xs text-white/50 mb-0.5">Recommended</p>
-                        <div className={`inline-block text-transparent bg-clip-text bg-linear-to-r ${row.color} text-xl font-black`}>
-                          {row.capacity}
-                        </div>
+                      <div className="h-1 bg-white/5 overflow-hidden">
+                        <div className={`h-full ${row.color} transition-all duration-500`} style={{ width: `${row.pct}%` }} />
                       </div>
-                      <div className={`absolute inset-0 opacity-0 group-hover:opacity-20 bg-linear-to-r ${row.color} transition-opacity duration-300`} />
                     </div>
                   ))}
                 </div>
               </div>
-            </motion.div>
+            </div>
 
-            <motion.div variants={fadeUpVariant} className="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-6 relative overflow-hidden shadow-xl">
-              <motion.div 
-                animate={{ rotate: 360 }}
-                transition={{ repeat: Infinity, duration: 60, ease: "linear" }}
-                className="absolute top-[-20%] right-[-10%] p-6 opacity-10"
-              >
-                <Sun className="h-48 w-48 text-amber-300" />
-              </motion.div>
-              <h4 className="text-xl font-bold text-white mb-5 relative z-10">Why Choose PM Surya Ghar?</h4>
-              <ul className="space-y-4 relative z-10">
+            <div className="border border-white/8 p-6">
+              <h4 className="text-base font-bold text-white mb-4">Why Choose PM Surya Ghar?</h4>
+              <ul className="space-y-3">
                 {[
-                  "Transparent application & swift processing", 
-                  "Collateral free loan at 6.75% interest", 
-                  "Replace electricity bills with savings", 
+                  "Transparent application & swift processing",
+                  "Collateral free loan at 6.75% interest",
+                  "Replace electricity bills with savings",
                   "Government subsidy up to ₹78,000"
                 ].map((benefit, idx) => (
-                  <motion.li 
-                    key={idx} 
-                    initial={{ opacity: 0, x: -15 }}
+                  <motion.li
+                    key={idx}
+                    initial={{ opacity: 0, x: -10 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1, duration: 0.5 }}
-                    className="flex items-start gap-3 text-white/90"
+                    transition={{ delay: idx * 0.08, duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+                    className="flex items-center gap-3"
                   >
-                    <div className="rounded-full bg-emerald-500/20 p-1 shrink-0 mt-0.5 border border-emerald-500/30">
-                      <CheckCircle2 className="h-4 w-4 text-emerald-400" />
-                    </div>
-                    <span className="font-medium text-white text-sm">{benefit}</span>
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0" />
+                    <span className="text-sm text-white/50">{benefit}</span>
                   </motion.li>
                 ))}
               </ul>
-            </motion.div>
-
+            </div>
           </motion.div>
         </div>
 

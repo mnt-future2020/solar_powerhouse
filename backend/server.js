@@ -60,6 +60,7 @@ app.use('/api/contacts', require('./routes/contacts'));
 app.use('/api/consultations', require('./routes/consultations'));
 app.use('/api/settings', require('./routes/settings'));
 app.use('/api/bank-partners', require('./routes/bankPartners'));
+app.use('/api/portfolio', require('./routes/portfolio'));
 
 // Only load upload route if dependencies are available
 try {

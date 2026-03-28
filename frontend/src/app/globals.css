@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -9,53 +9,43 @@
   --color-solar-teal: #0F766E;
   --color-solar-dark: #0F172A;
   --color-solar-light: #F8FAFC;
+  --color-solar-warm: #1a1208;
+  --color-solar-cream: #fef9f0;
+
+  --color-navy: #1a2332;
+  --color-navy-light: #243044;
+  --color-cream: #faf7f2;
+  --color-cream-dark: #f0ebe3;
+  --color-gold: #e6a817;
+  --color-gold-dark: #c48f0e;
+  --color-charcoal: #2c2c2c;
 
   --font-family-sans: "Montserrat", sans-serif;
-  --font-family-display: "Montserrat", sans-serif;
+  --font-family-display: "Playfair Display", Georgia, serif;
 }
 
 @layer base {
   * {
     border-color: #e5e7eb;
   }
-  
+
   body {
-    background-color: #ffffff;
-    color: #111827;
+    background-color: #fefefe;
+    color: #1a1a1a;
     font-family: "Montserrat", sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 }
 
 /* Professional Utilities */
 .text-gradient-solar {
-  @apply bg-clip-text text-transparent;
-  background-image: linear-gradient(135deg,#D97706, #FBBF24, #F59E0B );
+  color: #D97706;
 }
 
 .text-gradient-power {
-  @apply bg-clip-text text-transparent;
-  background-image: linear-gradient(135deg, #059669, #0F766E);
-}
-
-.glass {
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
-}
-
-.glass-card {
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-  transition: all 0.3s ease;
-}
-
-.glass-card:hover {
-  border-color: rgba(217, 119, 6, 0.3);
-  transform: translateY(-2px);
-  box-shadow: 0 20px 40px -12px rgba(217, 119, 6, 0.15);
+  color: #0F766E;
 }
 
 .bg-mesh {
@@ -74,29 +64,10 @@
   border: 2px solid transparent;
 }
 
-@keyframes float {
-  0% { transform: translateY(0px) rotate(0deg); }
-  50% { transform: translateY(-15px) rotate(1deg); }
-  100% { transform: translateY(0px) rotate(0deg); }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
-
-@keyframes pulse-glow {
-  0%, 100% { opacity: 0.4; transform: scale(1); }
-  50% { opacity: 0.8; transform: scale(1.05); }
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 4s ease-in-out infinite;
-}
-
 @keyframes fade-in-up {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -105,18 +76,7 @@
 }
 
 .animate-fade-in-up {
-  animation: fade-in-up 0.8s ease-out;
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-.shimmer {
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite;
+  animation: fade-in-up 0.6s ease-out;
 }
 
 /* Professional Scrollbar */
@@ -144,6 +104,52 @@
 
 .btn-secondary {
   @apply bg-white border-2 border-gray-200 hover:border-orange-300 text-gray-800 font-semibold px-8 py-4 rounded-xl shadow-md transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+}
+
+/* Pill Buttons */
+.btn-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.875rem 2rem;
+  border-radius: 50rem;
+  font-weight: 700;
+  font-size: 0.875rem;
+  transition: all 0.2s ease-out;
+  cursor: pointer;
+}
+
+.btn-pill-primary {
+  background: #1a2332;
+  color: #fff;
+}
+
+.btn-pill-primary:hover {
+  background: #243044;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(26, 35, 50, 0.2);
+}
+
+.btn-pill-gold {
+  background: #e6a817;
+  color: #1a2332;
+}
+
+.btn-pill-gold:hover {
+  background: #c48f0e;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(230, 168, 23, 0.3);
+}
+
+.btn-pill-outline {
+  background: transparent;
+  color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.25);
+}
+
+.btn-pill-outline:hover {
+  border-color: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.05);
 }
 
 /* Professional Card Styles */
@@ -299,37 +305,6 @@ input[type="range"].tariff-slider::-moz-range-thumb {
   cursor: pointer;
   border: 2px solid white;
   box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-}
-/* Finance page slider styling */
-.slider::-webkit-slider-thumb {
-  appearance: none;
-  height: 20px;
-  width: 20px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #f97316, #f59e0b);
-  cursor: pointer;
-  border: 2px solid #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.slider::-moz-range-thumb {
-  height: 20px;
-  width: 20px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #f97316, #f59e0b);
-  cursor: pointer;
-  border: 2px solid #fff;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.slider::-webkit-slider-track {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 5px;
-}
-
-.slider::-moz-range-track {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 5px;
 }
 /* EMI Calculator slider styling */
 .emi-slider::-webkit-slider-thumb {

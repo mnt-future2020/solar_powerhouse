@@ -45,7 +45,7 @@ export default function RegisterPage() {
       <div className="w-full max-w-[460px] z-10">
         {/* Logo and Branding */}
         <div className="flex flex-col items-center mb-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
-          <div className="bg-gradient-to-br from-solar-amber to-solar-orange p-3 rounded-2xl shadow-xl shadow-solar-amber/30 mb-4 animate-float">
+          <div className="bg-gradient-to-br from-solar-amber to-solar-orange p-3 rounded-2xl shadow-xl shadow-solar-amber/30 mb-4 animate-fade-in-up">
             <Zap className="h-8 w-8 text-white" />
           </div>
           <h1 className="text-3xl font-black tracking-tight text-foreground uppercase text-center">

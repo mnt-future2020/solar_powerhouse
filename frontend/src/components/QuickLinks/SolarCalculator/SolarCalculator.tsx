@@ -95,7 +95,7 @@ export default function SolarCalculator() {
           alt=""
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-black/70" />
+        <div className="absolute inset-0 bg-linear-to-r from-[#0a0a0a]/85 via-[#0a0a0a]/70 to-[#0a0a0a]/50" />
       </div>
 
       {/* Content */}
@@ -105,46 +105,49 @@ export default function SolarCalculator() {
           {/* LEFT — Info */}
           <div className="text-white space-y-6">
             <div className="space-y-3">
-              <p className="text-amber-400 font-semibold text-xs uppercase tracking-widest">Solar Calculator</p>
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight">
+              <p className="text-amber-400/70 font-semibold text-xs uppercase tracking-[0.15em]">Solar Calculator</p>
+              <h1
+                className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight"
+                style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
+              >
                 Calculate Your{' '}
                 <span className="text-amber-400">Solar Savings</span>
               </h1>
-              <p className="text-white/70 text-sm sm:text-base leading-relaxed max-w-lg">
+              <p className="text-white/50 text-sm sm:text-base leading-relaxed max-w-lg">
                 Discover how much you can save with solar power and get personalized recommendations with government subsidies.
               </p>
             </div>
 
             {/* PM Surya Ghar card */}
-            <div className="flex gap-3 bg-white/10 backdrop-blur-sm border border-white/15 rounded-xl p-4">
-              <div className="shrink-0 w-10 h-10 bg-orange-500/20 border border-orange-500/30 rounded-lg flex items-center justify-center">
+            <div className="flex gap-3 bg-white/4 border border-white/8 rounded-xl p-4">
+              <div className="shrink-0 w-10 h-10 bg-orange-500/10 rounded-lg flex items-center justify-center">
                 <Sun className="h-5 w-5 text-orange-400" />
               </div>
               <div>
                 <p className="font-semibold text-sm text-white">PM Surya Ghar Muft Bijli Yojana</p>
-                <p className="text-xs text-white/60 mt-0.5 leading-relaxed">
+                <p className="text-xs text-white/40 mt-0.5 leading-relaxed">
                   Transform your rooftop into a power source. Eliminate electricity bills with comprehensive government subsidies.
                 </p>
                 <div className="flex flex-wrap gap-2 mt-2">
-                  <span className="px-2.5 py-0.5 bg-emerald-500/20 border border-emerald-500/30 rounded-full text-emerald-400 text-xs font-medium">Up to ₹78,000 Subsidy</span>
-                  <span className="px-2.5 py-0.5 bg-sky-500/20 border border-sky-500/30 rounded-full text-sky-400 text-xs font-medium">6.75% Interest Rate</span>
+                  <span className="px-2.5 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-emerald-400 text-xs font-medium">Up to ₹78,000 Subsidy</span>
+                  <span className="px-2.5 py-0.5 bg-sky-500/10 border border-sky-500/20 rounded-full text-sky-400 text-xs font-medium">6.75% Interest Rate</span>
                 </div>
               </div>
             </div>
 
             {/* Subsidy structure */}
-            <div className="bg-white/10 backdrop-blur-sm border border-white/15 rounded-xl p-4">
+            <div className="bg-white/4 border border-white/8 rounded-xl p-4">
               <h3 className="text-sm font-bold text-white flex items-center gap-2 mb-3">
                 <Banknote className="h-4 w-4 text-amber-400" />
                 Government Subsidy Structure
               </h3>
               <div className="space-y-2">
                 {householdSubsidy.map((item, i) => (
-                  <div key={i} className="flex items-center justify-between p-2.5 rounded-lg bg-black/20 border border-white/10">
+                  <div key={i} className="flex items-center justify-between p-2.5 rounded-lg bg-white/3 border border-white/6 hover:border-amber-500/20 transition-colors duration-200">
                     <span className="text-xs font-medium text-white">{item.range}</span>
                     <div className="text-right">
                       <span className="text-xs font-bold text-amber-400">{item.amount}</span>
-                      <p className="text-[10px] text-white/50">{item.perKw ? 'per kW' : item.suffix}</p>
+                      <p className="text-[10px] text-white/40">{item.perKw ? 'per kW' : item.suffix}</p>
                     </div>
                   </div>
                 ))}
@@ -156,15 +159,20 @@ export default function SolarCalculator() {
           <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-2xl w-full">
             <div className="flex items-center gap-2 mb-1">
               <Calculator className="h-5 w-5 text-amber-500" />
-              <h4 className="text-xl font-bold text-gray-900">Solar Calculator</h4>
+              <h4
+                className="text-xl font-bold text-gray-900"
+                style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
+              >
+                Solar Calculator
+              </h4>
             </div>
-            <p className="text-sm text-gray-500 mb-5">Get personalized solar recommendations for your property.</p>
+            <p className="text-sm text-gray-400 mb-5">Get personalized solar recommendations for your property.</p>
 
             <div className="space-y-4">
 
               {/* Pincode */}
               <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-1">
+                <label className="block text-xs font-semibold text-gray-500 mb-1">
                   <MapPin className="inline h-3 w-3 mr-1" />PINCODE
                 </label>
                 <Input value={formData.pincode} onChange={e => set('pincode', e.target.value)} placeholder="Enter Your Pincode" />
@@ -172,7 +180,7 @@ export default function SolarCalculator() {
 
               {/* Phase */}
               <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-1">POWER SUPPLY PHASE</label>
+                <label className="block text-xs font-semibold text-gray-500 mb-1">POWER SUPPLY PHASE</label>
                 <div className="flex gap-3">
                   {['single', 'three'].map(p => (
                     <button key={p} type="button" onClick={() => set('powerPhase', p)}
@@ -189,21 +197,26 @@ export default function SolarCalculator() {
 
               {/* Tariff */}
               <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-1">TARIFF RATES: {formData.tariffRate} INR</label>
+                <label className="block text-xs font-semibold text-gray-500 mb-1">TARIFF RATES: {formData.tariffRate} INR</label>
                 <div className="flex items-center gap-2">
                   <span className="text-gray-400 text-xs">4</span>
                   <input type="range" min="4" max="30" value={formData.tariffRate}
                     onChange={e => set('tariffRate', parseInt(e.target.value))}
-                    className="flex-1 h-2 rounded-lg appearance-none cursor-pointer"
+                    aria-label="Tariff rate slider"
+                    aria-valuemin={4}
+                    aria-valuemax={30}
+                    aria-valuenow={formData.tariffRate}
+                    aria-valuetext={`${formData.tariffRate} INR per unit`}
+                    className="flex-1 h-2 rounded-lg appearance-none cursor-pointer tariff-slider"
                     style={{ background: `linear-gradient(to right, #f59e0b ${((formData.tariffRate - 4) / 26) * 100}%, #e5e7eb ${((formData.tariffRate - 4) / 26) * 100}%)` }}
                   />
                   <span className="text-gray-400 text-xs">30</span>
                   <div className="flex items-center gap-1 ml-1">
-                    <button type="button" onClick={() => dec('tariffRate')} className="w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center text-white hover:bg-gray-700">
+                    <button type="button" onClick={() => dec('tariffRate')} className="w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center text-white hover:bg-gray-700 transition-colors">
                       <Minus className="h-3 w-3" />
                     </button>
                     <span className="w-8 text-center text-gray-900 font-bold text-sm">{formData.tariffRate}</span>
-                    <button type="button" onClick={() => inc('tariffRate')} className="w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center text-white hover:bg-gray-700">
+                    <button type="button" onClick={() => inc('tariffRate')} className="w-7 h-7 rounded-full bg-gray-800 flex items-center justify-center text-white hover:bg-gray-700 transition-colors">
                       <Plus className="h-3 w-3" />
                     </button>
                   </div>
@@ -212,7 +225,7 @@ export default function SolarCalculator() {
 
               {/* Monthly Bill */}
               <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-1">MONTHLY ELECTRICITY BILL</label>
+                <label className="block text-xs font-semibold text-gray-500 mb-1">MONTHLY ELECTRICITY BILL</label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm">₹</span>
                   <Input type="number" value={formData.monthlyBill} onChange={e => set('monthlyBill', e.target.value)}
@@ -223,7 +236,7 @@ export default function SolarCalculator() {
 
               {/* Roof Area */}
               <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-1">
+                <label className="block text-xs font-semibold text-gray-500 mb-1">
                   <Grid3X3 className="inline h-3 w-3 mr-1" />AVAILABLE ROOF TOP AREA
                 </label>
                 <div className="flex gap-4 mb-2">
@@ -247,7 +260,7 @@ export default function SolarCalculator() {
 
               {/* Sanction Load */}
               <div>
-                <label className="block text-xs font-semibold text-gray-600 mb-1">
+                <label className="block text-xs font-semibold text-gray-500 mb-1">
                   <Bolt className="inline h-3 w-3 mr-1" />SANCTION LOAD
                 </label>
                 <div className="relative">
@@ -259,13 +272,13 @@ export default function SolarCalculator() {
 
               {/* Submit */}
               <Button onClick={computeResults}
-                className="w-full bg-linear-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-5 text-sm sm:text-base transition-all duration-300 hover:shadow-lg mt-2">
+                className="w-full bg-amber-500 hover:bg-amber-600 text-[#000c15] font-bold py-5 text-sm sm:text-base transition-colors duration-200 mt-2">
                 <span className="flex items-center justify-center gap-2">
                   GENERATE RESULT <ArrowRight className="h-4 w-4" />
                 </span>
               </Button>
 
-              <p className="text-xs text-gray-400 text-center">🔒 Your information is private and will never be shared.</p>
+              <p className="text-xs text-gray-400 text-center">Your information is private and will never be shared.</p>
             </div>
           </div>
 
@@ -274,21 +287,30 @@ export default function SolarCalculator() {
 
       {/* Results Modal */}
       {showResultsModal && results && (
-        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+        <div className="fixed inset-0 bg-[#0a0a0a]/60 flex items-center justify-center z-50 p-4" onClick={() => setShowResultsModal(false)}>
+          <div
+            className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl animate-in fade-in zoom-in-95 duration-200"
+            onClick={e => e.stopPropagation()}
+          >
 
             {/* Header */}
             <div className="flex items-center justify-between p-6 border-b border-gray-100">
-              <h2 className="text-xl font-bold text-gray-900">Solar Calculator Results</h2>
+              <h2
+                className="text-xl font-bold text-gray-900"
+                style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
+              >
+                Solar Calculator Results
+              </h2>
               <button onClick={() => setShowResultsModal(false)}
-                className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors">
+                className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                aria-label="Close results">
                 <X className="h-4 w-4 text-gray-600" />
               </button>
             </div>
 
             {/* Badge */}
             <div className="px-6 pt-4">
-              <span className="inline-block px-4 py-1.5 rounded-lg bg-blue-600 text-white text-sm font-semibold">On-Grid</span>
+              <span className="inline-block px-4 py-1.5 rounded-lg bg-amber-500 text-[#000c15] text-sm font-bold">On-Grid</span>
             </div>
 
             {/* Recommendation */}
@@ -297,9 +319,11 @@ export default function SolarCalculator() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* System details */}
-                <div className="bg-green-50 rounded-xl p-5 border border-green-200">
+                <div className="bg-emerald-50 rounded-xl p-5 border border-emerald-200">
                   <div className="flex items-start gap-3">
-                    <span className="text-4xl">🌞</span>
+                    <div className="w-10 h-10 rounded-xl bg-emerald-100 flex items-center justify-center shrink-0">
+                      <Sun className="h-5 w-5 text-emerald-600" />
+                    </div>
                     <div className="flex-1 space-y-2">
                       <h4 className="text-sm font-bold text-gray-900">Recommended System</h4>
                       {[
@@ -309,8 +333,8 @@ export default function SolarCalculator() {
                         { label: 'Payback Period', value: `${results.paybackYears} years` },
                       ].map(({ label, value, green }) => (
                         <div key={label} className="flex items-center gap-2">
-                          <div className="w-2 h-2 bg-blue-500 rounded-full shrink-0" />
-                          <span className="text-gray-700 text-xs">{label}: <span className={`font-bold ${green ? 'text-green-600' : 'text-gray-900'}`}>{value}</span></span>
+                          <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full shrink-0" />
+                          <span className="text-gray-700 text-xs">{label}: <span className={`font-bold ${green ? 'text-emerald-600' : 'text-gray-900'}`}>{value}</span></span>
                         </div>
                       ))}
                     </div>
@@ -319,29 +343,33 @@ export default function SolarCalculator() {
 
                 {/* Area + savings */}
                 <div className="space-y-3">
-                  <div className="bg-blue-50 rounded-xl p-4 border border-blue-200 flex items-center justify-between">
+                  <div className="bg-sky-50 rounded-xl p-4 border border-sky-200 flex items-center justify-between">
                     <div>
-                      <p className="text-xs font-semibold text-gray-600 mb-1">Required Area</p>
+                      <p className="text-xs font-semibold text-gray-500 mb-1">Required Area</p>
                       <p className="text-xl font-bold text-gray-900">{results.requiredAreaSqft} sq.ft</p>
-                      <p className="text-sm text-gray-500">{results.requiredAreaSqm} sq.m</p>
+                      <p className="text-sm text-gray-400">{results.requiredAreaSqm} sq.m</p>
                     </div>
-                    <span className="text-3xl">🏠</span>
+                    <div className="w-10 h-10 rounded-xl bg-sky-100 flex items-center justify-center">
+                      <Grid3X3 className="h-5 w-5 text-sky-600" />
+                    </div>
                   </div>
-                  <div className="bg-yellow-50 rounded-xl p-4 border border-yellow-200 flex items-center justify-between">
+                  <div className="bg-amber-50 rounded-xl p-4 border border-amber-200 flex items-center justify-between">
                     <div>
-                      <p className="text-xs font-semibold text-gray-600 mb-1">Bill Savings</p>
+                      <p className="text-xs font-semibold text-gray-500 mb-1">Bill Savings</p>
                       <p className="text-2xl font-bold text-gray-900">{results.billSavingsPct}%</p>
                     </div>
-                    <span className="text-3xl">🐷</span>
+                    <div className="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center">
+                      <Banknote className="h-5 w-5 text-amber-600" />
+                    </div>
                   </div>
                 </div>
               </div>
 
               {/* Disclaimer */}
-              <div className="p-4 rounded-xl bg-amber-100 border border-amber-600 space-y-1">
-                <p className="text-xs text-amber-600 font-medium">*Above plant size is only indicative and derived based on your inputs.</p>
-                <p className="text-xs text-amber-600 font-medium">The actual plant size capacity will be based on available rooftop area.</p>
-                <p className="text-xs text-amber-600 font-medium">If the area available is more than the recommended area required, higher capacities can be installed and vice-versa.</p>
+              <div className="p-4 rounded-xl bg-amber-50 border border-amber-200 space-y-1">
+                <p className="text-xs text-amber-700 font-medium">*Above plant size is only indicative and derived based on your inputs.</p>
+                <p className="text-xs text-amber-700 font-medium">The actual plant size capacity will be based on available rooftop area.</p>
+                <p className="text-xs text-amber-700 font-medium">If the area available is more than the recommended area required, higher capacities can be installed and vice-versa.</p>
               </div>
             </div>
           </div>

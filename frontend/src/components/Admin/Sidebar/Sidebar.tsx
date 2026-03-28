@@ -15,7 +15,8 @@ import {
   LayoutGrid,
   Bell,
   SearchCheck,
-  Share2
+  Share2,
+  Image
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState, useCallback, useEffect } from 'react';
@@ -37,6 +38,7 @@ const navigation: NavigationItem[] = [
   { title: 'Dashboard', icon: LayoutDashboard, href: '/admin/dashboard' },
   { title: 'Services', icon: LayoutGrid, href: '/admin/services' },
   { title: 'Bank Partners', icon: ShieldCheck, href: '/admin/bank-partners' },
+  { title: 'Portfolio', icon: Image, href: '/admin/portfolio' },
   { title: 'Consultations', icon: MessageSquare, href: '/admin/consultations' },
   { title: 'Settings', icon: Settings, href: '/admin/settings/general' },
   { title: 'SEO Config', icon: SearchCheck, href: '/admin/settings/seo' },

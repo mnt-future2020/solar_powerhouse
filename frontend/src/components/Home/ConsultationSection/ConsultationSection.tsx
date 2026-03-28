@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Zap, TrendingDown, Leaf, ShieldCheck, Sun, BadgeCheck, CheckCircle2, XCircle, X, AlertTriangle } from 'lucide-react';
+import { TrendingDown, Leaf, Sun, BadgeCheck, CheckCircle2, XCircle, X, AlertTriangle } from 'lucide-react';
 import axios from '@/lib/axios';
 import Dropdown from '@/components/ui/dropdown-menu';
 
@@ -44,7 +44,6 @@ const benefits = [
   { icon: BadgeCheck,   title: 'Certified Installation',  desc: 'Every install is done by MNRE-certified solar professionals.' },
 ];
 
-// ── Popup Modal ──────────────────────────────────────────────────────────────
 function StatusModal({ modal, onClose }: { modal: ModalState; onClose: () => void }) {
   if (!modal.open) return null;
 
@@ -72,19 +71,12 @@ function StatusModal({ modal, onClose }: { modal: ModalState; onClose: () => voi
   const Icon = config.icon;
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      onClick={onClose}
-    >
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
-
-      {/* Card */}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="absolute inset-0 bg-[#0a0a0a]/60" />
       <div
-        className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 sm:p-8 animate-in fade-in zoom-in-95 duration-200"
+        className="relative bg-white rounded-xl shadow-2xl w-full max-w-sm p-6 sm:p-8 animate-in fade-in zoom-in-95 duration-200"
         onClick={e => e.stopPropagation()}
       >
-        {/* Close button */}
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"
@@ -92,22 +84,16 @@ function StatusModal({ modal, onClose }: { modal: ModalState; onClose: () => voi
         >
           <X className="h-5 w-5" />
         </button>
-
-        {/* Icon */}
-        <div className={`mx-auto mb-4 w-16 h-16 rounded-full ${config.ringClass} flex items-center justify-center`}>
-          <Icon className={`h-8 w-8 ${config.iconClass}`} />
+        <div className={`mx-auto mb-4 w-14 h-14 rounded-full ${config.ringClass} flex items-center justify-center`}>
+          <Icon className={`h-7 w-7 ${config.iconClass}`} />
         </div>
-
-        {/* Text */}
         <div className="text-center space-y-2 mb-6">
           <h3 className="text-lg font-bold text-gray-900">{modal.title}</h3>
           <p className="text-sm text-gray-500 leading-relaxed">{modal.message}</p>
         </div>
-
-        {/* Action button */}
         <button
           onClick={onClose}
-          className={`w-full ${config.btnClass} text-white font-semibold py-2.5 rounded-xl transition-colors text-sm`}
+          className={`w-full ${config.btnClass} text-white font-semibold py-2.5 rounded-lg transition-colors text-sm`}
         >
           {modal.type === 'success' ? 'Great, thanks!' : 'Got it'}
         </button>
@@ -116,7 +102,6 @@ function StatusModal({ modal, onClose }: { modal: ModalState; onClose: () => voi
   );
 }
 
-// ── Main Component ────────────────────────────────────────────────────────────
 export default function ConsultationSection() {
   const [services, setServices] = useState<Service[]>([]);
   const [formData, setFormData] = useState<FormData>({
@@ -192,42 +177,50 @@ export default function ConsultationSection() {
       <StatusModal modal={modal} onClose={closeModal} />
 
       <section className="relative min-h-[75vh] w-full overflow-hidden">
-        {/* Full-bleed background */}
+        {/* Background */}
         <div className="absolute inset-0">
           <img src="/assets/image/banner/contact.jpg" alt="" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-black/70" />
+          <div className="absolute inset-0 bg-[#0a0a0a]/75" />
         </div>
 
         {/* Content */}
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 lg:py-24">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
 
             {/* LEFT — Benefits */}
-            <div className="text-white space-y-8">
+            <div className="text-white space-y-10">
               <div className="space-y-4">
-                <p className="text-amber-400 font-semibold text-xs uppercase tracking-widest">Why Go Solar?</p>
-                <h2 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold leading-tight">
+                <div className="flex items-center gap-3">
+                  <div className="w-8 h-px bg-amber-400" />
+                  <p className="text-amber-400/70 font-semibold text-xs uppercase tracking-[0.15em]">
+                    Why Go Solar?
+                  </p>
+                </div>
+                <h2
+                  className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight"
+                  style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
+                >
                   Reduce Your Electricity Bill{' '}
                   <span className="text-amber-400">Significantly</span>
                 </h2>
-                <p className="text-white/70 text-sm sm:text-base leading-relaxed max-w-lg">
+                <p className="text-white/40 text-sm sm:text-base leading-relaxed max-w-lg">
                   Join thousands of homes and businesses already saving with clean solar energy.
                   Get a free consultation and discover how much you can save.
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="space-y-1">
                 {benefits.map(({ icon: Icon, title, desc }) => (
                   <div
                     key={title}
-                    className="flex gap-3 bg-white/10 backdrop-blur-sm border border-white/15 rounded-xl p-3 sm:p-4 hover:bg-white/15 transition-all duration-300"
+                    className="flex gap-4 items-start py-4 border-b border-white/6 last:border-0"
                   >
-                    <div className="shrink-0 w-8 h-8 bg-amber-500/20 rounded-lg flex items-center justify-center">
+                    <div className="shrink-0 w-9 h-9 bg-amber-500/10 flex items-center justify-center mt-0.5">
                       <Icon className="h-4 w-4 text-amber-400" />
                     </div>
                     <div>
-                      <p className="font-semibold text-xs sm:text-sm text-white">{title}</p>
-                      <p className="text-xs text-white/60 mt-0.5 leading-relaxed hidden sm:block">{desc}</p>
+                      <p className="font-semibold text-sm text-white">{title}</p>
+                      <p className="text-xs text-white/35 mt-0.5 leading-relaxed hidden sm:block">{desc}</p>
                     </div>
                   </div>
                 ))}
@@ -235,22 +228,27 @@ export default function ConsultationSection() {
             </div>
 
             {/* RIGHT — Form */}
-            <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-2xl w-full">
-              <h4 className="text-xl font-bold text-gray-900 mb-1">Request Free Consultation</h4>
-              <p className="text-sm text-gray-500 mb-4">Our experts will reach you within 24 hours.</p>
+            <div className="bg-white rounded-xl p-6 sm:p-8 shadow-2xl w-full">
+              <h4
+                className="text-xl font-bold text-[#1a1a1a] mb-1"
+                style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
+              >
+                Request Free Consultation
+              </h4>
+              <p className="text-sm text-gray-400 mb-5">Our experts will reach you within 24 hours.</p>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-gray-600 mb-1">NAME *</label>
+                    <label className="block text-xs font-semibold text-gray-500 mb-1">NAME *</label>
                     <Input name="name" value={formData.name} onChange={handleInput} placeholder="Your name" required
                       className={formErrors.name ? 'border-red-500 focus:ring-red-500' : ''} />
                     {formErrors.name && <p className="text-red-500 text-xs mt-1">{formErrors.name}</p>}
                   </div>
                   <div>
-                    <label className="block text-xs font-semibold text-gray-600 mb-1">PHONE *</label>
+                    <label className="block text-xs font-semibold text-gray-500 mb-1">PHONE *</label>
                     <div className={`flex items-center border rounded-md overflow-hidden ${formErrors.phone ? 'border-red-500' : 'border-input'} bg-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-0`}>
-                      <span className="px-3 py-2 text-sm font-semibold text-gray-500 bg-gray-50 border-r border-gray-200 select-none">+91</span>
+                      <span className="px-3 py-2 text-sm font-semibold text-gray-400 bg-gray-50 border-r border-gray-200 select-none">+91</span>
                       <input
                         name="phone"
                         type="tel"
@@ -272,7 +270,7 @@ export default function ConsultationSection() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-semibold text-gray-600 mb-1">EMAIL *</label>
+                  <label className="block text-xs font-semibold text-gray-500 mb-1">EMAIL *</label>
                   <Input name="email" type="email" value={formData.email} onChange={handleInput} placeholder="you@example.com" required
                     className={formErrors.email ? 'border-red-500 focus:ring-red-500' : ''} />
                   {formErrors.email && <p className="text-red-500 text-xs mt-1">{formErrors.email}</p>}
@@ -280,7 +278,7 @@ export default function ConsultationSection() {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-semibold text-gray-600 mb-1">CITY *</label>
+                    <label className="block text-xs font-semibold text-gray-500 mb-1">CITY *</label>
                     <Input name="city" value={formData.city} onChange={handleInput} placeholder="e.g. Chennai" required
                       className={formErrors.city ? 'border-red-500 focus:ring-red-500' : ''} />
                     {formErrors.city && <p className="text-red-500 text-xs mt-1">{formErrors.city}</p>}
@@ -308,12 +306,12 @@ export default function ConsultationSection() {
                 </div>
 
                 <Button type="submit" disabled={isSubmitting}
-                  className="w-full bg-linear-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold py-5 text-sm sm:text-base transition-all duration-300 hover:shadow-lg mt-2">
+                  className="w-full bg-amber-500 hover:bg-amber-600 text-[#0a0a0a] font-bold py-5 text-sm sm:text-base transition-colors duration-200 mt-2">
                   {isSubmitting ? 'Submitting...' : 'Get My Free Solar Quote →'}
                 </Button>
 
                 <p className="text-xs text-gray-400 text-center">
-                  🔒 Your information is private and will never be shared.
+                  Your information is private and will never be shared.
                 </p>
               </form>
             </div>
