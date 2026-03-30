@@ -325,7 +325,7 @@ export default function About() {
               </div>
 
               <Link
-                href="/contact"
+                href="/contact#contact-form"
                 className="w-full inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold bg-amber-500 text-solar-warm hover:bg-amber-400 transition-colors duration-200 group"
               >
                 <span className="flex items-center gap-2 text-sm tracking-wide">

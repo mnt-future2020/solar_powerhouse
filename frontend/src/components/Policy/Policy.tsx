@@ -154,7 +154,7 @@ export default function Policy() {
               {email}
             </a>
             <span className="text-white/30">|</span>
-            <Link href="/contact" className="text-amber-400 hover:text-amber-300 font-medium transition-colors">
+            <Link href="/contact#contact-form" className="text-amber-400 hover:text-amber-300 font-medium transition-colors">
               Contact Us →
             </Link>
           </div>

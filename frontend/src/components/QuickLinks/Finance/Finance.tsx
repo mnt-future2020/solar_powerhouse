@@ -428,7 +428,7 @@ export default function Finance() {
                </div>
 
                <Link
-                  href="/contact"
+                  href="/contact#contact-form"
                   className="w-full relative inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold overflow-hidden transition-all bg-amber-500 text-[#000c15] hover:bg-amber-400 group"
                >
                   <span className="relative z-10 flex items-center gap-2 text-sm tracking-wide">

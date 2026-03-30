@@ -122,7 +122,7 @@ export default function Footer() {
                 { name: "Portfolio", path: "/portfolio" },
                 { name: "Solar Calculator", path: "/solar-calculator" },
                 { name: "Financing Options", path: "/financing" },
-                { name: "Contact", path: "/contact" }
+                { name: "Contact", path: "/contact#contact-form" }
               ].map((link, idx) => (
                 <Link
                   key={idx}

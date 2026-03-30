@@ -146,7 +146,7 @@ function Lightbox({
 
           {/* CTA */}
           <Link
-            href="/contact"
+            href="/contact#contact-form"
             className="btn-pill btn-pill-gold justify-center mt-8 text-sm"
           >
             Get a Similar Setup
@@ -400,7 +400,7 @@ export default function PortfolioPage() {
                 Get Free Quote
                 <ArrowRight className="h-4 w-4" />
               </Link>
-              <Link href="/contact" className="btn-pill btn-pill-outline">
+              <Link href="/contact#contact-form" className="btn-pill btn-pill-outline">
                 Contact Us
               </Link>
             </div>

@@ -47,7 +47,7 @@ export default function Header() {
     { name: 'About Us', href: '/about' },
     { name: 'Services', href: '/services' },
     { name: 'Portfolio', href: '/portfolio' },
-    { name: 'Contact', href: '/contact' },
+    { name: 'Contact', href: '/contact#contact-form' },
   ];
 
   const isActive = (href: string) => {

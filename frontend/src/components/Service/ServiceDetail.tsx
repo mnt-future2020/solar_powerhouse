@@ -150,7 +150,7 @@ export default function ServiceDetail({ service }: { service: ServiceType }) {
           )}
 
           {/* CTA */}
-          <Link href="/contact" className="block w-full">
+          <Link href="/contact#contact-form" className="block w-full">
             <button className="w-full py-4 bg-amber-500 hover:bg-amber-400 rounded-xl font-bold uppercase tracking-wide text-solar-warm text-sm transition-colors duration-200 flex items-center justify-center gap-3 group">
               Request a Free Quote
               <ArrowRight className="h-4 w-4 group-hover:translate-x-1 transition-transform duration-200" />
