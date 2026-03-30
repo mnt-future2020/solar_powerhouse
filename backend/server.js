@@ -205,15 +205,38 @@ const initializeSampleBankPartners = async () => {
 };
 
 // MongoDB Connection — runs on both local and Vercel cold start
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log('✅ MongoDB connected');
-    console.log(`   Database: ${mongoose.connection.name}`);
-    initializeAdmin();
-    initializeSampleServices();
-    initializeSampleBankPartners();
-  })
-  .catch(err => console.error('❌ MongoDB connection error:', err));
+let dbError = null;
+
+const mongoUri = process.env.MONGODB_URI;
+if (!mongoUri) {
+  dbError = 'MONGODB_URI environment variable is not set';
+  console.error('❌ MONGODB_URI is not set');
+} else {
+  mongoose.connect(mongoUri)
+    .then(() => {
+      console.log('✅ MongoDB connected');
+      console.log(`   Database: ${mongoose.connection.name}`);
+      dbError = null;
+      initializeAdmin();
+      initializeSampleServices();
+      initializeSampleBankPartners();
+    })
+    .catch(err => {
+      dbError = err.message;
+      console.error('❌ MongoDB connection error:', err.message);
+    });
+}
+
+// Debug endpoint — shows connection error (remove after fixing)
+app.get('/api/debug', (req, res) => {
+  res.json({
+    mongoUriSet: !!process.env.MONGODB_URI,
+    mongoUriPrefix: process.env.MONGODB_URI ? process.env.MONGODB_URI.substring(0, 20) + '...' : 'NOT SET',
+    dbState: mongoose.connection.readyState,
+    dbError: dbError,
+    envKeys: Object.keys(process.env).filter(k => ['MONGODB_URI', 'JWT_SECRET', 'NODE_ENV', 'ADMIN_EMAIL'].includes(k)),
+  });
+});
 
 // Start server locally only (Vercel uses module.exports)
 if (process.env.NODE_ENV !== 'production') {
