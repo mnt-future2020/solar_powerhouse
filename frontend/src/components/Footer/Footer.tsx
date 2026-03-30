@@ -190,6 +190,15 @@ export default function Footer() {
           <div className="flex items-center gap-6 text-sm text-white/30">
             <Link href="/privacy-policy" className="hover:text-amber-400 transition-colors">Privacy Policy</Link>
             <Link href="/terms-of-service" className="hover:text-amber-400 transition-colors">Terms of Service</Link>
+            <span className="hidden md:inline">|</span>
+            <a 
+              href="https://mntfuture.com/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="hover:text-amber-400 transition-colors flex items-center gap-1"
+            >
+              Developed by <span className="font-semibold text-amber-400">MnT</span>
+            </a>
           </div>
         </div>
       </div>
