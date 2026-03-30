@@ -34,6 +34,7 @@ export interface NavigationItem {
 }
 
 const navigation: NavigationItem[] = [
+  { title: 'Website', icon: Sun, href: '/' },
   { title: 'Dashboard', icon: LayoutDashboard, href: '/admin/dashboard' },
   { title: 'Services', icon: LayoutGrid, href: '/admin/services' },
   { title: 'Bank Partners', icon: ShieldCheck, href: '/admin/bank-partners' },

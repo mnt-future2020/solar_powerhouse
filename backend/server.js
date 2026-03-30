@@ -29,13 +29,40 @@ app.get('/', (req, res) => {
 });
 
 // Health check endpoint
+const startTime = Date.now();
+
 app.get('/api/health', (req, res) => {
-  res.status(200).json({
-    status: 'OK',
-    message: 'Server is running',
+  const uptime = Math.floor((Date.now() - startTime) / 1000);
+  const dbStatus = mongoose.connection.readyState;
+  const dbStatusMap = {
+    0: 'Disconnected',
+    1: 'Connected',
+    2: 'Connecting',
+    3: 'Disconnecting'
+  };
+
+  const healthStatus = {
+    status: dbStatus === 1 ? 'healthy' : 'unhealthy',
     timestamp: new Date().toISOString(),
-    database: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected'
-  });
+    uptime: `${uptime}s`,
+    database: {
+      status: dbStatusMap[dbStatus] || 'Unknown',
+      connected: dbStatus === 1,
+      name: mongoose.connection.name || 'N/A'
+    },
+    server: {
+      nodeVersion: process.version,
+      platform: process.platform,
+      memory: {
+        used: `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB`,
+        total: `${Math.round(process.memoryUsage().heapTotal / 1024 / 1024)}MB`
+      }
+    },
+    environment: process.env.NODE_ENV || 'development'
+  };
+
+  const statusCode = healthStatus.status === 'healthy' ? 200 : 503;
+  res.status(statusCode).json(healthStatus);
 });
 
 // Routes

@@ -9,7 +9,7 @@ import {
   Save, Building2, Mail, Phone, MapPin, Loader2,
   Search, Globe, LayoutGrid, Share2,
   Facebook, Twitter, Instagram, Linkedin,
-  Lock, Eye, EyeOff,
+  Lock, Eye, EyeOff, Settings,
 } from 'lucide-react';
 import axios from '@/lib/axios';
 import { cn } from '@/lib/utils';
