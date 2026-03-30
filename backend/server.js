@@ -212,7 +212,11 @@ if (!mongoUri) {
   dbError = 'MONGODB_URI environment variable is not set';
   console.error('❌ MONGODB_URI is not set');
 } else {
-  mongoose.connect(mongoUri)
+  mongoose.connect(mongoUri, {
+    serverSelectionTimeoutMS: 30000,
+    socketTimeoutMS: 45000,
+    family: 4,
+  })
     .then(() => {
       console.log('✅ MongoDB connected');
       console.log(`   Database: ${mongoose.connection.name}`);
