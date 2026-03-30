@@ -62,7 +62,7 @@ export default function Header() {
         isScrolled ? "py-3" : "py-5"
       )}
     >
-      <div className="max-w-7xl mx-auto px-6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
@@ -76,7 +76,7 @@ export default function Header() {
               />
             </div>
             <div className="flex flex-col">
-              <span className="text-base font-bold leading-none text-white uppercase tracking-wide">
+              <span className="text-base font-bold leading-none text-white uppercase tracking-wide font-display">
                 {settings.companyName.split(' ')[0]}
                 <span className="text-amber-400 ml-1">
                   {settings.companyName.split(' ').slice(1).join(' ')}
@@ -93,7 +93,7 @@ export default function Header() {
                 key={link.name}
                 href={link.href}
                 className={cn(
-                  "text-sm font-semibold transition-colors relative py-2",
+                  "text-sm font-semibold transition-colors relative py-2 font-display",
                   isActive(link.href)
                     ? "text-amber-400"
                     : "text-white/70 hover:text-white"
@@ -127,7 +127,7 @@ export default function Header() {
         "lg:hidden fixed inset-0 top-15 bg-[#0c1117] transition-all duration-300 ease-in-out",
         isMobileMenuOpen ? "translate-x-0 opacity-100" : "translate-x-full opacity-0"
       )}>
-        <div className="max-w-7xl mx-auto px-6 py-12 flex flex-col gap-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12 flex flex-col gap-6">
           {navLinks.map((link) => (
             <Link
               key={link.name}

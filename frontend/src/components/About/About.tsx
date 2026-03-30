@@ -70,10 +70,10 @@ export default function About() {
         <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-[0.03]" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10 w-full">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 w-full">
 
         {/* ═══ Hero ═══ */}
-        <div className="py-16 lg:py-24 flex flex-col lg:flex-row gap-12 lg:gap-16 items-center">
+        <div className="py-12 sm:py-16 lg:py-24 flex flex-col lg:flex-row gap-8 sm:gap-12 lg:gap-16 items-center">
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -86,8 +86,7 @@ export default function About() {
             </p>
 
             <h1
-              className="text-3xl lg:text-5xl font-bold text-white leading-tight"
-              style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
+              className="text-2xl sm:text-3xl lg:text-5xl font-bold text-white leading-tight"
             >
               Engineering a<br />
               <span className="text-amber-400">Brighter Tomorrow.</span>
@@ -135,8 +134,7 @@ export default function About() {
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.07, ease: [0.25, 0.46, 0.45, 0.94] }}
               >
-                <div className={`text-3xl lg:text-4xl font-bold ${stat.color} mb-1`}
-                     style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
+                <div className={`text-3xl lg:text-4xl font-bold font-display ${stat.color} mb-1`}>
                   {stat.value}
                 </div>
                 <div className="text-xs text-white/40 font-medium uppercase tracking-wide">{stat.label}</div>
@@ -159,7 +157,6 @@ export default function About() {
             </p>
             <h2
               className="text-2xl lg:text-4xl font-bold text-white leading-tight"
-              style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
             >
               Founded on the principle of<br />
               <span className="text-amber-400">democratizing clean energy.</span>
@@ -224,7 +221,6 @@ export default function About() {
               </div>
               <h3
                 className="text-xl font-bold text-white mb-3"
-                style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
               >
                 {card.title}
               </h3>
@@ -247,7 +243,6 @@ export default function About() {
             </p>
             <h2
               className="text-2xl lg:text-4xl font-bold text-white leading-tight"
-              style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
             >
               Built on precision,<br />delivered with care.
             </h2>
@@ -288,7 +283,6 @@ export default function About() {
             <div className="space-y-5">
               <h3
                 className="text-2xl lg:text-4xl font-bold text-white leading-tight"
-                style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
               >
                 Ready for<br />
                 <span className="text-amber-400">True Independence?</span>
@@ -324,7 +318,6 @@ export default function About() {
               <div className="space-y-1">
                 <h4
                   className="text-lg font-bold text-white"
-                  style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
                 >
                   Generate Your Savings Report
                 </h4>

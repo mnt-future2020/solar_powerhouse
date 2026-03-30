@@ -44,7 +44,7 @@ export default function QuickLinks() {
                 <div className="space-y-2">
                   <p className="text-amber-400/70 text-xs font-semibold tracking-[0.15em] uppercase">Calculate</p>
                   <h3 className="text-xl sm:text-2xl font-bold text-white leading-tight"
-                      style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
+                     >
                     Solar Savings Calculator
                   </h3>
                   <p className="text-white/50 text-sm max-w-sm">
@@ -64,7 +64,7 @@ export default function QuickLinks() {
               <div className="relative z-10 space-y-3">
                 <p className="text-teal-400/70 text-xs font-semibold tracking-[0.15em] uppercase">Explore</p>
                 <h3 className="text-xl sm:text-2xl font-bold text-white leading-tight"
-                    style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>
+                   >
                   Financing Options
                 </h3>
                 <p className="text-white/50 text-sm">

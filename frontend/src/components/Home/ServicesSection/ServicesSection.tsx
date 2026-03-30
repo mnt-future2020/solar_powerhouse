@@ -41,7 +41,6 @@ export default function ServicesSection() {
           </div>
           <h2
             className="text-3xl sm:text-4xl font-bold text-[#1a1a1a] leading-tight"
-            style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
           >
             Solar Solutions For Every Need
           </h2>

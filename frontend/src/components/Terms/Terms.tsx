@@ -83,7 +83,7 @@ export default function Terms() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Banner */}
-      <div className="relative bg-[#000c15] py-20 px-6 overflow-hidden">
+      <div className="relative bg-[#000c15] py-14 sm:py-20 px-4 sm:px-6 overflow-hidden">
         <div className="absolute inset-0 bg-[url('/assets/image/banner/contact.jpg')] bg-cover bg-center opacity-20" />
         <div className="absolute inset-0 bg-linear-to-r from-[#000c15] via-[#000c15]/80 to-transparent" />
         <div className="relative z-10 max-w-4xl mx-auto">
@@ -104,7 +104,7 @@ export default function Terms() {
       </div>
 
       {/* Content */}
-      <div className="max-w-4xl mx-auto px-6 py-16">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 sm:py-16">
         {/* Intro */}
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 mb-12">
           <p className="text-gray-700 leading-relaxed">

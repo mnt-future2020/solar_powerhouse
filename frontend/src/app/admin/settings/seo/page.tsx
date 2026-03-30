@@ -23,7 +23,7 @@ interface Service {
   title: string;
 }
 
-const inputCls = 'w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 transition-all';
+const inputCls = 'w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:border-slate-400 transition-all';
 
 const staticPages = [
   { value: 'home',     label: 'Home',     path: '/' },
@@ -34,13 +34,11 @@ const staticPages = [
 
 const emptySEO: SEOSettings = { metaTitle: '', metaDescription: '', metaKeywords: '' };
 
-function CardHeader({ icon: Icon, title }: { icon: React.ElementType; title: string }) {
+function SectionHeader({ icon: Icon, title }: { icon: React.ElementType; title: string }) {
   return (
-    <div className="flex items-center gap-3 px-6 py-4 bg-slate-950 border-b border-slate-800">
-      <div className="p-2 rounded-lg bg-white/10">
-        <Icon className="h-4 w-4 text-amber-400" />
-      </div>
-      <h2 className="text-sm font-bold text-white uppercase tracking-wider">{title}</h2>
+    <div className="flex items-center gap-2.5 px-6 py-3.5 border-b border-gray-100 bg-slate-800">
+      <Icon className="h-4 w-4 text-amber-500" />
+      <h2 className="text-sm font-semibold text-white">{title}</h2>
     </div>
   );
 }
@@ -64,9 +62,9 @@ function Badge({
       className={cn(
         'flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider border transition-all duration-200',
         active
-          ? 'bg-slate-950 text-white border-slate-950 shadow-md'
+          ? 'bg-slate-800 text-white border-gray-900 shadow-md'
           : clickable
-            ? 'bg-white text-gray-500 border-gray-200 hover:border-amber-400 hover:text-amber-600 cursor-pointer'
+            ? 'bg-white text-gray-500 border-gray-200 hover:border-slate-400 hover:text-slate-600 cursor-pointer'
             : 'bg-white text-gray-400 border-gray-100 cursor-default'
       )}
     >
@@ -163,8 +161,8 @@ export default function SEOSettingsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black tracking-tight text-gray-900 uppercase">SEO Config</h1>
-          <p className="text-sm text-gray-500 mt-0.5">Optimize your website pages for search engines</p>
+          <h1 className="text-xl font-bold text-gray-900">SEO Settings</h1>
+          <p className="text-sm text-gray-400 mt-0.5">Manage meta tags for each page</p>
         </div>
         <div className="flex items-center gap-3">
           {editing ? (
@@ -173,24 +171,24 @@ export default function SEOSettingsPage() {
                 <X className="h-4 w-4 mr-2" />Cancel
               </Button>
               <Button onClick={handleSave} disabled={saving}
-                className="bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20">
+                className="bg-slate-800 hover:bg-slate-700 text-white font-bold">
                 {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
                 {saving ? 'Saving...' : 'Save Changes'}
               </Button>
             </>
           ) : (
-            <Button onClick={handleEdit} className="bg-slate-950 hover:bg-slate-800 text-white font-bold shadow-lg">
+            <Button onClick={handleEdit} className="bg-slate-800 hover:bg-slate-700 text-white font-bold shadow-lg">
               <Pencil className="h-4 w-4 mr-2" />Edit Profile
             </Button>
           )}
         </div>
       </div>
 
-      <div className="bg-[#f4edaf] rounded-2xl p-6 shadow-inner space-y-6">
+      <div className="space-y-6">
 
         {/* Page Selector */}
-        <Card className="border-0 bg-white shadow-md overflow-hidden">
-          <CardHeader icon={Globe} title="Select Page" />
+        <Card className="bg-white border border-gray-100 overflow-hidden">
+          <SectionHeader icon={Globe} title="Select Page" />
           <CardContent className="p-6 space-y-4">
 
             {/* Static pages */}
@@ -235,8 +233,8 @@ export default function SEOSettingsPage() {
         </Card>
 
         {/* Meta Fields */}
-        <Card className="border-0 bg-white shadow-md overflow-hidden">
-          <CardHeader icon={Search} title={`Meta Information — ${selectedPageMeta.label}`} />
+        <Card className="bg-white border border-gray-100 overflow-hidden">
+          <SectionHeader icon={Search} title={`Meta Information — ${selectedPageMeta.label}`} />
           <CardContent className="p-6 space-y-5">
             <div className="space-y-1.5">
               <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider">Meta Title</label>
@@ -275,32 +273,7 @@ export default function SEOSettingsPage() {
           </CardContent>
         </Card>
 
-        {/* Search Preview */}
-        <Card className="border-0 bg-white shadow-md overflow-hidden">
-          <CardHeader icon={Tag} title="Search Engine Preview" />
-          <CardContent className="p-6 space-y-4">
-            <div className="bg-white border border-gray-200 rounded-xl p-5 shadow-sm">
-              <p className="text-blue-600 text-base font-medium hover:underline cursor-pointer truncate">
-                {currentSEO.metaTitle || 'Your Page Title'}
-              </p>
-              <p className="text-green-700 text-xs mt-0.5">
-                https://yourwebsite.com{selectedPageMeta.path}
-              </p>
-              <p className="text-gray-600 text-sm mt-1 line-clamp-2">
-                {currentSEO.metaDescription || 'Your meta description will appear here...'}
-              </p>
-            </div>
-            <div className="bg-amber-50 border border-amber-100 rounded-xl p-4">
-              <p className="text-xs font-bold text-amber-800 uppercase tracking-wider mb-2">SEO Tips</p>
-              <ul className="text-xs text-amber-700 space-y-1">
-                <li>• Keep meta titles under 60 characters</li>
-                <li>• Write compelling descriptions under 160 characters</li>
-                <li>• Use relevant keywords naturally in titles and descriptions</li>
-                <li>• Make each page's SEO unique and descriptive</li>
-              </ul>
-            </div>
-          </CardContent>
-        </Card>
+
 
       </div>
     </div>

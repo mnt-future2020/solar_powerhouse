@@ -52,15 +52,15 @@ function Lightbox({
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="fixed inset-0 z-50 bg-navy/95 flex items-center justify-center p-4 sm:p-8"
+      className="fixed inset-0 z-50 bg-navy/95 flex items-center justify-center p-3 sm:p-8"
       onClick={onClose}
     >
       <div
-        className="relative w-full max-w-5xl max-h-[90vh] flex flex-col lg:flex-row bg-white rounded-2xl overflow-hidden shadow-2xl"
+        className="relative w-full max-w-5xl max-h-[90vh] flex flex-col lg:flex-row bg-white rounded-xl sm:rounded-2xl overflow-hidden overflow-y-auto shadow-2xl"
         onClick={e => e.stopPropagation()}
       >
         {/* Image */}
-        <div className="relative lg:w-3/5 aspect-4/3 lg:aspect-auto bg-cream-dark shrink-0">
+        <div className="relative lg:w-3/5 aspect-video sm:aspect-4/3 lg:aspect-auto bg-cream-dark shrink-0">
           <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
 
           {/* Nav arrows */}
@@ -107,7 +107,6 @@ function Lightbox({
 
             <h2
               className="text-2xl sm:text-3xl font-bold text-navy leading-snug mb-4"
-              style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
             >
               {item.title}
             </h2>
@@ -193,15 +192,14 @@ export default function PortfolioPage() {
 
       <main className="flex-1 pt-24">
         {/* Hero */}
-        <section className="bg-navy py-20 lg:py-28 relative overflow-hidden">
-          <div className="max-w-7xl mx-auto px-6">
+        <section className="bg-navy py-14 sm:py-20 lg:py-28 relative overflow-hidden">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
               {/* Left — Text */}
               <div>
                 <span className="text-xs font-bold text-gold uppercase tracking-widest">Our Work</span>
                 <h1
-                  className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-[1.1] mt-4"
-                  style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
+                  className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-[1.1] mt-4"
                 >
                   Projects That<br />
                   <span className="text-gold">Speak Results</span>
@@ -269,8 +267,8 @@ export default function PortfolioPage() {
         </section>
 
         {/* Filter + Grid */}
-        <section className="py-16 lg:py-24">
-          <div className="max-w-7xl mx-auto px-6">
+        <section className="py-10 sm:py-16 lg:py-24">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
             {/* Filters */}
             <div className="flex flex-wrap gap-2 mb-12">
@@ -387,11 +385,10 @@ export default function PortfolioPage() {
         </section>
 
         {/* Bottom CTA */}
-        <section className="bg-navy py-16 lg:py-20">
-          <div className="max-w-3xl mx-auto px-6 text-center">
+        <section className="bg-navy py-12 sm:py-16 lg:py-20">
+          <div className="max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2
               className="text-2xl sm:text-3xl font-bold text-white leading-tight"
-              style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
             >
               Ready to Start Your Solar Project?
             </h2>

@@ -19,7 +19,7 @@ interface Settings {
     zipCode: string;
     country: string;
   };
-  socialLinks?: {
+  socialMedia?: {
     facebook?: string;
     twitter?: string;
     instagram?: string;
@@ -67,11 +67,11 @@ export default function Footer() {
   };
 
   return (
-    <footer className="bg-[#0c1117] text-white/70 pt-20 pb-10 border-t border-white/6">
-      <div className="max-w-7xl mx-auto px-6">
+    <footer className="bg-[#0c1117] text-white/70 pt-14 sm:pt-20 pb-10 border-t border-white/6">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-12 mb-10 sm:mb-16">
 
           {/* Brand */}
           <div className="space-y-5">
@@ -80,7 +80,7 @@ export default function Footer() {
                 <Image fill src={settings.logo || '/assets/image/logo/logo.jpg'} alt={settings.companyName} priority className="object-contain p-0.5" />
               </div>
               <div className="flex flex-col">
-                <span className="text-base font-bold leading-none text-white uppercase tracking-wide">
+                <span className="text-base font-bold leading-none text-white uppercase tracking-wide font-display">
                   {settings.companyName.split(' ')[0]}
                   <span className="text-amber-400 ml-1">
                     {settings.companyName.split(' ').slice(1).join(' ')}
@@ -98,12 +98,12 @@ export default function Footer() {
 
             <div className="flex items-center gap-2">
               {[
-                { name: 'Facebook', icon: '/assets/svg/facebook.svg', url: settings.socialLinks?.facebook || '#' },
-                { name: 'Twitter', icon: '/assets/svg/twitter.svg', url: settings.socialLinks?.twitter || '#' },
-                { name: 'Instagram', icon: '/assets/svg/instagram.svg', url: settings.socialLinks?.instagram || '#' },
-                { name: 'LinkedIn', icon: '/assets/svg/linkedin.svg', url: settings.socialLinks?.linkedin || '#' }
+                { name: 'Facebook', icon: '/assets/svg/facebook.svg', url: settings.socialMedia?.facebook || '#' },
+                { name: 'Twitter', icon: '/assets/svg/twitter.svg', url: settings.socialMedia?.twitter || '#' },
+                { name: 'Instagram', icon: '/assets/svg/instagram.svg', url: settings.socialMedia?.instagram || '#' },
+                { name: 'LinkedIn', icon: '/assets/svg/linkedin.svg', url: settings.socialMedia?.linkedin || '#' }
               ].map((social, i) => (
-                <a key={i} href={social.url} className="w-9 h-9 border border-white/8 flex items-center justify-center hover:border-amber-400/30 hover:bg-amber-400/5 transition-all duration-200 group">
+                <a key={i} href={social.url} target="_blank" rel="noopener noreferrer" className="w-9 h-9 border border-white/8 flex items-center justify-center hover:border-amber-400/30 hover:bg-amber-400/5 transition-all duration-200 group">
                   <Image src={social.icon} alt={social.name} width={14} height={14} className="opacity-40 group-hover:opacity-80 transition-opacity duration-200" />
                   <span className="sr-only">{social.name}</span>
                 </a>
@@ -113,7 +113,7 @@ export default function Footer() {
 
           {/* Navigation */}
           <div className="space-y-5">
-            <h3 className="text-sm font-semibold text-white uppercase tracking-[0.15em]">Explore</h3>
+            <h3 className="text-sm font-semibold text-white uppercase tracking-[0.15em] font-display">Explore</h3>
             <nav className="flex flex-col gap-2.5">
               {[
                 { name: "Home", path: "/" },
@@ -138,7 +138,7 @@ export default function Footer() {
 
           {/* Contact */}
           <div className="space-y-5">
-            <h3 className="text-sm font-semibold text-white uppercase tracking-[0.15em]">Connect</h3>
+            <h3 className="text-sm font-semibold text-white uppercase tracking-[0.15em] font-display">Connect</h3>
             <div className="space-y-4">
               <a href={`mailto:${settings.email}`} className="group flex items-start gap-3 hover:text-amber-400 transition-colors">
                 <div className="p-2 bg-white/3 border border-white/6 group-hover:border-amber-400/20 transition-colors shrink-0">
@@ -198,7 +198,7 @@ export default function Footer() {
       {showTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 w-11 h-11 bg-[#0c1117] border border-white/10 hover:border-amber-400/30 flex items-center justify-center text-white/50 hover:text-amber-400 transition-all duration-200 z-50"
+          className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 w-10 h-10 sm:w-11 sm:h-11 bg-[#0c1117] border border-white/10 hover:border-amber-400/30 flex items-center justify-center text-white/50 hover:text-amber-400 transition-all duration-200 z-50"
           aria-label="Back to top"
         >
           <ArrowUp className="h-4 w-4" />

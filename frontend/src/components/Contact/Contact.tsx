@@ -118,7 +118,7 @@ export default function Contact() {
     }
     setIsSubmitting(true);
     try {
-      await axios.post('/contacts', { ...formData, phone: `+91${formData.phone}` });
+      await axios.post('/consultations', { ...formData, phone: `+91${formData.phone}` });
       showModal('success', 'Message Sent!', "Your message has been received. We'll get back to you within 24 hours.");
       setFormData({ name: '', phone: '', email: '', city: '', propertyType: '', monthlyBill: '', service: '', message: '', source: 'Contact Page' });
       setFormErrors({});
@@ -174,7 +174,6 @@ export default function Contact() {
             </p>
             <h1
               className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4"
-              style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
             >
               Let's Start Your<br />
               <span className="text-amber-400">Solar Journey</span>
@@ -216,7 +215,6 @@ export default function Contact() {
               <div>
                 <h3
                   className="text-xl font-bold text-white mb-2"
-                  style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
                 >
                   Contact Information
                 </h3>
@@ -246,11 +244,11 @@ export default function Contact() {
 
               <div className="grid grid-cols-2 gap-4 pt-4 border-t border-white/8">
                 <div>
-                  <div className="text-2xl font-bold text-amber-400" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>24hrs</div>
+                  <div className="text-2xl font-bold text-amber-400 font-display">24hrs</div>
                   <div className="text-[10px] text-white/35 uppercase tracking-wider font-medium">Response Time</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-emerald-400" style={{ fontFamily: '"Playfair Display", Georgia, serif' }}>1,200+</div>
+                  <div className="text-2xl font-bold text-emerald-400 font-display">1,200+</div>
                   <div className="text-[10px] text-white/35 uppercase tracking-wider font-medium">Happy Customers</div>
                 </div>
               </div>
@@ -266,7 +264,6 @@ export default function Contact() {
             >
               <h3
                 className="text-xl font-bold text-white mb-1"
-                style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
               >
                 Send Us a Message
               </h3>

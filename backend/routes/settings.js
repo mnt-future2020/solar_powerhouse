@@ -1,4 +1,5 @@
 const express = require('express');
+const { body, validationResult } = require('express-validator');
 const Settings = require('../models/Settings');
 const { auth, adminAuth } = require('../middleware/auth');
 
@@ -25,7 +26,14 @@ router.get('/admin', [auth, adminAuth], async (req, res) => {
 });
 
 // Update general settings
-router.put('/general', [auth, adminAuth], async (req, res) => {
+router.put('/general', [auth, adminAuth,
+  body('email').optional().isEmail().withMessage('Valid email is required'),
+  body('phone').optional().notEmpty().withMessage('Phone cannot be empty'),
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   try {
     const {
       companyName,
@@ -73,12 +81,15 @@ router.put('/seo', [auth, adminAuth], async (req, res) => {
       };
     }
     
-    // Update page-specific SEO data
+    // Update page-specific SEO data (supports dynamic keys like service-xyz)
     Object.keys(seoData).forEach(page => {
-      if (settings.seo.pages[page]) {
-        settings.seo.pages[page] = { ...settings.seo.pages[page], ...seoData[page] };
-      }
+      settings.seo.pages[page] = {
+        metaTitle: seoData[page].metaTitle || '',
+        metaDescription: seoData[page].metaDescription || '',
+        metaKeywords: seoData[page].metaKeywords || '',
+      };
     });
+    settings.markModified('seo.pages');
     
     settings.updatedAt = new Date();
     await settings.save();

@@ -198,7 +198,6 @@ export default function ConsultationSection() {
                 </div>
                 <h2
                   className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight"
-                  style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
                 >
                   Reduce Your Electricity Bill{' '}
                   <span className="text-amber-400">Significantly</span>
@@ -231,7 +230,6 @@ export default function ConsultationSection() {
             <div className="bg-white rounded-xl p-6 sm:p-8 shadow-2xl w-full">
               <h4
                 className="text-xl font-bold text-[#1a1a1a] mb-1"
-                style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
               >
                 Request Free Consultation
               </h4>

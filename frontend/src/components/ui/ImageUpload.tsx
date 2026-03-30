@@ -182,19 +182,6 @@ export default function ImageUpload({ value, onChange, onRemove, className }: Im
           </div>
         </div>
 
-        {/* Fallback Direct URL Input (Always available for flexibility) */}
-        <div className="relative max-w-md">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-             <ImageIcon className="h-4 w-4 text-gray-400" />
-          </div>
-          <input
-            type="url"
-            value={value || ''}
-            onChange={(e) => onChange(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 bg-gray-50/50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white transition-all text-sm"
-            placeholder="Or drop a direct https:// image URL..."
-          />
-        </div>
       </div>
 
       {value && (

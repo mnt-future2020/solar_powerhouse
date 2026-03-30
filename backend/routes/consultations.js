@@ -1,11 +1,21 @@
 const express = require('express');
+const { body, validationResult } = require('express-validator');
 const Consultation = require('../models/Consultation');
 const { auth, adminAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
 // Submit consultation (public)
-router.post('/', async (req, res) => {
+router.post('/', [
+  body('name').notEmpty().trim().withMessage('Name is required'),
+  body('phone').notEmpty().trim().withMessage('Phone is required'),
+  body('email').isEmail().normalizeEmail().withMessage('Valid email is required'),
+  body('city').optional().trim(),
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   try {
     const consultation = new Consultation(req.body);
     await consultation.save();
@@ -31,6 +41,7 @@ router.get('/', [auth, adminAuth], async (req, res) => {
         { email: { $regex: search, $options: 'i' } },
         { phone: { $regex: search, $options: 'i' } },
         { city: { $regex: search, $options: 'i' } },
+        { message: { $regex: search, $options: 'i' } },
       ];
     }
 

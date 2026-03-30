@@ -19,8 +19,9 @@ const config = {
     },
     extend: {
       fontFamily: {
-        sans: ["Montserrat", "sans-serif"],
+        sans: ["Open Sans", "sans-serif"],
         display: ["Montserrat", "sans-serif"],
+        button: ["Poppins", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",

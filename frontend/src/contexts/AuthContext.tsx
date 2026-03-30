@@ -1,7 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import axios from 'axios';
+import axiosInstance from '@/lib/axios';
 
 interface User {
   id: string;
@@ -14,10 +14,8 @@ interface AuthContextType {
   user: User | null;
   loading: boolean;
   login: (email: string, password: string) => Promise<void>;
-  loginWithGoogle: () => void;
-  logout: () => void;
+  logout: () => Promise<void>;
   isAuthenticated: boolean;
-  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -32,47 +30,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const checkAuth = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (token) {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/auth/me`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setUser(response.data.user);
+      const response = await axiosInstance.get('/auth/me');
+      setUser(response.data.user);
+    } catch (error: any) {
+      // Only clear user on 401 (actually unauthorized)
+      // Keep user state on server errors / network issues
+      if (error.response?.status === 401) {
+        setUser(null);
       }
-    } catch (error) {
-      localStorage.removeItem('token');
-      setUser(null);
     } finally {
       setLoading(false);
     }
   };
 
-  const refreshUser = async () => {
-    await checkAuth();
-  };
-
   const login = async (email: string, password: string) => {
-    const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
-      email,
-      password
-    });
-    
-    const { token, user } = response.data;
-    localStorage.setItem('token', token);
-    setUser(user);
+    const response = await axiosInstance.post('/auth/login', { email, password });
+    setUser(response.data.user);
   };
 
-  const loginWithGoogle = () => {
-    window.location.href = `${process.env.NEXT_PUBLIC_API_URL}/auth/google`;
-  };
-
-  const logout = () => {
-    localStorage.removeItem('token');
+  const logout = async () => {
+    try {
+      await axiosInstance.post('/auth/logout');
+    } catch {
+      // ignore — cookie will expire anyway
+    }
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, loginWithGoogle, logout, isAuthenticated: !!user, refreshUser }}>
+    <AuthContext.Provider value={{ user, loading, login, logout, isAuthenticated: !!user }}>
       {children}
     </AuthContext.Provider>
   );

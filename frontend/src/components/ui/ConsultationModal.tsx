@@ -87,7 +87,6 @@ export default function ConsultationModal({ isOpen, onClose }: ConsultationModal
             <div className="relative z-10">
               <h2
                 className="text-2xl sm:text-3xl font-bold text-white leading-snug"
-                style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
               >
                 Get Your Free<br />
                 <span className="text-amber-400">Solar Quote</span>

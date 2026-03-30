@@ -37,27 +37,14 @@ const settingsSchema = new mongoose.Schema({
       ogImage: { type: String, default: '' },
       favicon: { type: String, default: '' }
     },
-    // Page-specific SEO settings
+    // Page-specific SEO settings (supports dynamic keys like service-xyz)
     pages: {
-      home: {
-        metaTitle: { type: String, default: '' },
-        metaDescription: { type: String, default: '' },
-        metaKeywords: { type: String, default: '' }
-      },
-      about: {
-        metaTitle: { type: String, default: '' },
-        metaDescription: { type: String, default: '' },
-        metaKeywords: { type: String, default: '' }
-      },
-      services: {
-        metaTitle: { type: String, default: '' },
-        metaDescription: { type: String, default: '' },
-        metaKeywords: { type: String, default: '' }
-      },
-      contact: {
-        metaTitle: { type: String, default: '' },
-        metaDescription: { type: String, default: '' },
-        metaKeywords: { type: String, default: '' }
+      type: mongoose.Schema.Types.Mixed,
+      default: {
+        home: { metaTitle: '', metaDescription: '', metaKeywords: '' },
+        about: { metaTitle: '', metaDescription: '', metaKeywords: '' },
+        services: { metaTitle: '', metaDescription: '', metaKeywords: '' },
+        contact: { metaTitle: '', metaDescription: '', metaKeywords: '' }
       }
     }
   },

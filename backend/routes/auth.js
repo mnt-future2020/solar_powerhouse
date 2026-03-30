@@ -2,67 +2,24 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { body, validationResult } = require('express-validator');
-const passport = require('passport');
 const User = require('../models/User');
 
 const router = express.Router();
 
-// Register
-router.post('/register', [
-  body('name').notEmpty(),
-  body('email').isEmail(),
-  body('password').isLength({ min: 6 })
-], async (req, res) => {
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    return res.status(400).json({ errors: errors.array() });
-  }
+const isProduction = process.env.NODE_ENV === 'production';
 
-  try {
-    const { name, email, password, role } = req.body;
-    
-    let user = await User.findOne({ email });
-    if (user) {
-      return res.status(400).json({ message: 'User already exists' });
-    }
+const COOKIE_OPTIONS = {
+  httpOnly: true,
+  secure: isProduction,
+  sameSite: 'lax',
+  maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+  path: '/',
+};
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-    
-    // Explicitly set role - default to 'user', allow 'admin' if specified
-    const userRole = role === 'admin' ? 'admin' : 'user';
-    
-    user = new User({ 
-      name, 
-      email, 
-      password: hashedPassword,
-      role: userRole 
-    });
-    await user.save();
-
-    const token = jwt.sign(
-      { userId: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: '7d' }
-    );
-
-    res.status(201).json({ 
-      token, 
-      user: { 
-        id: user._id, 
-        name, 
-        email, 
-        role: user.role 
-      } 
-    });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error' });
-  }
-});
-
-// Login
+// Login (admin only — admin user is seeded from env vars on startup)
 router.post('/login', [
-  body('email').isEmail(),
-  body('password').notEmpty()
+  body('email').isEmail().withMessage('Valid email is required'),
+  body('password').notEmpty().withMessage('Password is required')
 ], async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -71,10 +28,14 @@ router.post('/login', [
 
   try {
     const { email, password } = req.body;
-    
+
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: 'Invalid credentials' });
+    }
+
+    if (user.role !== 'admin') {
+      return res.status(403).json({ message: 'Access denied. Admin only.' });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -88,50 +49,84 @@ router.post('/login', [
       { expiresIn: '7d' }
     );
 
-    res.json({ token, user: { id: user._id, name: user.name, email, role: user.role } });
+    res.cookie('token', token, COOKIE_OPTIONS);
+    res.json({ user: { id: user._id, name: user.name, email, role: user.role } });
   } catch (error) {
     res.status(500).json({ message: 'Server error' });
   }
 });
 
-module.exports = router;
-
-// Google OAuth Routes
-router.get('/google',
-  passport.authenticate('google', { scope: ['profile', 'email'] })
-);
-
-router.get('/google/callback',
-  passport.authenticate('google', { session: false, failureRedirect: `${process.env.FRONTEND_URL}/login?error=oauth_failed` }),
-  (req, res) => {
-    const token = jwt.sign(
-      { userId: req.user._id, role: req.user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: '7d' }
-    );
-
-    res.redirect(`${process.env.FRONTEND_URL}/auth/callback?token=${token}`);
-  }
-);
+// Logout — clear the auth cookie
+router.post('/logout', (req, res) => {
+  res.clearCookie('token', { ...COOKIE_OPTIONS, maxAge: 0 });
+  res.json({ message: 'Logged out successfully' });
+});
 
 // Get current user
 router.get('/me', async (req, res) => {
   try {
-    const token = req.headers.authorization?.replace('Bearer ', '');
-    
+    const token = req.cookies?.token;
+
     if (!token) {
       return res.status(401).json({ message: 'No token provided' });
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.userId).select('-password');
-    
+
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
 
     res.json({ user });
   } catch (error) {
-    res.status(401).json({ message: 'Invalid token' });
+    // Only clear cookie and return 401 for JWT errors (expired/invalid token)
+    if (error.name === 'JsonWebTokenError' || error.name === 'TokenExpiredError') {
+      res.clearCookie('token', { ...COOKIE_OPTIONS, maxAge: 0 });
+      return res.status(401).json({ message: 'Invalid token' });
+    }
+    // For DB errors or other issues, return 500 — don't clear the cookie
+    res.status(500).json({ message: 'Server error' });
   }
 });
+
+// Change password (authenticated)
+const { auth } = require('../middleware/auth');
+
+router.put('/change-password', [
+  auth,
+  body('currentPassword').notEmpty().withMessage('Current password is required'),
+  body('newPassword').isLength({ min: 6 }).withMessage('New password must be at least 6 characters'),
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ message: errors.array()[0].msg });
+  }
+
+  try {
+    const { currentPassword, newPassword } = req.body;
+
+    const user = await User.findById(req.user.userId);
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    if (!user.password) {
+      return res.status(400).json({ message: 'Cannot change password for Google OAuth accounts' });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: 'Current password is incorrect' });
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+
+    res.json({ message: 'Password changed successfully' });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+module.exports = router;

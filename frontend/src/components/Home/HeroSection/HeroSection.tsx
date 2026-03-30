@@ -47,7 +47,7 @@ export default function HeroSection() {
   const slide = slides[current];
 
   return (
-    <section className="relative w-full h-screen flex flex-col overflow-hidden">
+    <section className="relative w-full min-h-[100dvh] h-screen flex flex-col overflow-hidden">
       {/* Backgrounds */}
       {slides.map((s, i) => (
         <div
@@ -63,8 +63,8 @@ export default function HeroSection() {
 
       {/* Content */}
       <div className="relative z-10 flex-1 flex items-center">
-        <div className="max-w-7xl mx-auto px-6 w-full">
-          <div className="max-w-2xl space-y-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full">
+          <div className="max-w-2xl space-y-5 sm:space-y-8">
             {/* Overline */}
             <div className="flex items-center gap-3">
               <div className="w-8 h-px bg-amber-400" />
@@ -76,8 +76,7 @@ export default function HeroSection() {
             {/* Heading */}
             <h1
               key={current}
-              className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-[1.08] tracking-tight"
-              style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-white leading-[1.08] tracking-tight"
             >
               {slide.title}
             </h1>
@@ -88,7 +87,7 @@ export default function HeroSection() {
             </p>
 
             {/* CTAs */}
-            <div className="flex items-center gap-5 pt-2">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-5 pt-2">
               <button
                 onClick={() => setIsModalOpen(true)}
                 className="inline-flex items-center gap-3 bg-amber-500 text-[#0a0a0a] text-sm font-bold px-7 py-3.5 hover:bg-amber-400 transition-colors duration-200 group"
@@ -108,8 +107,8 @@ export default function HeroSection() {
       </div>
 
       {/* Bottom bar */}
-      <div className="relative z-10 pb-10">
-        <div className="max-w-7xl mx-auto px-6 w-full flex items-center justify-between">
+      <div className="relative z-10 pb-6 sm:pb-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full flex items-center justify-between">
           {/* Slide indicators */}
           <div className="flex items-center gap-3">
             {slides.map((_, i) => (

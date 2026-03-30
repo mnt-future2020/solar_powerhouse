@@ -14,13 +14,13 @@ interface SocialLinks {
   linkedin: string;
 }
 
-const inputCls = 'w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 transition-all';
+const inputCls = 'w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:border-slate-400 transition-all';
 
 const platforms = [
-  { key: 'facebook' as const, label: 'Facebook', icon: Facebook, color: 'text-blue-600', placeholder: 'https://facebook.com/yourpage' },
-  { key: 'twitter' as const, label: 'Twitter / X', icon: Twitter, color: 'text-sky-500', placeholder: 'https://twitter.com/yourhandle' },
-  { key: 'instagram' as const, label: 'Instagram', icon: Instagram, color: 'text-pink-500', placeholder: 'https://instagram.com/yourprofile' },
-  { key: 'linkedin' as const, label: 'LinkedIn', icon: Linkedin, color: 'text-blue-700', placeholder: 'https://linkedin.com/company/yourcompany' },
+  { key: 'facebook' as const, label: 'Facebook', icon: Facebook, color: 'text-gray-500', placeholder: 'https://facebook.com/yourpage' },
+  { key: 'twitter' as const, label: 'Twitter / X', icon: Twitter, color: 'text-gray-500', placeholder: 'https://twitter.com/yourhandle' },
+  { key: 'instagram' as const, label: 'Instagram', icon: Instagram, color: 'text-gray-500', placeholder: 'https://instagram.com/yourprofile' },
+  { key: 'linkedin' as const, label: 'LinkedIn', icon: Linkedin, color: 'text-gray-500', placeholder: 'https://linkedin.com/company/yourcompany' },
 ];
 
 const empty: SocialLinks = { facebook: '', twitter: '', instagram: '', linkedin: '' };
@@ -96,8 +96,8 @@ export default function SocialLinksPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black tracking-tight text-gray-900 uppercase">Social Links</h1>
-          <p className="text-sm text-gray-500 mt-0.5">Manage your company social media profiles</p>
+          <h1 className="text-xl font-bold text-gray-900">Social Links</h1>
+          <p className="text-sm text-gray-400 mt-0.5">Manage your company social media profiles</p>
         </div>
         <div className="flex items-center gap-3">
           {editing ? (
@@ -106,26 +106,24 @@ export default function SocialLinksPage() {
                 <X className="h-4 w-4 mr-2" />Cancel
               </Button>
               <Button onClick={handleSave} disabled={saving}
-                className="bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20">
+                className="bg-slate-800 hover:bg-slate-700 text-white font-bold">
                 {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
                 {saving ? 'Saving...' : 'Save Changes'}
               </Button>
             </>
           ) : (
-            <Button onClick={handleEdit} className="bg-slate-950 hover:bg-slate-800 text-white font-bold shadow-lg">
+            <Button onClick={handleEdit} className="bg-slate-800 hover:bg-slate-700 text-white font-bold shadow-lg">
               <Pencil className="h-4 w-4 mr-2" />Edit Profile
             </Button>
           )}
         </div>
       </div>
 
-      <div className="bg-[#f4edaf]  rounded-2xl p-6 shadow-inner">
-        <Card className="border-0 bg-white shadow-md overflow-hidden">
-          <div className="flex items-center gap-3 px-6 py-4 bg-slate-950 border-b border-slate-800">
-            <div className="p-2 rounded-lg bg-white/10">
-              <Share2 className="h-4 w-4 text-amber-400" />
-            </div>
-            <h2 className="text-sm font-bold text-white uppercase tracking-wider">Social Media Links</h2>
+      <div>
+        <Card className="bg-white border border-gray-100 overflow-hidden">
+          <div className="flex items-center gap-2.5 px-6 py-3.5 border-b border-gray-100 bg-slate-800">
+            <Share2 className="h-4 w-4 text-amber-500" />
+            <h2 className="text-sm font-semibold text-white">Social Media Links</h2>
           </div>
           <CardContent className="p-6 space-y-5">
             {platforms.map(({ key, label, icon: Icon, color, placeholder }) => (

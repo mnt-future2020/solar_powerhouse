@@ -27,8 +27,8 @@ export default function SchemesSection() {
   ];
 
   return (
-    <section id="schemes" className="relative py-20 lg:py-28 overflow-hidden bg-[#0c1117]">
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
+    <section id="schemes" className="relative py-14 sm:py-20 lg:py-28 overflow-hidden bg-[#0c1117]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
 
         {/* Header */}
         <div className="flex flex-col lg:flex-row items-start lg:items-end justify-between gap-10 mb-16">
@@ -48,7 +48,6 @@ export default function SchemesSection() {
 
             <h2
               className="text-3xl lg:text-5xl font-bold text-white leading-tight"
-              style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
             >
               PM Surya Ghar<br />
               <span className="text-amber-400">Muft Bijli Yojana</span>
@@ -98,7 +97,7 @@ export default function SchemesSection() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.4, duration: 0.5 }}
-              className="absolute -top-3 -right-3 bg-[#0c1117] border border-white/8 p-3 shadow-lg"
+              className="absolute -top-3 right-0 sm:-right-3 bg-[#0c1117] border border-white/8 p-2 sm:p-3 shadow-lg"
             >
               <div className="flex items-center gap-2">
                 <div className="bg-emerald-500/10 p-1.5">
@@ -114,7 +113,7 @@ export default function SchemesSection() {
         </div>
 
         {/* 3 Value Pillars */}
-        <div className="grid md:grid-cols-3 gap-px bg-white/8 mb-16">
+        <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-px bg-white/8 mb-10 sm:mb-16">
           {[
             {
               icon: Banknote,

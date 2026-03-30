@@ -1,85 +1,114 @@
 'use client';
 
 import { useEffect } from 'react';
+import { usePathname } from 'next/navigation';
 import axios from '@/lib/axios';
 
-interface SEOSettings {
-  metaTitle: string;
-  metaDescription: string;
-  metaKeywords: string;
-  ogImage: string;
-  favicon: string;
+interface PageSEO {
+  metaTitle?: string;
+  metaDescription?: string;
+  metaKeywords?: string;
+}
+
+interface GlobalSEO extends PageSEO {
+  ogImage?: string;
+  favicon?: string;
 }
 
 export default function MetadataProvider() {
+  const pathname = usePathname();
+
   useEffect(() => {
     updateMetadata();
-  }, []);
+  }, [pathname]);
+
+  const getPageKey = (): string => {
+    if (pathname === '/') return 'home';
+    if (pathname === '/about') return 'about';
+    if (pathname === '/services') return 'services';
+    if (pathname === '/contact') return 'contact';
+    const serviceMatch = pathname.match(/^\/services\/([^/]+)$/);
+    if (serviceMatch) return `service-${serviceMatch[1]}`;
+    return '';
+  };
 
   const updateMetadata = async () => {
     try {
-      const response = await axios.get('/settings');
-      const seoSettings: SEOSettings = response.data.seo || {};
+      const pageKey = getPageKey();
+      const isServiceDetail = pageKey.startsWith('service-');
+      const serviceId = isServiceDetail ? pageKey.replace('service-', '') : null;
 
-      // Update document title
-      if (seoSettings.metaTitle) {
-        document.title = seoSettings.metaTitle;
+      // Fetch settings + service data in parallel
+      const [settingsRes, serviceRes] = await Promise.all([
+        axios.get('/settings'),
+        serviceId ? axios.get(`/services/${serviceId}`).catch(() => null) : Promise.resolve(null),
+      ]);
+
+      const settings = settingsRes.data;
+      const globalSeo: GlobalSEO = settings.seo?.global || {};
+      const pages = settings.seo?.pages || {};
+      const pageSeo: PageSEO = pageKey ? pages[pageKey] || {} : {};
+      const serviceData = serviceRes?.data;
+
+      // Priority: page-specific SEO → service data (auto) → global SEO
+      let title = pageSeo.metaTitle;
+      let description = pageSeo.metaDescription;
+      let keywords = pageSeo.metaKeywords;
+
+      if (!title && serviceData) {
+        title = `${serviceData.detailTitle || serviceData.title} | ${settings.companyName || 'Solar Power House'}`;
+      }
+      if (!description && serviceData) {
+        description = serviceData.detailDescription || serviceData.description;
       }
 
-      // Update meta description
-      updateMetaTag('description', seoSettings.metaDescription);
-      
-      // Update meta keywords
-      updateMetaTag('keywords', seoSettings.metaKeywords);
+      // Fall back to global
+      title = title || globalSeo.metaTitle;
+      description = description || globalSeo.metaDescription;
+      keywords = keywords || globalSeo.metaKeywords;
 
-      // Update Open Graph tags
-      updateMetaTag('og:title', seoSettings.metaTitle, 'property');
-      updateMetaTag('og:description', seoSettings.metaDescription, 'property');
-      updateMetaTag('og:image', seoSettings.ogImage, 'property');
+      if (title) document.title = title;
+      updateMetaTag('description', description);
+      updateMetaTag('keywords', keywords);
 
-      // Update Twitter Card tags
-      updateMetaTag('twitter:title', seoSettings.metaTitle, 'name');
-      updateMetaTag('twitter:description', seoSettings.metaDescription, 'name');
-      updateMetaTag('twitter:image', seoSettings.ogImage, 'name');
+      // Open Graph
+      updateMetaTag('og:title', title, 'property');
+      updateMetaTag('og:description', description, 'property');
+      if (globalSeo.ogImage) updateMetaTag('og:image', globalSeo.ogImage, 'property');
+
+      // Twitter Card
+      updateMetaTag('twitter:title', title, 'name');
+      updateMetaTag('twitter:description', description, 'name');
+      if (globalSeo.ogImage) updateMetaTag('twitter:image', globalSeo.ogImage, 'name');
       updateMetaTag('twitter:card', 'summary_large_image', 'name');
 
-      // Update favicon
-      if (seoSettings.favicon) {
-        updateFavicon(seoSettings.favicon);
-      }
+      if (globalSeo.favicon) updateFavicon(globalSeo.favicon);
     } catch {
-      // Non-critical — site works fine without dynamic metadata
+      // Non-critical
     }
   };
 
-  const updateMetaTag = (name: string, content: string, attribute: string = 'name') => {
+  const updateMetaTag = (name: string, content: string | undefined, attribute: string = 'name') => {
     if (!content) return;
-
-    let metaTag = document.querySelector(`meta[${attribute}="${name}"]`);
-    
-    if (metaTag) {
-      metaTag.setAttribute('content', content);
+    let tag = document.querySelector(`meta[${attribute}="${name}"]`);
+    if (tag) {
+      tag.setAttribute('content', content);
     } else {
-      metaTag = document.createElement('meta');
-      metaTag.setAttribute(attribute, name);
-      metaTag.setAttribute('content', content);
-      document.head.appendChild(metaTag);
+      tag = document.createElement('meta');
+      tag.setAttribute(attribute, name);
+      tag.setAttribute('content', content);
+      document.head.appendChild(tag);
     }
   };
 
-  const updateFavicon = (faviconUrl: string) => {
-    // Remove existing favicon
-    const existingFavicon = document.querySelector('link[rel="icon"]');
-    if (existingFavicon) {
-      existingFavicon.remove();
-    }
-
-    // Add new favicon
-    const favicon = document.createElement('link');
-    favicon.rel = 'icon';
-    favicon.href = faviconUrl;
-    document.head.appendChild(favicon);
+  const updateFavicon = (url: string) => {
+    const existing = document.querySelector('link[rel="icon"]');
+    if (existing) existing.remove();
+    const link = document.createElement('link');
+    link.rel = 'icon';
+    link.href = url;
+    document.head.appendChild(link);
   };
 
-  return null; // This component doesn't render anything
+  return null;
 }

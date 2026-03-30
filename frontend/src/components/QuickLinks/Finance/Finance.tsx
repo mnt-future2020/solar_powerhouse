@@ -150,7 +150,7 @@ export default function Finance() {
         <div className="absolute inset-0 bg-[url('/images/grid-pattern.svg')] opacity-[0.03]" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10 w-full space-y-20 lg:space-y-28">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10 w-full space-y-12 sm:space-y-20 lg:space-y-28">
 
         {/* Header Section */}
         <motion.div
@@ -165,7 +165,6 @@ export default function Finance() {
           </p>
           <h1
             className="text-3xl lg:text-5xl font-bold tracking-tight text-white leading-tight"
-            style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
           >
             Pradhan Mantri{" "}
             <span className="text-amber-400">Surya Ghar</span>{" "}
@@ -188,7 +187,6 @@ export default function Finance() {
           <div className="text-center mb-8">
             <h2
               className="text-2xl lg:text-3xl font-bold text-white mb-2"
-              style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
             >
               Financing For Systems{" "}
               <span className="text-amber-400">&lt;= 3 KW</span>
@@ -222,20 +220,22 @@ export default function Finance() {
           )}
 
           {/* Loan Details Table */}
-          <div className="bg-white/3 border border-white/8 rounded-xl overflow-hidden">
-            <div className="grid grid-cols-5 bg-white/6 text-white font-semibold text-sm">
-              <div className="p-4 border-r border-white/8">Loan Amt (Rs. Lakhs)</div>
-              <div className="p-4 border-r border-white/8">Down Payment</div>
-              <div className="p-4 border-r border-white/8">Interest p.a</div>
-              <div className="p-4 border-r border-white/8">Tenure (yrs)</div>
-              <div className="p-4">Geographies</div>
-            </div>
-            <div className="grid grid-cols-5 text-white/70 text-sm">
-              <div className="p-4 border-r border-white/8">&lt;= 2</div>
-              <div className="p-4 border-r border-white/8">5-10%</div>
-              <div className="p-4 border-r border-white/8">7.00%</div>
-              <div className="p-4 border-r border-white/8">Up to {MAX_TENURE}</div>
-              <div className="p-4">Pan India</div>
+          <div className="bg-white/3 border border-white/8 rounded-xl overflow-hidden overflow-x-auto">
+            <div className="min-w-[500px]">
+              <div className="grid grid-cols-5 bg-white/6 text-white font-semibold text-xs sm:text-sm">
+                <div className="p-3 sm:p-4 border-r border-white/8">Loan Amt (Rs. Lakhs)</div>
+                <div className="p-3 sm:p-4 border-r border-white/8">Down Payment</div>
+                <div className="p-3 sm:p-4 border-r border-white/8">Interest p.a</div>
+                <div className="p-3 sm:p-4 border-r border-white/8">Tenure (yrs)</div>
+                <div className="p-3 sm:p-4">Geographies</div>
+              </div>
+              <div className="grid grid-cols-5 text-white/70 text-xs sm:text-sm">
+                <div className="p-3 sm:p-4 border-r border-white/8">&lt;= 2</div>
+                <div className="p-3 sm:p-4 border-r border-white/8">5-10%</div>
+                <div className="p-3 sm:p-4 border-r border-white/8">7.00%</div>
+                <div className="p-3 sm:p-4 border-r border-white/8">Up to {MAX_TENURE}</div>
+                <div className="p-3 sm:p-4">Pan India</div>
+              </div>
             </div>
           </div>
         </motion.div>
@@ -252,7 +252,6 @@ export default function Finance() {
             <div>
               <h2
                 className="text-2xl lg:text-3xl font-bold text-white mb-8 flex items-center gap-3"
-                style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
               >
                 <Calculator className="h-7 w-7 text-amber-400" />
                 EMI Calculator
@@ -315,7 +314,7 @@ export default function Finance() {
 
             <div className="bg-white/4 border border-amber-500/20 rounded-2xl p-8">
               <h3 className="text-sm font-bold text-white/60 mb-2 uppercase tracking-wide">Monthly EMI</h3>
-              <div className="text-4xl lg:text-5xl font-black text-amber-400 mb-4">
+              <div className="text-3xl sm:text-4xl lg:text-5xl font-black text-amber-400 mb-4">
                 ₹{formatCurrency(calculateEMI())}
               </div>
               <p className="text-white/50 text-sm mb-6">
@@ -324,11 +323,11 @@ export default function Finance() {
               <div className="grid grid-cols-2 gap-6 pt-4 border-t border-white/8">
                 <div>
                   <div className="text-white/40 mb-1 text-xs uppercase tracking-wide">Total Amount</div>
-                  <div className="text-white font-bold text-lg">₹{formatCurrency(calculateEMI() * loanTerm * 12)}</div>
+                  <div className="text-white font-bold font-display text-lg">₹{formatCurrency(calculateEMI() * loanTerm * 12)}</div>
                 </div>
                 <div>
                   <div className="text-white/40 mb-1 text-xs uppercase tracking-wide">Total Interest</div>
-                  <div className="text-white font-bold text-lg">₹{formatCurrency((calculateEMI() * loanTerm * 12) - loanAmount)}</div>
+                  <div className="text-white font-bold font-display text-lg">₹{formatCurrency((calculateEMI() * loanTerm * 12) - loanAmount)}</div>
                 </div>
               </div>
             </div>
@@ -346,7 +345,6 @@ export default function Finance() {
           >
             <h2
               className="text-3xl lg:text-4xl font-bold tracking-tight text-white leading-tight"
-              style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
             >
               Why Choose <span className="text-amber-400">Us</span>
             </h2>
@@ -391,7 +389,6 @@ export default function Finance() {
             <div className="space-y-6">
                <h3
                  className="text-2xl lg:text-4xl font-bold text-white leading-tight"
-                 style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
                >
                   Ready For{" "}
                   <span className="text-amber-400">Solar Financing?</span>

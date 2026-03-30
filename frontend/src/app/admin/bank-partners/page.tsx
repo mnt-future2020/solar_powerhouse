@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, X, Save, Loader2, ShieldCheck, AlertTriangle, Building2, ImageOff, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
 import { useToast } from '@/components/ui/use-toast';
 import axios from '@/lib/axios';
 import { cn } from '@/lib/utils';
@@ -15,24 +14,7 @@ interface BankPartner {
   createdAt: string;
 }
 
-const inputCls = 'w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 transition-all';
-
-// ── Logo with fallback ───────────────────────────────────────────────────────
-function LogoImage({ src, alt }: { src: string; alt: string }) {
-  const [errored, setErrored] = useState(false);
-  if (!src || errored) {
-    return (
-      <div className="flex flex-col items-center justify-center gap-2 text-gray-300">
-        <ImageOff className="h-8 w-8" />
-        <span className="text-[10px] font-bold uppercase tracking-wider">No Image</span>
-      </div>
-    );
-  }
-  return (
-    <img src={src} alt={alt} onError={() => setErrored(true)}
-      className="max-h-24 max-w-full object-contain p-4" />
-  );
-}
+const inputCls = 'w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-400 transition-all';
 
 // ── Delete Confirm Modal ──────────────────────────────────────────────────────
 function DeleteModal({ name, onConfirm, onCancel }: { name: string; onConfirm: () => void; onCancel: () => void }) {
@@ -122,52 +104,47 @@ function PartnerModal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
-      <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md animate-in fade-in zoom-in-95 duration-200"
+      <div className="relative bg-white rounded-xl shadow-2xl w-full max-w-md animate-in fade-in zoom-in-95 duration-200"
         onClick={e => e.stopPropagation()}>
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 bg-slate-950 rounded-t-2xl">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-white/10">
-              <Building2 className="h-4 w-4 text-amber-400" />
-            </div>
-            <h2 className="text-sm font-bold text-white uppercase tracking-wider">
-              {editing ? 'Edit Bank Partner' : 'Add Bank Partner'}
-            </h2>
-          </div>
-          <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+          <h2 className="text-sm font-bold text-gray-900">
+            {editing ? 'Edit Bank Partner' : 'Add Bank Partner'}
+          </h2>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
             <X className="h-5 w-5" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-6 space-y-4">
-          <div className="space-y-1.5">
-            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider">Bank Name</label>
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1.5">Bank Name</label>
             <input type="text" value={name} onChange={e => setName(e.target.value)}
               className={inputCls} placeholder="e.g. State Bank of India" required />
           </div>
 
-          <div className="space-y-1.5">
-            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider">Bank Logo</label>
-            <label className="flex items-center gap-3 px-4 py-3 border-2 border-dashed border-gray-200 rounded-xl cursor-pointer hover:border-amber-400 hover:bg-amber-50/30 transition-all">
+          <div>
+            <label className="block text-xs font-semibold text-gray-600 mb-1.5">Bank Logo</label>
+            <label className="flex items-center gap-3 px-4 py-3 border-2 border-dashed border-gray-200 rounded-lg cursor-pointer hover:border-amber-400 hover:bg-amber-50/30 transition-all">
               <Plus className="h-4 w-4 text-gray-400" />
               <span className="text-sm text-gray-500">Click to upload image</span>
               <input type="file" accept="image/*" onChange={handleFile} className="hidden" />
             </label>
             {preview && (
-              <div className="relative w-full h-28 bg-gray-50 border border-gray-100 rounded-xl overflow-hidden flex items-center justify-center">
-                <img src={preview} className="max-h-24 max-w-full object-contain p-3" alt="Preview"
+              <div className="mt-2 w-full h-24 bg-gray-50 border border-gray-100 rounded-lg overflow-hidden flex items-center justify-center">
+                <img src={preview} className="max-h-20 max-w-full object-contain p-2" alt="Preview"
                   onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
               </div>
             )}
           </div>
 
           <div className="flex gap-3 pt-2">
-            <Button type="button" variant="outline" onClick={onClose} disabled={saving}
-              className="flex-1 border-gray-200 text-gray-600">
+            <button type="button" onClick={onClose} disabled={saving}
+              className="flex-1 px-4 py-2.5 rounded-lg border border-gray-200 text-gray-600 font-medium text-sm hover:bg-gray-50 transition-colors">
               Cancel
-            </Button>
+            </button>
             <Button type="submit" disabled={saving}
-              className="flex-1 bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20">
+              className="flex-1 bg-slate-800 hover:bg-slate-700 text-white font-semibold">
               {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Save className="h-4 w-4 mr-2" />}
               {saving ? 'Saving...' : editing ? 'Update' : 'Add Partner'}
             </Button>
@@ -218,10 +195,13 @@ export default function BankPartnersAdmin() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <Loader2 className="h-8 w-8 animate-spin text-amber-500" />
+        <Loader2 className="h-5 w-5 animate-spin text-amber-500" />
       </div>
     );
   }
+
+  const totalPages = Math.ceil(partners.length / LIMIT);
+  const paginated = partners.slice((page - 1) * LIMIT, page * LIMIT);
 
   return (
     <>
@@ -239,75 +219,98 @@ export default function BankPartnersAdmin() {
       <div className="space-y-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-black tracking-tight text-gray-900 uppercase">Bank Partners</h1>
-            <p className="text-sm text-gray-500 mt-0.5">Manage financing bank partners</p>
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center">
+              <ShieldCheck className="h-5 w-5 text-blue-500" />
+            </div>
+            <div>
+              <h1 className="text-xl font-bold text-slate-800">Bank Partners</h1>
+              <p className="text-xs text-gray-400 mt-0.5">{partners.length} partners total</p>
+            </div>
           </div>
           <Button onClick={() => { setEditing(null); setShowModal(true); }}
-            className="bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold shadow-lg shadow-amber-500/20">
-            <Plus className="h-4 w-4 mr-2" />Add Bank Partner
+            className="bg-slate-800 hover:bg-slate-700 text-white font-semibold">
+            <Plus className="h-4 w-4 mr-2" />Add Partner
           </Button>
         </div>
 
-        {/* Grid */}
+        {/* List */}
         {partners.length === 0 ? (
-          <Card className="border-0 shadow-md">
-            <CardContent className="flex flex-col items-center justify-center py-20 text-center">
-              <div className="w-16 h-16 rounded-full bg-gray-100 flex items-center justify-center mb-4">
-                <ShieldCheck className="h-8 w-8 text-gray-300" />
-              </div>
-              <p className="text-sm font-semibold text-gray-400 mb-1">No bank partners yet</p>
-              <p className="text-xs text-gray-300 mb-5">Add your first financing partner</p>
-              <Button onClick={() => setShowModal(true)}
-                className="bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold text-sm">
-                <Plus className="h-4 w-4 mr-2" />Add Bank Partner
-              </Button>
-            </CardContent>
-          </Card>
+          <div className="bg-white border border-gray-100 rounded-xl py-16 text-center">
+            <div className="w-14 h-14 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
+              <ShieldCheck className="h-6 w-6 text-gray-300" />
+            </div>
+            <h3 className="text-sm font-semibold text-gray-900 mb-1">No bank partners yet</h3>
+            <p className="text-xs text-gray-400 mb-4">Add your first financing partner</p>
+            <Button onClick={() => setShowModal(true)}
+              className="bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm">
+              <Plus className="h-4 w-4 mr-2" />Add Partner
+            </Button>
+          </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-              {partners.slice((page - 1) * LIMIT, page * LIMIT).map(partner => (
-                <Card key={partner._id} className="border-0 shadow-md overflow-hidden group hover:shadow-lg transition-all duration-300">
-                  <div className="relative h-32 bg-gray-50 border-b border-gray-100 flex items-center justify-center">
-                    <LogoImage src={partner.image} alt={partner.name} />
-                  </div>
-                  <div className="px-4 py-3 bg-slate-950">
-                    <p className="text-xs font-bold text-white uppercase tracking-wider truncate mb-3">{partner.name}</p>
-                    <div className="flex gap-2">
+            <div className="space-y-3">
+              {paginated.map(partner => (
+                <div key={partner._id}
+                  className="bg-white border border-gray-100 rounded-xl p-4 hover:border-amber-200 hover:shadow-sm transition-all duration-200">
+                  <div className="flex items-center gap-4">
+                    {/* Logo */}
+                    <div className="w-16 h-16 rounded-lg bg-gray-50 border border-gray-100 flex items-center justify-center shrink-0 overflow-hidden">
+                      {partner.image ? (
+                        <img src={partner.image} alt={partner.name}
+                          className="max-h-12 max-w-full object-contain p-1"
+                          onError={e => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                      ) : (
+                        <ImageOff className="h-5 w-5 text-gray-300" />
+                      )}
+                    </div>
+
+                    {/* Name */}
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-sm font-semibold text-slate-800 truncate">{partner.name}</h3>
+                      <p className="text-[11px] text-gray-400 mt-0.5">
+                        Added {new Date(partner.createdAt).toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </p>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex items-center gap-1 shrink-0">
                       <button onClick={() => { setEditing(partner); setShowModal(true); }}
-                        className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition-colors">
-                        <Edit className="h-3 w-3" />Edit
+                        className="p-2 rounded-lg text-gray-400 hover:text-amber-600 hover:bg-amber-50 transition-colors"
+                        title="Edit">
+                        <Edit className="h-4 w-4" />
                       </button>
                       <button onClick={() => setDeleteTarget(partner)}
-                        className="flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-lg bg-red-500/20 hover:bg-red-500/40 text-red-400 text-xs font-bold transition-colors">
-                        <Trash2 className="h-3 w-3" />Delete
+                        className="p-2 rounded-lg text-gray-400 hover:text-red-500 hover:bg-red-50 transition-colors"
+                        title="Delete">
+                        <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
                   </div>
-                </Card>
+                </div>
               ))}
             </div>
 
-            {Math.ceil(partners.length / LIMIT) > 1 && (
-              <div className="flex items-center justify-between mt-6">
+            {/* Pagination */}
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between pt-2">
                 <p className="text-xs text-gray-400">
-                  Showing {(page - 1) * LIMIT + 1}–{Math.min(page * LIMIT, partners.length)} of {partners.length}
+                  {(page - 1) * LIMIT + 1}–{Math.min(page * LIMIT, partners.length)} of {partners.length}
                 </p>
                 <div className="flex items-center gap-1">
                   <button onClick={() => setPage(p => p - 1)} disabled={page <= 1}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
                     <ChevronLeft className="h-4 w-4" />
                   </button>
-                  {Array.from({ length: Math.ceil(partners.length / LIMIT) }, (_, i) => i + 1).map(p => (
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(p => (
                     <button key={p} onClick={() => setPage(p)}
-                      className={cn('w-8 h-8 rounded-lg flex items-center justify-center text-xs font-bold transition-colors',
-                        p === page ? 'bg-gray-900 text-white' : 'text-gray-500 hover:bg-gray-200')}>
+                      className={cn('w-8 h-8 rounded-lg flex items-center justify-center text-xs font-semibold transition-colors',
+                        p === page ? 'bg-amber-500 text-white shadow-sm shadow-amber-500/20' : 'text-gray-500 hover:bg-gray-100')}>
                       {p}
                     </button>
                   ))}
-                  <button onClick={() => setPage(p => p + 1)} disabled={page >= Math.ceil(partners.length / LIMIT)}
-                    className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-200 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
+                  <button onClick={() => setPage(p => p + 1)} disabled={page >= totalPages}
+                    className="w-8 h-8 rounded-lg flex items-center justify-center text-gray-400 hover:bg-gray-100 disabled:opacity-30 disabled:cursor-not-allowed transition-colors">
                     <ChevronRight className="h-4 w-4" />
                   </button>
                 </div>

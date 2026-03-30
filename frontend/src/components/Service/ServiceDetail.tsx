@@ -59,7 +59,6 @@ export default function ServiceDetail({ service }: { service: ServiceType }) {
             </p>
             <h1
               className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight mb-6"
-              style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
             >
               {service.detailTitle || service.title}
             </h1>

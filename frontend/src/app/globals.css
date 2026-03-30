@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&family=Open+Sans:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
 @import "tailwindcss";
 
 @theme {
@@ -20,8 +20,9 @@
   --color-gold-dark: #c48f0e;
   --color-charcoal: #2c2c2c;
 
-  --font-family-sans: "Montserrat", sans-serif;
-  --font-family-display: "Playfair Display", Georgia, serif;
+  --font-family-sans: "Open Sans", sans-serif;
+  --font-family-display: "Montserrat", sans-serif;
+  --font-family-button: "Poppins", sans-serif;
 }
 
 @layer base {
@@ -29,13 +30,36 @@
     border-color: #e5e7eb;
   }
 
+  button,
+  a,
+  [role="button"],
+  input[type="submit"],
+  input[type="button"],
+  input[type="reset"],
+  select,
+  summary {
+    cursor: pointer;
+  }
+
   body {
     background-color: #fefefe;
     color: #1a1a1a;
-    font-family: "Montserrat", sans-serif;
+    font-family: "Open Sans", sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: "Montserrat", sans-serif;
+  }
+
+  button,
+  [role="button"],
+  input[type="submit"],
+  input[type="button"],
+  input[type="reset"] {
+    font-family: "Poppins", sans-serif;
   }
 }
 
@@ -81,11 +105,11 @@
 
 /* Professional Scrollbar */
 .custom-scrollbar::-webkit-scrollbar {
-  width: 6px;
+  width: 5px;
 }
 
 .custom-scrollbar::-webkit-scrollbar-track {
-  background: #f1f5f9;
+  background: transparent;
 }
 
 .custom-scrollbar::-webkit-scrollbar-thumb {
@@ -95,6 +119,24 @@
 
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #D97706;
+}
+
+/* Dark scrollbar for sidebar */
+.dark-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.dark-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dark-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+}
+
+.dark-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
 
 /* Professional Button Styles */

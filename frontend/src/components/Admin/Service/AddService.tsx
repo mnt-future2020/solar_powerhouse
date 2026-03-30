@@ -1,8 +1,7 @@
 'use client';
 import { useState, KeyboardEvent } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { X } from 'lucide-react';
+import { X, Upload } from 'lucide-react';
 import ImageUpload from '@/components/ui/ImageUpload';
 
 export interface ServiceFormData {
@@ -24,15 +23,17 @@ interface AddServiceProps {
   onDiscard: () => void;
 }
 
-const inputCls = "w-full px-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 text-sm transition-all outline-none";
+const inputCls = "w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-amber-500/20 focus:border-amber-400 text-sm transition-all outline-none";
 const textareaCls = `${inputCls} resize-none`;
 
-function Field({ label, hint, children }: { label: string; hint?: string; children: React.ReactNode }) {
+function Field({ label, required, hint, children }: { label: string; required?: boolean; hint?: string; children: React.ReactNode }) {
   return (
     <div>
-      <label className="block text-xs font-bold text-gray-700 mb-1">{label}</label>
+      <label className="block text-xs font-semibold text-gray-600 mb-1.5">
+        {label}{required && <span className="text-red-400 ml-0.5">*</span>}
+      </label>
       {children}
-      {hint && <p className="text-xs text-gray-400 mt-1">{hint}</p>}
+      {hint && <p className="text-[11px] text-gray-400 mt-1">{hint}</p>}
     </div>
   );
 }
@@ -75,13 +76,13 @@ function TagInput({
     }
   };
 
-  const dotColor  = tagColor === 'teal' ? 'bg-teal-500'  : 'bg-amber-500';
-  const textColor = tagColor === 'teal' ? 'text-teal-800' : 'text-amber-800';
-  const xColor    = tagColor === 'teal' ? 'text-teal-400 hover:text-teal-700' : 'text-amber-400 hover:text-amber-700';
+  const dotColor  = tagColor === 'teal' ? 'bg-slate-500'  : 'bg-amber-500';
+  const textColor = tagColor === 'teal' ? 'text-slate-700' : 'text-amber-700';
+  const xColor    = tagColor === 'teal' ? 'text-slate-400 hover:text-slate-700' : 'text-amber-400 hover:text-amber-700';
+  const bgColor   = tagColor === 'teal' ? 'bg-slate-50 border-slate-100' : 'bg-amber-50 border-amber-100';
 
   return (
-    <div className="space-y-1">
-      {/* Text input */}
+    <div>
       <input
         type="text"
         value={input}
@@ -92,29 +93,26 @@ function TagInput({
         className={inputCls}
       />
 
-      {/* Points list below the input */}
       {tags.length > 0 && (
-        <ul className="mt-2 space-y-1">
+        <div className="flex flex-wrap gap-1.5 mt-2">
           {tags.map((tag, i) => (
-            <li
+            <span
               key={i}
-              className="flex items-center justify-between gap-2 px-3 py-1.5 rounded-lg bg-gray-50 border border-gray-100 group"
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium border ${bgColor} ${textColor}`}
             >
-              <div className="flex items-center gap-2 min-w-0">
-                <span className={`shrink-0 w-1.5 h-1.5 rounded-full ${dotColor}`} />
-                <span className={`text-xs font-medium truncate ${textColor}`}>{tag}</span>
-              </div>
+              <span className={`w-1 h-1 rounded-full ${dotColor}`} />
+              {tag}
               <button
                 type="button"
                 onClick={() => removeTag(i)}
-                className={`shrink-0 transition-colors ${xColor}`}
+                className={`ml-0.5 transition-colors ${xColor}`}
                 aria-label={`Remove ${tag}`}
               >
-                <X className="h-3.5 w-3.5" />
+                <X className="h-3 w-3" />
               </button>
-            </li>
+            </span>
           ))}
-        </ul>
+        </div>
       )}
     </div>
   );
@@ -124,19 +122,21 @@ function TagInput({
 export default function AddService({ formData, isEditing, onSet, onSubmit, onDiscard }: AddServiceProps) {
   return (
     <form onSubmit={onSubmit}>
-      <Card className="border shadow-md">
-        <CardHeader className="bg-amber-50 border-b py-4 px-6">
-          <CardTitle className="text-base font-bold text-gray-900">
-            {isEditing ? 'Edit Service' : 'Add New Service'}
-          </CardTitle>
-          <p className="text-xs text-gray-500 mt-0.5">Fill in all the details for this service</p>
-        </CardHeader>
+      <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
+        {/* Header */}
+        <div className="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+          <h2 className="text-sm font-bold text-gray-900">
+            {isEditing ? 'Edit Service' : 'New Service'}
+          </h2>
+          <p className="text-xs text-gray-400 mt-0.5">Fill in the details below</p>
+        </div>
 
-        <CardContent className="p-6 grid grid-cols-1 md:grid-cols-2 gap-5">
+        <div className="p-6 space-y-6">
+          {/* Section: Basic Info */}
+          <div className="space-y-4">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-300">Basic Information</p>
 
-          {/* Service Title */}
-          <div className="md:col-span-2">
-            <Field label="Service Title *">
+            <Field label="Service Title" required>
               <input
                 required
                 value={formData.title}
@@ -145,62 +145,66 @@ export default function AddService({ formData, isEditing, onSet, onSubmit, onDis
                 placeholder="e.g., Residential Solar Installation"
               />
             </Field>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Field label="Short Description" required hint="Shown on the service card">
+                <textarea
+                  required rows={3}
+                  value={formData.description}
+                  onChange={e => onSet('description', e.target.value)}
+                  className={textareaCls}
+                  placeholder="Brief summary for the card..."
+                />
+              </Field>
+
+              <Field label="Detail Description" hint="Shown on the detail page">
+                <textarea
+                  rows={3}
+                  value={formData.detailDescription}
+                  onChange={e => onSet('detailDescription', e.target.value)}
+                  className={textareaCls}
+                  placeholder="Full description for the detail page..."
+                />
+              </Field>
+            </div>
           </div>
 
-          {/* Short Description */}
-          <Field label="Short Description *" hint="Shown on service cards">
-            <textarea
-              required rows={3}
-              value={formData.description}
-              onChange={e => onSet('description', e.target.value)}
-              className={textareaCls}
-              placeholder="Brief summary for the card..."
-            />
-          </Field>
+          {/* Divider */}
+          <div className="border-t border-gray-100" />
 
-          {/* Full Description */}
-          <Field label="Description" hint="Shown on the detail page">
-            <textarea
-              rows={3}
-              value={formData.detailDescription}
-              onChange={e => onSet('detailDescription', e.target.value)}
-              className={textareaCls}
-              placeholder="Comprehensive description for the detail page..."
-            />
-          </Field>
+          {/* Section: Features & Benefits */}
+          <div className="space-y-4">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-300">Features & Benefits</p>
 
-          {/* Features — tag input */}
-          <Field label="Features *" hint="Press Enter or comma to add a point">
-            <TagInput
-              value={formData.features}
-              onChange={val => onSet('features', val)}
-              placeholder="e.g. Free Consultation"
-              tagColor="amber"
-            />
-            {/* Hidden required guard */}
-            <input
-              tabIndex={-1}
-              required
-              value={formData.features}
-              onChange={() => {}}
-              className="sr-only"
-              aria-hidden
-            />
-          </Field>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Field label="Features" required hint="Press Enter or comma to add">
+                <TagInput
+                  value={formData.features}
+                  onChange={val => onSet('features', val)}
+                  placeholder="e.g. Free Consultation"
+                  tagColor="amber"
+                />
+                <input
+                  tabIndex={-1}
+                  required
+                  value={formData.features}
+                  onChange={() => {}}
+                  className="sr-only"
+                  aria-hidden
+                />
+              </Field>
 
-          {/* Benefits — tag input */}
-          <Field label="Benefits Points" hint="Press Enter or comma to add a point">
-            <TagInput
-              value={formData.benefits}
-              onChange={val => onSet('benefits', val)}
-              placeholder="e.g. Save 80% on bills"
-              tagColor="teal"
-            />
-          </Field>
+              <Field label="Benefits" hint="Press Enter or comma to add">
+                <TagInput
+                  value={formData.benefits}
+                  onChange={val => onSet('benefits', val)}
+                  placeholder="e.g. Save 80% on bills"
+                  tagColor="teal"
+                />
+              </Field>
+            </div>
 
-          {/* What We Do */}
-          <div className="md:col-span-2">
-            <Field label="What We Do in This Work">
+            <Field label="Work Process" hint="Describe how this service is delivered">
               <textarea
                 rows={3}
                 value={formData.workProcess}
@@ -211,41 +215,52 @@ export default function AddService({ formData, isEditing, onSet, onSubmit, onDis
             </Field>
           </div>
 
-          {/* Service Image */}
-          <Field label="Service Image">
-            <ImageUpload
-              value={formData.image}
-              onChange={url => onSet('image', url)}
-              onRemove={() => onSet('image', '')}
-            />
-            {formData.image && <p className="text-xs text-green-600 mt-1 font-medium">✓ Image uploaded</p>}
-          </Field>
+          {/* Divider */}
+          <div className="border-t border-gray-100" />
 
-          {/* Banner Image */}
-          <Field label="Service Banner">
-            <ImageUpload
-              value={formData.bannerImage}
-              onChange={url => onSet('bannerImage', url)}
-              onRemove={() => onSet('bannerImage', '')}
-            />
-            {formData.bannerImage && <p className="text-xs text-green-600 mt-1 font-medium">✓ Banner uploaded</p>}
-          </Field>
+          {/* Section: Images */}
+          <div className="space-y-4">
+            <p className="text-[10px] font-bold uppercase tracking-widest text-gray-300">Images</p>
 
-        </CardContent>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <Field label="Service Image" hint="Main thumbnail image">
+                <ImageUpload
+                  value={formData.image}
+                  onChange={url => onSet('image', url)}
+                  onRemove={() => onSet('image', '')}
+                />
+                {formData.image && <p className="text-[11px] text-amber-600 mt-1 font-medium">Image uploaded</p>}
+              </Field>
 
-        {/* Form Actions */}
-        <div className="flex justify-end gap-3 px-6 py-4 border-t bg-gray-50 rounded-b-xl">
-          <Button type="button" variant="outline" onClick={onDiscard} className="px-6">
-            Discard
-          </Button>
+              <Field label="Banner Image" hint="Displayed on the detail page">
+                <ImageUpload
+                  value={formData.bannerImage}
+                  onChange={url => onSet('bannerImage', url)}
+                  onRemove={() => onSet('bannerImage', '')}
+                />
+                {formData.bannerImage && <p className="text-[11px] text-amber-600 mt-1 font-medium">Banner uploaded</p>}
+              </Field>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer Actions */}
+        <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100 bg-gray-50/50">
+          <button
+            type="button"
+            onClick={onDiscard}
+            className="text-sm text-gray-400 hover:text-gray-600 font-medium transition-colors"
+          >
+            Cancel
+          </button>
           <Button
             type="submit"
-            className="px-8 bg-linear-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold"
+            className="px-6 bg-slate-800 hover:bg-slate-700 text-white font-semibold"
           >
             {isEditing ? 'Update Service' : 'Create Service'}
           </Button>
         </div>
-      </Card>
+      </div>
     </form>
   );
 }

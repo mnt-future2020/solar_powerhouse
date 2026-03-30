@@ -108,7 +108,6 @@ export default function SolarCalculator() {
               <p className="text-amber-400/70 font-semibold text-xs uppercase tracking-[0.15em]">Solar Calculator</p>
               <h1
                 className="text-3xl sm:text-4xl lg:text-5xl font-bold leading-tight"
-                style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
               >
                 Calculate Your{' '}
                 <span className="text-amber-400">Solar Savings</span>
@@ -161,7 +160,6 @@ export default function SolarCalculator() {
               <Calculator className="h-5 w-5 text-amber-500" />
               <h4
                 className="text-xl font-bold text-gray-900"
-                style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
               >
                 Solar Calculator
               </h4>
@@ -198,7 +196,7 @@ export default function SolarCalculator() {
               {/* Tariff */}
               <div>
                 <label className="block text-xs font-semibold text-gray-500 mb-1">TARIFF RATES: {formData.tariffRate} INR</label>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
                   <span className="text-gray-400 text-xs">4</span>
                   <input type="range" min="4" max="30" value={formData.tariffRate}
                     onChange={e => set('tariffRate', parseInt(e.target.value))}
@@ -297,7 +295,6 @@ export default function SolarCalculator() {
             <div className="flex items-center justify-between p-6 border-b border-gray-100">
               <h2
                 className="text-xl font-bold text-gray-900"
-                style={{ fontFamily: '"Playfair Display", Georgia, serif' }}
               >
                 Solar Calculator Results
               </h2>

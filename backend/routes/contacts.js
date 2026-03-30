@@ -1,11 +1,20 @@
 const express = require('express');
+const { body, validationResult } = require('express-validator');
 const Contact = require('../models/Contact');
 const { auth, adminAuth } = require('../middleware/auth');
 
 const router = express.Router();
 
-// Create contact
-router.post('/', async (req, res) => {
+// Create contact (public)
+router.post('/', [
+  body('name').notEmpty().trim().withMessage('Name is required'),
+  body('email').isEmail().normalizeEmail().withMessage('Valid email is required'),
+  body('message').notEmpty().trim().withMessage('Message is required'),
+], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ errors: errors.array() });
+  }
   try {
     const contact = new Contact(req.body);
     await contact.save();
