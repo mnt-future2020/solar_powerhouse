@@ -18,7 +18,7 @@ app.use(cors({
 app.use(express.json());
 app.use(cookieParser());
 
-// Root route — fixes "Cannot GET /" on Vercel
+// Root route
 app.get('/', (req, res) => {
   res.status(200).json({
     status: 'OK',
@@ -204,7 +204,7 @@ const initializeSampleBankPartners = async () => {
   }
 };
 
-// MongoDB Connection — runs on both local and Vercel cold start
+// MongoDB Connection
 let dbError = null;
 
 const mongoUri = process.env.MONGODB_URI;
@@ -242,13 +242,11 @@ app.get('/api/debug', (req, res) => {
   });
 });
 
-// Start server locally only (Vercel uses module.exports)
-if (process.env.NODE_ENV !== 'production') {
-  const PORT = process.env.PORT || 5000;
-  app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-    console.log(`   Health check: http://localhost:${PORT}/api/health`);
-  });
-}
+// Start server
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`   Health check: http://localhost:${PORT}/api/health`);
+});
 
 module.exports = app;
