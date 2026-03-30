@@ -396,7 +396,7 @@ export default function PortfolioPage() {
               Get a free consultation and a custom solar solution designed for your property.
             </p>
             <div className="flex flex-wrap justify-center gap-4 mt-8">
-              <Link href="/solar-calculator" className="btn-pill btn-pill-gold">
+              <Link href="/contact#contact-form" className="btn-pill btn-pill-gold">
                 Get Free Quote
                 <ArrowRight className="h-4 w-4" />
               </Link>

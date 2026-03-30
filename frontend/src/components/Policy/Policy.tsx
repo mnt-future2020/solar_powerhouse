@@ -1,6 +1,8 @@
 "use client";
 import { Shield, Eye, Lock, Database, UserCheck, Bell, RefreshCw, Mail } from "lucide-react";
 import Link from "next/link";
+import { useState, useEffect } from "react";
+import axios from "@/lib/axios";
 
 const sections = [
   {
@@ -66,6 +68,24 @@ const sections = [
 ];
 
 export default function Policy() {
+  const [email, setEmail] = useState("privacy@solarpowerhouse.com");
+  const [companyName, setCompanyName] = useState("Solar Power House");
+
+  useEffect(() => {
+    axios.get('/settings')
+      .then(response => {
+        if (response.data.email) {
+          setEmail(response.data.email);
+        }
+        if (response.data.companyName) {
+          setCompanyName(response.data.companyName);
+        }
+      })
+      .catch(() => {
+        // Keep default values if fetch fails
+      });
+  }, []);
+
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Banner */}
@@ -94,7 +114,7 @@ export default function Policy() {
         {/* Intro */}
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 mb-12">
           <p className="text-gray-700 leading-relaxed">
-            Solar Power House ("we", "our", "us") is committed to protecting your privacy. This policy explains what information we collect when you use our website, request a solar consultation, or engage us for solar panel installation, and how we handle that information. By using our services, you agree to the practices described below.
+            {companyName} ("we", "our", "us") is committed to protecting your privacy. This policy explains what information we collect when you use our website, request a solar consultation, or engage us for solar panel installation, and how we handle that information. By using our services, you agree to the practices described below.
           </p>
         </div>
 
@@ -130,8 +150,8 @@ export default function Policy() {
             For any privacy-related queries, data access requests, or concerns about your solar installation data, please reach out to us.
           </p>
           <div className="flex flex-wrap gap-4">
-            <a href="mailto:privacy@solarpowerhouse.com" className="text-amber-400 hover:text-amber-300 font-medium transition-colors">
-              privacy@solarpowerhouse.com
+            <a href={`mailto:${email}`} className="text-amber-400 hover:text-amber-300 font-medium transition-colors">
+              {email}
             </a>
             <span className="text-white/30">|</span>
             <Link href="/contact" className="text-amber-400 hover:text-amber-300 font-medium transition-colors">

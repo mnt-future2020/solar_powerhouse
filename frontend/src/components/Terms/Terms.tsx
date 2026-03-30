@@ -1,17 +1,38 @@
 "use client";
 import { FileText, Wrench, AlertTriangle, CreditCard, ShieldCheck, RotateCcw, Scale, Phone } from "lucide-react";
 import Link from "next/link";
+import { useState, useEffect } from "react";
+import axios from "@/lib/axios";
 
-const sections = [
+export default function Terms() {
+  const [email, setEmail] = useState("legal@solarpowerhouse.com");
+  const [companyName, setCompanyName] = useState("Solar Power House");
+
+  useEffect(() => {
+    axios.get('/settings')
+      .then(response => {
+        if (response.data.email) {
+          setEmail(response.data.email);
+        }
+        if (response.data.companyName) {
+          setCompanyName(response.data.companyName);
+        }
+      })
+      .catch(() => {
+        // Keep default values if fetch fails
+      });
+  }, []);
+
+  const sections = [
   {
     icon: Wrench,
     title: "Solar Installation Services",
     content: [
-      "Solar Power House provides design, supply, installation, and commissioning of rooftop solar photovoltaic (PV) systems for residential, commercial, and industrial properties.",
+      `${companyName} provides design, supply, installation, and commissioning of rooftop solar photovoltaic (PV) systems for residential, commercial, and industrial properties.`,
       "All installations are carried out by MNRE-certified solar engineers and technicians in compliance with CEA (Central Electricity Authority) technical standards.",
       "The system design — including panel capacity (kWp), inverter rating, mounting structure, and wiring — is based on the site survey report and your approved sanction load from the DISCOM.",
       "Any changes to the agreed system design after work order confirmation may attract additional charges and revised timelines.",
-      "Net metering applications and DISCOM approvals are facilitated by Solar Power House but are subject to the respective state electricity board's processing timelines.",
+      `Net metering applications and DISCOM approvals are facilitated by ${companyName} but are subject to the respective state electricity board's processing timelines.`,
     ],
   },
   {
@@ -21,7 +42,7 @@ const sections = [
       "Solar panels carry a 25-year linear performance warranty from the manufacturer, guaranteeing at least 80% of rated output at year 25.",
       "Inverters are covered by a 5-year manufacturer warranty, extendable to 10 years with an optional AMC (Annual Maintenance Contract).",
       "Mounting structures carry a 10-year structural warranty against corrosion and mechanical failure under normal weather conditions.",
-      "Solar Power House provides a 1-year workmanship warranty covering installation defects, wiring faults, and mounting issues.",
+      `${companyName} provides a 1-year workmanship warranty covering installation defects, wiring faults, and mounting issues.`,
       "Warranties are void if the system is tampered with, modified, or serviced by non-authorised personnel.",
     ],
   },
@@ -45,7 +66,7 @@ const sections = [
       "Cancellations after 48 hours but before material procurement will attract a 10% administrative charge on the advance.",
       "Once materials have been procured or installation has commenced, cancellations are not eligible for a refund of material costs.",
       "Refunds, where applicable, will be processed within 14 working days to the original payment method.",
-      "Solar Power House reserves the right to cancel a work order if site conditions are found to be unsuitable for safe installation, with a full refund of any advance paid.",
+      `${companyName} reserves the right to cancel a work order if site conditions are found to be unsuitable for safe installation, with a full refund of any advance paid.`,
     ],
   },
   {
@@ -53,7 +74,7 @@ const sections = [
     title: "Limitations of Liability",
     content: [
       "Solar generation estimates provided through our solar calculator are indicative only and based on average peak sun hours for your region. Actual generation may vary due to weather, shading, soiling, and grid availability.",
-      "Solar Power House is not liable for delays in DISCOM net metering approvals, subsidy disbursements, or grid connectivity, as these are governed by state electricity regulations.",
+      `${companyName} is not liable for delays in DISCOM net metering approvals, subsidy disbursements, or grid connectivity, as these are governed by state electricity regulations.`,
       "We are not responsible for damage to the solar system caused by acts of God (cyclones, floods, lightning strikes), vandalism, or structural failure of the building on which the system is mounted.",
       "Our total liability for any claim arising from installation services shall not exceed the total contract value paid by the customer.",
     ],
@@ -72,14 +93,13 @@ const sections = [
     icon: FileText,
     title: "Intellectual Property",
     content: [
-      "All content on this website — including solar system designs, calculation methodologies, images, and text — is the intellectual property of Solar Power House.",
+      `All content on this website — including solar system designs, calculation methodologies, images, and text — is the intellectual property of ${companyName}.`,
       "You may not reproduce, distribute, or use our content for commercial purposes without prior written consent.",
-      "The Solar Power House name, logo, and tagline 'Powering Future' are registered trademarks and may not be used without authorisation.",
+      `The ${companyName} name, logo, and tagline are registered trademarks and may not be used without authorisation.`,
     ],
   },
 ];
 
-export default function Terms() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero Banner */}
@@ -97,7 +117,7 @@ export default function Terms() {
             Terms of <span className="text-amber-400">Service</span>
           </h1>
           <p className="text-white/70 text-lg max-w-2xl">
-            The terms and conditions governing solar panel installation, consultation, warranties, and all services provided by Solar Power House.
+            The terms and conditions governing solar panel installation, consultation, warranties, and all services provided by {companyName}.
           </p>
           <p className="text-white/40 text-sm mt-4">Last updated: March 2026</p>
         </div>
@@ -108,7 +128,7 @@ export default function Terms() {
         {/* Intro */}
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 mb-12">
           <p className="text-gray-700 leading-relaxed">
-            By engaging Solar Power House for a solar consultation, site survey, or installation project, you agree to be bound by these Terms of Service. Please read them carefully before confirming any work order. These terms apply to all residential, commercial, and industrial solar installations carried out by Solar Power House across India.
+            By engaging {companyName} for a solar consultation, site survey, or installation project, you agree to be bound by these Terms of Service. Please read them carefully before confirming any work order. These terms apply to all residential, commercial, and industrial solar installations carried out by {companyName} across India.
           </p>
         </div>
 
@@ -144,8 +164,8 @@ export default function Terms() {
             If you have any questions about our terms of service, installation contracts, or warranty conditions, our team is happy to help.
           </p>
           <div className="flex flex-wrap gap-4">
-            <a href="mailto:legal@solarpowerhouse.com" className="text-amber-400 hover:text-amber-300 font-medium transition-colors">
-              legal@solarpowerhouse.com
+            <a href={`mailto:${email}`} className="text-amber-400 hover:text-amber-300 font-medium transition-colors">
+              {email}
             </a>
             <span className="text-white/30">|</span>
             <Link href="/contact" className="text-amber-400 hover:text-amber-300 font-medium transition-colors">
