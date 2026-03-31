@@ -65,15 +65,48 @@ app.get('/api/health', (req, res) => {
   res.status(statusCode).json(healthStatus);
 });
 
-// Debug — temporary
+// MongoDB Connection — cached for Vercel serverless reuse
+let cachedDb = null;
 let dbError = null;
 mongoose.connection.on('error', (err) => { dbError = err.message; });
+
+async function connectDB() {
+  if (cachedDb && mongoose.connection.readyState === 1) {
+    return cachedDb;
+  }
+  await mongoose.connect(process.env.MONGODB_URI, {
+    family: 4,
+    serverSelectionTimeoutMS: 10000,
+  });
+  cachedDb = mongoose.connection;
+  console.log('✅ MongoDB connected');
+  console.log(`   Database: ${mongoose.connection.name}`);
+  await Promise.all([
+    initializeAdmin(),
+    initializeSampleServices(),
+    initializeSampleBankPartners(),
+  ]);
+  return cachedDb;
+}
+
+// Debug — temporary
 app.get('/api/debug', (req, res) => {
   res.json({
     uri: process.env.MONGODB_URI ? process.env.MONGODB_URI.substring(0, 30) + '...' : 'NOT SET',
     dbState: mongoose.connection.readyState,
     error: dbError,
   });
+});
+
+// Ensure DB is connected before API routes
+app.use('/api', async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (err) {
+    console.error('❌ MongoDB connection error:', err);
+    res.status(503).json({ error: 'Database connection failed' });
+  }
 });
 
 // Routes
@@ -214,17 +247,6 @@ const initializeSampleBankPartners = async () => {
     console.error('❌ Error initializing bank partners:', error.message);
   }
 };
-
-// MongoDB Connection
-mongoose.connect(process.env.MONGODB_URI, { family: 4 })
-  .then(() => {
-    console.log('✅ MongoDB connected');
-    console.log(`   Database: ${mongoose.connection.name}`);
-    initializeAdmin();
-    initializeSampleServices();
-    initializeSampleBankPartners();
-  })
-  .catch(err => console.error('❌ MongoDB connection error:', err));
 
 // Start server (local only — Vercel uses module.exports)
 if (process.env.NODE_ENV !== 'production') {
