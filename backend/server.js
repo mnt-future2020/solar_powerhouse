@@ -65,6 +65,17 @@ app.get('/api/health', (req, res) => {
   res.status(statusCode).json(healthStatus);
 });
 
+// Debug — temporary
+let dbError = null;
+mongoose.connection.on('error', (err) => { dbError = err.message; });
+app.get('/api/debug', (req, res) => {
+  res.json({
+    uri: process.env.MONGODB_URI ? process.env.MONGODB_URI.substring(0, 30) + '...' : 'NOT SET',
+    dbState: mongoose.connection.readyState,
+    error: dbError,
+  });
+});
+
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/services', require('./routes/services'));
