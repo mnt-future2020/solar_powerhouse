@@ -89,15 +89,6 @@ async function connectDB() {
   return cachedDb;
 }
 
-// Debug — temporary
-app.get('/api/debug', (req, res) => {
-  res.json({
-    uri: process.env.MONGODB_URI ? process.env.MONGODB_URI.substring(0, 30) + '...' : 'NOT SET',
-    dbState: mongoose.connection.readyState,
-    error: dbError,
-  });
-});
-
 // Ensure DB is connected before API routes
 app.use('/api', async (req, res, next) => {
   try {
@@ -107,6 +98,15 @@ app.use('/api', async (req, res, next) => {
     console.error('❌ MongoDB connection error:', err);
     res.status(503).json({ error: 'Database connection failed' });
   }
+});
+
+// Debug — temporary (placed after DB middleware so connection is attempted first)
+app.get('/api/debug', (req, res) => {
+  res.json({
+    uri: process.env.MONGODB_URI ? process.env.MONGODB_URI.substring(0, 30) + '...' : 'NOT SET',
+    dbState: mongoose.connection.readyState,
+    error: dbError,
+  });
 });
 
 // Routes
