@@ -205,42 +205,15 @@ const initializeSampleBankPartners = async () => {
 };
 
 // MongoDB Connection
-let dbError = null;
-
-const mongoUri = process.env.MONGODB_URI;
-if (!mongoUri) {
-  dbError = 'MONGODB_URI environment variable is not set';
-  console.error('❌ MONGODB_URI is not set');
-} else {
-  mongoose.connect(mongoUri, {
-    serverSelectionTimeoutMS: 30000,
-    socketTimeoutMS: 45000,
-    family: 4,
+mongoose.connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log('✅ MongoDB connected');
+    console.log(`   Database: ${mongoose.connection.name}`);
+    initializeAdmin();
+    initializeSampleServices();
+    initializeSampleBankPartners();
   })
-    .then(() => {
-      console.log('✅ MongoDB connected');
-      console.log(`   Database: ${mongoose.connection.name}`);
-      dbError = null;
-      initializeAdmin();
-      initializeSampleServices();
-      initializeSampleBankPartners();
-    })
-    .catch(err => {
-      dbError = err.message;
-      console.error('❌ MongoDB connection error:', err.message);
-    });
-}
-
-// Debug endpoint — shows connection error (remove after fixing)
-app.get('/api/debug', (req, res) => {
-  res.json({
-    mongoUriSet: !!process.env.MONGODB_URI,
-    mongoUriPrefix: process.env.MONGODB_URI ? process.env.MONGODB_URI.substring(0, 20) + '...' : 'NOT SET',
-    dbState: mongoose.connection.readyState,
-    dbError: dbError,
-    envKeys: Object.keys(process.env).filter(k => ['MONGODB_URI', 'JWT_SECRET', 'NODE_ENV', 'ADMIN_EMAIL'].includes(k)),
-  });
-});
+  .catch(err => console.error('❌ MongoDB connection error:', err));
 
 // Start server
 const PORT = process.env.PORT || 5000;
@@ -248,5 +221,3 @@ app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`   Health check: http://localhost:${PORT}/api/health`);
 });
-
-module.exports = app;
