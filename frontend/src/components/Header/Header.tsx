@@ -66,7 +66,7 @@ export default function Header() {
         <div className="flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3 group">
-            <div className="relative h-9 w-9 overflow-hidden bg-white shrink-0">
+            <div className="relative h-12 w-12 overflow-hidden bg-white shrink-0">
               <Image
                 src={settings.logo || '/assets/image/logo/logo.jpg'}
                 alt={settings.companyName}
