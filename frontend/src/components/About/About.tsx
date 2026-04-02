@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
-import { ShieldCheck, Target, Eye, Award, Globe, Zap, ArrowRight, CheckCircle2, Phone, Mail } from "lucide-react";
+import { ShieldCheck, Target, Eye, Award, Globe, Zap, ArrowRight, CheckCircle2, Phone, Mail, Leaf, Lightbulb, Heart, Users } from "lucide-react";
 import Link from "next/link";
 import axios from "@/lib/axios";
 
@@ -198,14 +198,14 @@ export default function About() {
               accent: "text-emerald-400",
               bg: "bg-emerald-500/10",
               title: "Our Mission",
-              text: "To provide high-quality solar installations and energy solutions that eliminate electricity costs, promote environmental sustainability, and deliver long-lasting value to our client ecosystem."
+              text: "To deliver high-quality solar energy solutions that help customers reduce electricity costs while promoting environmental sustainability. We are committed to providing reliable, innovative, and efficient solar installations that create long-term value and customer satisfaction."
             },
             {
               icon: Eye,
               accent: "text-amber-400",
               bg: "bg-amber-500/10",
               title: "Our Vision",
-              text: "To remain the trusted regional leader in solar solutions, architecting reliable, zero-emission infrastructure that permanently modernizes how communities power their future."
+              text: "To become a trusted leader in sustainable energy by offering innovative and dependable solar solutions. We aim to empower residential, commercial, and industrial clients to achieve energy independence and reduce their carbon footprint through expertly designed and executed projects."
             }
           ].map((card, idx) => (
             <motion.div
@@ -227,6 +227,79 @@ export default function About() {
               <p className="text-sm text-white/50 leading-relaxed">{card.text}</p>
             </motion.div>
           ))}
+        </div>
+
+        {/* ═══ Our Values ═══ */}
+        <div className="mb-24">
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
+            className="max-w-xl mb-10"
+          >
+            <p className="text-emerald-400/70 text-xs font-semibold tracking-[0.15em] uppercase mb-3">
+              What We Stand For
+            </p>
+            <h2 className="text-2xl lg:text-4xl font-bold text-white leading-tight">
+              Our Values
+            </h2>
+          </motion.div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {[
+              {
+                icon: Leaf,
+                accent: "text-emerald-400",
+                bg: "bg-emerald-500/10",
+                title: "Sustainability",
+                text: "We are dedicated to protecting the environment and promoting clean energy solutions."
+              },
+              {
+                icon: Lightbulb,
+                accent: "text-amber-400",
+                bg: "bg-amber-500/10",
+                title: "Innovation",
+                text: "Continuously improving with advanced technologies and smart energy systems."
+              },
+              {
+                icon: ShieldCheck,
+                accent: "text-blue-400",
+                bg: "bg-blue-500/10",
+                title: "Reliability",
+                text: "Delivering consistent quality and dependable service to our customers."
+              },
+              {
+                icon: Heart,
+                accent: "text-rose-400",
+                bg: "bg-rose-500/10",
+                title: "Customer Focus",
+                text: "Building long-term relationships through trust, transparency, and support."
+              },
+              {
+                icon: Users,
+                accent: "text-violet-400",
+                bg: "bg-violet-500/10",
+                title: "Responsibility",
+                text: "Contributing to a greener future by reducing environmental impact and supporting communities."
+              }
+            ].map((val, idx) => (
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: idx * 0.08, duration: 0.4, ease: [0.25, 0.46, 0.45, 0.94] }}
+                className="group p-6 rounded-2xl bg-white/3 border border-white/8 hover:border-white/15 transition-colors duration-300"
+              >
+                <div className={`w-10 h-10 rounded-xl ${val.bg} flex items-center justify-center mb-5`}>
+                  <val.icon className={`h-5 w-5 ${val.accent}`} />
+                </div>
+                <h3 className="text-lg font-bold text-white mb-2">{val.title}</h3>
+                <p className="text-sm text-white/50 leading-relaxed">{val.text}</p>
+              </motion.div>
+            ))}
+          </div>
         </div>
 
         {/* ═══ Why Choose Us — values list, not identical cards ═══ */}
