@@ -90,15 +90,21 @@ async function connectDB() {
 }
 
 // Ensure DB is connected before API routes
+let dbReady = false;
 app.use('/api', async (req, res, next) => {
   try {
-    await connectDB();
+    if (!dbReady || mongoose.connection.readyState !== 1) {
+      await connectDB();
+      dbReady = true;
+    }
     next();
   } catch (err) {
     console.error('❌ MongoDB connection error:', err);
+    dbReady = false;
     res.status(503).json({ error: 'Database connection failed' });
   }
 });
+mongoose.connection.on('disconnected', () => { dbReady = false; });
 
 // Debug — temporary (placed after DB middleware so connection is attempted first)
 app.get('/api/debug', (req, res) => {

@@ -1,7 +1,7 @@
 'use client';
 import { useState, KeyboardEvent } from 'react';
 import { Button } from '@/components/ui/button';
-import { X, Upload } from 'lucide-react';
+import { X, Upload, Loader2 } from 'lucide-react';
 import ImageUpload from '@/components/ui/ImageUpload';
 
 export interface ServiceFormData {
@@ -21,6 +21,7 @@ interface AddServiceProps {
   onSet: (key: keyof ServiceFormData, value: string) => void;
   onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
   onDiscard: () => void;
+  saving?: boolean;
 }
 
 const inputCls = "w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg focus:ring-2 focus:ring-amber-500/20 focus:border-amber-400 text-sm transition-all outline-none";
@@ -119,7 +120,7 @@ function TagInput({
 }
 
 // ── Main Component ────────────────────────────────────────────────────────────
-export default function AddService({ formData, isEditing, onSet, onSubmit, onDiscard }: AddServiceProps) {
+export default function AddService({ formData, isEditing, onSet, onSubmit, onDiscard, saving }: AddServiceProps) {
   return (
     <form onSubmit={onSubmit}>
       <div className="bg-white border border-gray-200 rounded-xl overflow-hidden">
@@ -255,9 +256,10 @@ export default function AddService({ formData, isEditing, onSet, onSubmit, onDis
           </button>
           <Button
             type="submit"
+            disabled={saving}
             className="px-6 bg-slate-800 hover:bg-slate-700 text-white font-semibold"
           >
-            {isEditing ? 'Update Service' : 'Create Service'}
+            {saving ? <><Loader2 className="h-4 w-4 mr-2 animate-spin" />Saving...</> : isEditing ? 'Update Service' : 'Create Service'}
           </Button>
         </div>
       </div>

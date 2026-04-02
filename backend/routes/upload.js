@@ -28,16 +28,12 @@ router.post('/image', [auth, adminAuth], upload.single('image'), async (req, res
       return res.status(400).json({ message: 'No image file provided' });
     }
 
-    // Upload to Cloudinary
+    // Upload to Cloudinary — use eager async so upload returns fast
     const result = await new Promise((resolve, reject) => {
       cloudinary.uploader.upload_stream(
         {
           folder: 'solar-services',
-          transformation: [
-            { width: 800, height: 600, crop: 'fill' },
-            { quality: 'auto' },
-            { format: 'auto' }
-          ]
+          resource_type: 'image',
         },
         (error, result) => {
           if (error) reject(error);

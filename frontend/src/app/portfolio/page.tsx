@@ -13,6 +13,7 @@ interface PortfolioItem {
   title: string;
   description: string;
   image: string;
+  images: string[];
   category: string;
   location: string;
   capacity: string;
@@ -29,15 +30,25 @@ function Lightbox({
   onClose: () => void;
   onNavigate: (id: string) => void;
 }) {
+  const itemImages = item.images?.length ? item.images : [item.image];
+  const [imgIndex, setImgIndex] = useState(0);
   const currentIndex = items.findIndex(i => i._id === item._id);
   const hasPrev = currentIndex > 0;
   const hasNext = currentIndex < items.length - 1;
 
+  useEffect(() => { setImgIndex(0); }, [item._id]);
+
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
-      if (e.key === 'ArrowLeft' && hasPrev) onNavigate(items[currentIndex - 1]._id);
-      if (e.key === 'ArrowRight' && hasNext) onNavigate(items[currentIndex + 1]._id);
+      if (e.key === 'ArrowLeft') {
+        if (imgIndex > 0) setImgIndex(i => i - 1);
+        else if (hasPrev) onNavigate(items[currentIndex - 1]._id);
+      }
+      if (e.key === 'ArrowRight') {
+        if (imgIndex < itemImages.length - 1) setImgIndex(i => i + 1);
+        else if (hasNext) onNavigate(items[currentIndex + 1]._id);
+      }
     };
     window.addEventListener('keydown', handleKey);
     document.body.style.overflow = 'hidden';
@@ -45,7 +56,7 @@ function Lightbox({
       window.removeEventListener('keydown', handleKey);
       document.body.style.overflow = '';
     };
-  }, [item._id, hasPrev, hasNext, currentIndex, items, onClose, onNavigate]);
+  }, [item._id, imgIndex, itemImages.length, hasPrev, hasNext, currentIndex, items, onClose, onNavigate]);
 
   return (
     <motion.div
@@ -61,32 +72,42 @@ function Lightbox({
       >
         {/* Image */}
         <div className="relative lg:w-3/5 aspect-video sm:aspect-4/3 lg:aspect-auto bg-cream-dark shrink-0">
-          <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+          <img src={itemImages[imgIndex]} alt={item.title} className="w-full h-full object-cover" />
 
-          {/* Nav arrows */}
-          {hasPrev && (
+          {/* Nav arrows — image-level first, then project-level */}
+          {(imgIndex > 0 || hasPrev) && (
             <button
-              onClick={() => onNavigate(items[currentIndex - 1]._id)}
+              onClick={() => imgIndex > 0 ? setImgIndex(i => i - 1) : onNavigate(items[currentIndex - 1]._id)}
               className="absolute left-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-colors"
-              aria-label="Previous project"
+              aria-label="Previous"
             >
               <ChevronLeft className="h-5 w-5 text-navy" />
             </button>
           )}
-          {hasNext && (
+          {(imgIndex < itemImages.length - 1 || hasNext) && (
             <button
-              onClick={() => onNavigate(items[currentIndex + 1]._id)}
+              onClick={() => imgIndex < itemImages.length - 1 ? setImgIndex(i => i + 1) : onNavigate(items[currentIndex + 1]._id)}
               className="absolute right-3 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-colors"
-              aria-label="Next project"
+              aria-label="Next"
             >
               <ChevronRight className="h-5 w-5 text-navy" />
             </button>
           )}
 
-          {/* Counter */}
-          <div className="absolute bottom-3 left-3 px-3 py-1 rounded-full bg-navy/70 text-white text-xs font-semibold">
+          {/* Image dots */}
+          {itemImages.length > 1 && (
+            <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
+              {itemImages.map((_, i) => (
+                <button key={i} onClick={() => setImgIndex(i)}
+                  className={`w-2 h-2 rounded-full transition-all ${i === imgIndex ? 'bg-white scale-125' : 'bg-white/50'}`} />
+              ))}
+            </div>
+          )}
+
+          {/* Counter — hide when only 1 project */}
+          {items.length > 1 && <div className="absolute bottom-3 left-3 px-3 py-1 rounded-full bg-navy/70 text-white text-xs font-semibold">
             {currentIndex + 1} / {items.length}
-          </div>
+          </div>}
         </div>
 
         {/* Details panel */}

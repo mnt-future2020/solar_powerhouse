@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Plus, Edit, Trash2, Image as ImageIcon, Search, X, AlertTriangle, ChevronLeft, ChevronRight, CheckCircle2, Layers, LayoutGrid } from 'lucide-react';
+import { Plus, Edit, Trash2, Image as ImageIcon, Search, X, AlertTriangle, ChevronLeft, ChevronRight, CheckCircle2, Layers, LayoutGrid, Loader2 } from 'lucide-react';
 import axios from '@/lib/axios';
 import { useToast } from '@/components/ui/use-toast';
 import { cn } from '@/lib/utils';
@@ -26,13 +26,15 @@ function DeleteModal({
   serviceName,
   onConfirm,
   onCancel,
+  deleting,
 }: {
   serviceName: string;
   onConfirm: () => void;
   onCancel: () => void;
+  deleting: boolean;
 }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onCancel}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={deleting ? undefined : onCancel}>
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
       <div
         className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 animate-in fade-in zoom-in-95 duration-200"
@@ -49,15 +51,17 @@ function DeleteModal({
           <div className="flex gap-3 w-full">
             <button
               onClick={onCancel}
-              className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-semibold text-sm hover:bg-gray-50 transition-colors"
+              disabled={deleting}
+              className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-semibold text-sm hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               Cancel
             </button>
             <button
               onClick={onConfirm}
-              className="flex-1 px-4 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold text-sm transition-colors"
+              disabled={deleting}
+              className="flex-1 px-4 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              Yes, Delete
+              {deleting ? <Loader2 className="h-4 w-4 animate-spin mx-auto" /> : 'Yes, Delete'}
             </button>
           </div>
         </div>
@@ -73,6 +77,8 @@ export default function ServicesManagement() {
   const [showForm, setShowForm] = useState(false);
   const [editingService, setEditingService] = useState<Service | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Service | null>(null);
+  const [deleting, setDeleting] = useState(false);
+  const [saving, setSaving] = useState(false);
   const { toast } = useToast();
 
   const [formData, setFormData] = useState({
@@ -102,6 +108,7 @@ export default function ServicesManagement() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (saving) return;
     const payload = {
       title: formData.title,
       description: formData.description,
@@ -113,6 +120,7 @@ export default function ServicesManagement() {
       bannerImage: formData.bannerImage,
     };
     try {
+      setSaving(true);
       if (editingService) {
         await axios.put(`/services/${editingService._id}`, payload);
         toast({ title: 'Updated', description: 'Service updated successfully.' });
@@ -124,6 +132,8 @@ export default function ServicesManagement() {
       fetchServices();
     } catch {
       toast({ title: 'Error', description: 'Failed to save service.', variant: 'destructive' });
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -144,15 +154,19 @@ export default function ServicesManagement() {
   };
 
   const confirmDelete = async () => {
-    if (!deleteTarget) return;
+    if (!deleteTarget || deleting) return;
+    const target = deleteTarget;
     try {
-      await axios.delete(`/services/${deleteTarget._id}`);
+      setDeleting(true);
+      setServices(prev => prev.filter(s => s._id !== target._id));
+      setDeleteTarget(null);
+      await axios.delete(`/services/${target._id}`);
       toast({ title: 'Deleted', description: 'Service deleted successfully.' });
-      fetchServices();
     } catch {
       toast({ title: 'Error', description: 'Failed to delete service.', variant: 'destructive' });
+      fetchServices();
     } finally {
-      setDeleteTarget(null);
+      setDeleting(false);
     }
   };
 
@@ -181,7 +195,8 @@ export default function ServicesManagement() {
         <DeleteModal
           serviceName={deleteTarget.title}
           onConfirm={confirmDelete}
-          onCancel={() => setDeleteTarget(null)}
+          onCancel={() => { if (!deleting) setDeleteTarget(null); }}
+          deleting={deleting}
         />
       )}
 
@@ -220,6 +235,7 @@ export default function ServicesManagement() {
             onSet={set}
             onSubmit={handleSubmit}
             onDiscard={resetForm}
+            saving={saving}
           />
         )}
 

@@ -9,7 +9,10 @@ const nextConfig = {
         pathname: '/**',
       },
     ],
+    minimumCacheTTL: 60 * 60 * 24 * 30,
   },
+  compress: true,
+  poweredByHeader: false,
 }
 
 module.exports = nextConfig

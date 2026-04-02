@@ -154,9 +154,9 @@ function DetailModal({ contact, onClose, onUpdate }: {
 }
 
 // ── Delete Modal ──────────────────────────────────────────────────────────────
-function DeleteModal({ name, onConfirm, onCancel }: { name: string; onConfirm: () => void; onCancel: () => void }) {
+function DeleteModal({ name, onConfirm, onCancel, deleting }: { name: string; onConfirm: () => void; onCancel: () => void; deleting: boolean }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onCancel}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={deleting ? undefined : onCancel}>
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
       <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }}
         className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6" onClick={e => e.stopPropagation()}>
@@ -167,8 +167,10 @@ function DeleteModal({ name, onConfirm, onCancel }: { name: string; onConfirm: (
           <h3 className="text-lg font-bold text-slate-800 mb-1">Delete Message?</h3>
           <p className="text-sm text-gray-500 mb-6">Message from <span className="font-semibold text-slate-700">&ldquo;{name}&rdquo;</span> will be permanently removed.</p>
           <div className="flex gap-3 w-full">
-            <button onClick={onCancel} className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-semibold text-sm hover:bg-gray-50 transition-colors">Cancel</button>
-            <button onClick={onConfirm} className="flex-1 px-4 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold text-sm transition-colors">Yes, Delete</button>
+            <button onClick={onCancel} disabled={deleting} className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-semibold text-sm hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Cancel</button>
+            <button onClick={onConfirm} disabled={deleting} className="flex-1 px-4 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+              {deleting ? <Loader2 className="h-4 w-4 animate-spin mx-auto" /> : 'Yes, Delete'}
+            </button>
           </div>
         </div>
       </motion.div>
@@ -213,6 +215,7 @@ export default function ContactsPage() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [selected, setSelected] = useState<Contact | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Contact | null>(null);
+  const [deleting, setDeleting] = useState(false);
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [totalPages, setTotalPages] = useState(1);
@@ -248,14 +251,18 @@ export default function ContactsPage() {
     setContacts(prev => prev.map(c => c._id === id ? { ...c, ...updates } : c));
 
   const handleDelete = async () => {
-    if (!deleteTarget) return;
+    if (!deleteTarget || deleting) return;
+    const target = deleteTarget;
     try {
-      await axios.delete(`/contacts/${deleteTarget._id}`);
+      setDeleting(true);
+      setContacts(prev => prev.filter(c => c._id !== target._id));
+      setDeleteTarget(null);
+      await axios.delete(`/contacts/${target._id}`);
       toast({ title: 'Deleted', description: 'Message removed.' });
-      fetchContacts();
     } catch {
       toast({ title: 'Error', description: 'Failed to delete.', variant: 'destructive' });
-    } finally { setDeleteTarget(null); }
+      fetchContacts();
+    } finally { setDeleting(false); }
   };
 
   if (loading && contacts.length === 0) {
@@ -272,7 +279,7 @@ export default function ContactsPage() {
   return (
     <>
       {selected && <DetailModal contact={selected} onClose={() => setSelected(null)} onUpdate={handleUpdate} />}
-      {deleteTarget && <DeleteModal name={deleteTarget.name} onConfirm={handleDelete} onCancel={() => setDeleteTarget(null)} />}
+      {deleteTarget && <DeleteModal name={deleteTarget.name} onConfirm={handleDelete} onCancel={() => { if (!deleting) setDeleteTarget(null); }} deleting={deleting} />}
 
       <div className="space-y-5">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">

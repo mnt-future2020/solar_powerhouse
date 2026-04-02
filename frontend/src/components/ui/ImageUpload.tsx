@@ -1,9 +1,10 @@
 'use client';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Upload, X, Image as ImageIcon, AlertCircle } from 'lucide-react';
 import { useToast } from '@/components/ui/use-toast';
 import axios from '@/lib/axios';
+import { compressImage } from '@/lib/compressImage';
 
 interface ImageUploadProps {
   value?: string;
@@ -14,30 +15,15 @@ interface ImageUploadProps {
 
 export default function ImageUpload({ value, onChange, onRemove, className }: ImageUploadProps) {
   const [uploading, setUploading] = useState(false);
-  const [configured, setConfigured] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [configured, setConfigured] = useState(true);
+  const loading = false;
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
 
-  useEffect(() => {
-    checkConfiguration();
-  }, []);
-
-  const checkConfiguration = async () => {
-    try {
-      const response = await axios.get('/upload/config');
-      setConfigured(response.data.configured);
-    } catch {
-      // Backend unreachable or upload not configured — silently fall back
-      setConfigured(false);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const uploadToBackend = async (file: File) => {
+    const compressed = await compressImage(file);
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append('image', compressed);
 
     try {
       console.log('Starting upload for file:', file.name, 'Size:', file.size);

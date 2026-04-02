@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import axios from '@/lib/axios';
 import { cn } from '@/lib/utils';
+import { compressImage } from '@/lib/compressImage';
 
 interface BankPartner {
   _id: string;
@@ -17,9 +18,9 @@ interface BankPartner {
 const inputCls = 'w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-400 transition-all';
 
 // ── Delete Confirm Modal ──────────────────────────────────────────────────────
-function DeleteModal({ name, onConfirm, onCancel }: { name: string; onConfirm: () => void; onCancel: () => void }) {
+function DeleteModal({ name, onConfirm, onCancel, deleting }: { name: string; onConfirm: () => void; onCancel: () => void; deleting: boolean }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onCancel}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={deleting ? undefined : onCancel}>
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
       <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 animate-in fade-in zoom-in-95 duration-200"
         onClick={e => e.stopPropagation()}>
@@ -32,13 +33,13 @@ function DeleteModal({ name, onConfirm, onCancel }: { name: string; onConfirm: (
             <span className="font-semibold text-gray-700">"{name}"</span> will be permanently removed.
           </p>
           <div className="flex gap-3 w-full">
-            <button onClick={onCancel}
-              className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-semibold text-sm hover:bg-gray-50 transition-colors">
+            <button onClick={onCancel} disabled={deleting}
+              className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-semibold text-sm hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
               Cancel
             </button>
-            <button onClick={onConfirm}
-              className="flex-1 px-4 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold text-sm transition-colors">
-              Yes, Delete
+            <button onClick={onConfirm} disabled={deleting}
+              className="flex-1 px-4 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+              {deleting ? <Loader2 className="h-4 w-4 animate-spin mx-auto" /> : 'Yes, Delete'}
             </button>
           </div>
         </div>
@@ -71,9 +72,10 @@ function PartnerModal({
   };
 
   const uploadImage = async (file: File): Promise<string> => {
+    const compressed = await compressImage(file);
     const fd = new FormData();
-    fd.append('image', file);
-    const res = await axios.post('/upload/image', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+    fd.append('image', compressed);
+    const res = await axios.post('/upload/image', fd, { headers: { 'Content-Type': 'multipart/form-data' }, timeout: 60000 });
     return res.data.url;
   };
 
@@ -163,6 +165,7 @@ export default function BankPartnersAdmin() {
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState<BankPartner | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<BankPartner | null>(null);
+  const [deleting, setDeleting] = useState(false);
   const [page, setPage] = useState(1);
   const LIMIT = 12;
 
@@ -180,15 +183,19 @@ export default function BankPartnersAdmin() {
   };
 
   const handleDelete = async () => {
-    if (!deleteTarget) return;
+    if (!deleteTarget || deleting) return;
+    const target = deleteTarget;
     try {
-      await axios.delete(`/bank-partners/${deleteTarget._id}`);
+      setDeleting(true);
+      setPartners(prev => prev.filter(p => p._id !== target._id));
+      setDeleteTarget(null);
+      await axios.delete(`/bank-partners/${target._id}`);
       toast({ title: 'Deleted', description: 'Bank partner removed.' });
-      fetchPartners();
     } catch {
       toast({ title: 'Error', description: 'Failed to delete.', variant: 'destructive' });
+      fetchPartners();
     } finally {
-      setDeleteTarget(null);
+      setDeleting(false);
     }
   };
 
@@ -206,7 +213,7 @@ export default function BankPartnersAdmin() {
   return (
     <>
       {deleteTarget && (
-        <DeleteModal name={deleteTarget.name} onConfirm={handleDelete} onCancel={() => setDeleteTarget(null)} />
+        <DeleteModal name={deleteTarget.name} onConfirm={handleDelete} onCancel={() => { if (!deleting) setDeleteTarget(null); }} deleting={deleting} />
       )}
       {showModal && (
         <PartnerModal

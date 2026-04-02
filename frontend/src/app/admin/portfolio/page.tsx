@@ -6,12 +6,14 @@ import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import axios from '@/lib/axios';
 import { cn } from '@/lib/utils';
+import { compressImage } from '@/lib/compressImage';
 
 interface PortfolioItem {
   _id: string;
   title: string;
   description: string;
   image: string;
+  images: string[];
   category: string;
   location: string;
   capacity: string;
@@ -22,9 +24,9 @@ interface PortfolioItem {
 const inputCls = 'w-full px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-400 transition-all';
 const categories = ['Residential', 'Commercial', 'Industrial', 'Government', 'Educational'];
 
-function DeleteModal({ name, onConfirm, onCancel }: { name: string; onConfirm: () => void; onCancel: () => void }) {
+function DeleteModal({ name, onConfirm, onCancel, deleting }: { name: string; onConfirm: () => void; onCancel: () => void; deleting: boolean }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onCancel}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={deleting ? undefined : onCancel}>
       <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
       <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-sm p-6 animate-in fade-in zoom-in-95 duration-200"
         onClick={e => e.stopPropagation()}>
@@ -37,8 +39,10 @@ function DeleteModal({ name, onConfirm, onCancel }: { name: string; onConfirm: (
             <span className="font-semibold text-gray-700">"{name}"</span> will be permanently removed.
           </p>
           <div className="flex gap-3 w-full">
-            <button onClick={onCancel} className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-semibold text-sm hover:bg-gray-50 transition-colors">Cancel</button>
-            <button onClick={onConfirm} className="flex-1 px-4 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold text-sm transition-colors">Yes, Delete</button>
+            <button onClick={onCancel} disabled={deleting} className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-semibold text-sm hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">Cancel</button>
+            <button onClick={onConfirm} disabled={deleting} className="flex-1 px-4 py-2.5 rounded-xl bg-red-500 hover:bg-red-600 text-white font-semibold text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+              {deleting ? <Loader2 className="h-4 w-4 animate-spin mx-auto" /> : 'Yes, Delete'}
+            </button>
           </div>
         </div>
       </div>
@@ -54,38 +58,60 @@ function PortfolioModal({ editing, onClose, onSaved }: { editing: PortfolioItem 
   const [location, setLocation] = useState(editing?.location ?? '');
   const [capacity, setCapacity] = useState(editing?.capacity ?? '');
   const [visible, setVisible] = useState(editing?.visible ?? true);
-  const [imageFile, setImageFile] = useState<File | null>(null);
-  const [preview, setPreview] = useState(editing?.image ?? '');
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [previews, setPreviews] = useState<string[]>(editing?.images?.length ? editing.images : editing?.image ? [editing.image] : []);
   const [saving, setSaving] = useState(false);
 
-  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setImageFile(file);
-    const reader = new FileReader();
-    reader.onloadend = () => setPreview(reader.result as string);
-    reader.readAsDataURL(file);
+  const MAX_IMAGES = 3;
+
+  const handleFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    if (!files.length) return;
+    const remaining = MAX_IMAGES - previews.length;
+    if (remaining <= 0) {
+      toast({ title: 'Limit reached', description: `Maximum ${MAX_IMAGES} images allowed.`, variant: 'destructive' });
+      return;
+    }
+    const toAdd = files.slice(0, remaining);
+    setImageFiles(prev => [...prev, ...toAdd]);
+    toAdd.forEach(file => {
+      const reader = new FileReader();
+      reader.onloadend = () => setPreviews(prev => [...prev, reader.result as string]);
+      reader.readAsDataURL(file);
+    });
+    e.target.value = '';
+  };
+
+  const removeImage = (index: number) => {
+    const existingCount = editing?.images?.length ? editing.images.length : editing?.image ? 1 : 0;
+    setPreviews(prev => prev.filter((_, i) => i !== index));
+    if (index >= existingCount) {
+      setImageFiles(prev => prev.filter((_, i) => i !== index - existingCount));
+    }
   };
 
   const uploadImage = async (file: File): Promise<string> => {
+    const compressed = await compressImage(file);
     const fd = new FormData();
-    fd.append('image', file);
-    const res = await axios.post('/upload/image', fd, { headers: { 'Content-Type': 'multipart/form-data' } });
+    fd.append('image', compressed);
+    const res = await axios.post('/upload/image', fd, { headers: { 'Content-Type': 'multipart/form-data' }, timeout: 60000 });
     return res.data.url;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) return;
-    if (!preview && !imageFile) {
-      toast({ title: 'Image required', description: 'Please upload a project image.', variant: 'destructive' });
+    if (previews.length === 0) {
+      toast({ title: 'Image required', description: 'Please upload at least one project image.', variant: 'destructive' });
       return;
     }
     try {
       setSaving(true);
-      let imageUrl = editing?.image ?? '';
-      if (imageFile) imageUrl = await uploadImage(imageFile);
-      const payload = { title: title.trim(), description: description.trim(), image: imageUrl, category, location: location.trim(), capacity: capacity.trim(), visible };
+      const existingImages = editing?.images?.length ? editing.images : editing?.image ? [editing.image] : [];
+      const keptExisting = previews.filter(p => existingImages.includes(p));
+      const uploadedUrls = await Promise.all(imageFiles.map(f => uploadImage(f)));
+      const allImages = [...keptExisting, ...uploadedUrls].slice(0, MAX_IMAGES);
+      const payload = { title: title.trim(), description: description.trim(), images: allImages, image: allImages[0], category, location: location.trim(), capacity: capacity.trim(), visible };
       if (editing) {
         await axios.put(`/portfolio/${editing._id}`, payload);
         toast({ title: 'Updated', description: 'Portfolio project updated.' });
@@ -142,15 +168,25 @@ function PortfolioModal({ editing, onClose, onSaved }: { editing: PortfolioItem 
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-gray-600 mb-1.5">Project Image <span className="text-red-400">*</span></label>
-            <label className="flex items-center gap-3 px-4 py-3 border-2 border-dashed border-gray-200 rounded-lg cursor-pointer hover:border-amber-400 hover:bg-amber-50/30 transition-all">
-              <Plus className="h-4 w-4 text-gray-400" />
-              <span className="text-sm text-gray-500">Click to upload image</span>
-              <input type="file" accept="image/*" onChange={handleFile} className="hidden" />
-            </label>
-            {preview && (
-              <div className="mt-2 w-full h-36 bg-gray-50 border border-gray-100 rounded-lg overflow-hidden">
-                <img src={preview} className="h-full w-full object-cover" alt="Preview" />
+            <label className="block text-xs font-semibold text-gray-600 mb-1.5">Project Images <span className="text-red-400">*</span> <span className="text-gray-400 font-normal">({previews.length}/{MAX_IMAGES})</span></label>
+            {previews.length < MAX_IMAGES && (
+              <label className="flex items-center gap-3 px-4 py-3 border-2 border-dashed border-gray-200 rounded-lg cursor-pointer hover:border-amber-400 hover:bg-amber-50/30 transition-all">
+                <Plus className="h-4 w-4 text-gray-400" />
+                <span className="text-sm text-gray-500">Click to upload images (max {MAX_IMAGES})</span>
+                <input type="file" accept="image/*" multiple onChange={handleFiles} className="hidden" />
+              </label>
+            )}
+            {previews.length > 0 && (
+              <div className="mt-2 grid grid-cols-3 gap-2">
+                {previews.map((src, i) => (
+                  <div key={i} className="relative group h-28 bg-gray-50 border border-gray-100 rounded-lg overflow-hidden">
+                    <img src={src} className="h-full w-full object-cover" alt={`Preview ${i + 1}`} />
+                    <button type="button" onClick={() => removeImage(i)}
+                      className="absolute top-1 right-1 w-6 h-6 rounded-full bg-red-500 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                      <X className="h-3 w-3" />
+                    </button>
+                  </div>
+                ))}
               </div>
             )}
           </div>
@@ -187,6 +223,7 @@ export default function PortfolioAdmin() {
   const [showModal, setShowModal] = useState(false);
   const [editing, setEditing] = useState<PortfolioItem | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<PortfolioItem | null>(null);
+  const [deleting, setDeleting] = useState(false);
   const [page, setPage] = useState(1);
   const LIMIT = 9;
 
@@ -202,22 +239,27 @@ export default function PortfolioAdmin() {
   };
 
   const handleDelete = async () => {
-    if (!deleteTarget) return;
+    if (!deleteTarget || deleting) return;
+    const target = deleteTarget;
     try {
-      await axios.delete(`/portfolio/${deleteTarget._id}`);
+      setDeleting(true);
+      setItems(prev => prev.filter(i => i._id !== target._id));
+      setDeleteTarget(null);
+      await axios.delete(`/portfolio/${target._id}`);
       toast({ title: 'Deleted', description: 'Project removed.' });
-      fetchItems();
     } catch {
       toast({ title: 'Error', description: 'Failed to delete.', variant: 'destructive' });
-    } finally { setDeleteTarget(null); }
+      fetchItems();
+    } finally { setDeleting(false); }
   };
 
   const toggleVisibility = async (item: PortfolioItem) => {
+    setItems(prev => prev.map(i => i._id === item._id ? { ...i, visible: !i.visible } : i));
     try {
       await axios.put(`/portfolio/${item._id}`, { visible: !item.visible });
       toast({ title: item.visible ? 'Hidden' : 'Visible', description: `Project ${item.visible ? 'hidden from' : 'shown on'} website.` });
-      fetchItems();
     } catch {
+      setItems(prev => prev.map(i => i._id === item._id ? { ...i, visible: item.visible } : i));
       toast({ title: 'Error', description: 'Failed to update.', variant: 'destructive' });
     }
   };
@@ -229,7 +271,7 @@ export default function PortfolioAdmin() {
 
   return (
     <>
-      {deleteTarget && <DeleteModal name={deleteTarget.title} onConfirm={handleDelete} onCancel={() => setDeleteTarget(null)} />}
+      {deleteTarget && <DeleteModal name={deleteTarget.title} onConfirm={handleDelete} onCancel={() => { if (!deleting) setDeleteTarget(null); }} deleting={deleting} />}
       {showModal && <PortfolioModal editing={editing} onClose={() => { setShowModal(false); setEditing(null); }} onSaved={fetchItems} />}
 
       <div className="space-y-6">
