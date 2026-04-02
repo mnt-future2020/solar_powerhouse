@@ -13,7 +13,7 @@ const slides = [
   {
     src: '/assets/image/banner/hero2.jpg',
     title: 'Cut Your Energy Bills with Solar',
-    desc: 'Harness the sun to slash electricity costs. Our smart solar systems deliver real savings from the very first day.',
+    desc: 'Harness the sun to slash electricity costs. Get started with easy financing at just 6% interest rate and save from day one.',
     btn: 'Start Saving with Us',
   },
   {

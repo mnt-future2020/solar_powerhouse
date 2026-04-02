@@ -69,8 +69,8 @@ function StatusModal({ modal, onClose }: { modal: ModalState; onClose: () => voi
 // ── Main ──
 export default function Contact() {
   const [settings, setSettings] = useState<Settings>({
-    companyName: 'Solar Power House', email: 'accounts@solarpowerhouse.com', phone: '+91 98765 43210',
-    address: { street: 'No 15/A, LMA Courtyard', city: 'Chennai', state: 'Tamil Nadu', zipCode: '600031', country: 'India' }
+    companyName: 'Solar Power House', email: 'solarpowerhouse2020@gmail.com', phone: '+91 9944888170',
+    address: { street: '34/1, Idhyarajapuram 2nd Street, Sellur', city: 'Madurai', state: 'Tamil Nadu', zipCode: '625002', country: 'India' }
   });
   const [services, setServices] = useState<Service[]>([]);
   const [formData, setFormData] = useState<FormData>({ name: '', phone: '', email: '', city: '', propertyType: '', monthlyBill: '', service: '', message: '', source: 'Contact Page' });
@@ -248,8 +248,8 @@ export default function Contact() {
                   <div className="text-[10px] text-white/35 uppercase tracking-wider font-medium">Response Time</div>
                 </div>
                 <div>
-                  <div className="text-2xl font-bold text-emerald-400 font-display">1,200+</div>
-                  <div className="text-[10px] text-white/35 uppercase tracking-wider font-medium">Happy Customers</div>
+                  <div className="text-2xl font-bold text-emerald-400 font-display">MNRE</div>
+                  <div className="text-[10px] text-white/35 uppercase tracking-wider font-medium">Govt. Approved</div>
                 </div>
               </div>
             </motion.div>

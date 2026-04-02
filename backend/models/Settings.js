@@ -8,13 +8,13 @@ const settingsSchema = new mongoose.Schema({
   description: { type: String, default: 'Leading provider of sustainable solar energy solutions' },
   
   // Contact Information
-  email: { type: String, default: 'info@solarpowerhouse.com' },
-  phone: { type: String, default: '+91 98765 43210' },
-  address: { 
-    street: { type: String, default: 'Solar Power House' },
-    city: { type: String, default: 'Green Energy Park' },
-    state: { type: String, default: 'Renewable City' },
-    zipCode: { type: String, default: '123456' },
+  email: { type: String, default: 'solarpowerhouse2020@gmail.com' },
+  phone: { type: String, default: '+91 9944888170' },
+  address: {
+    street: { type: String, default: '34/1, Idhyarajapuram 2nd Street, Sellur' },
+    city: { type: String, default: 'Madurai' },
+    state: { type: String, default: 'Tamil Nadu' },
+    zipCode: { type: String, default: '625002' },
     country: { type: String, default: 'India' }
   },
   

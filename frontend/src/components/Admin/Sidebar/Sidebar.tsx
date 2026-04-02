@@ -14,7 +14,8 @@ import {
   LayoutGrid,
   Image,
   Mail,
-  Sun
+  Sun,
+  Scale
 } from 'lucide-react';
 import { useState, useCallback, useEffect } from 'react';
 import { cn } from '@/lib/utils';
@@ -34,12 +35,12 @@ export interface NavigationItem {
 }
 
 const navigation: NavigationItem[] = [
-  { title: 'Website', icon: Sun, href: '/' },
   { title: 'Dashboard', icon: LayoutDashboard, href: '/admin/dashboard' },
   { title: 'Services', icon: LayoutGrid, href: '/admin/services' },
   { title: 'Bank Partners', icon: ShieldCheck, href: '/admin/bank-partners' },
   { title: 'Portfolio', icon: Image, href: '/admin/portfolio' },
   { title: 'Consultations', icon: MessageSquare, href: '/admin/consultations' },
+  { title: 'Legal Pages', icon: Scale, href: '/admin/legal-pages' },
   { title: 'Settings', icon: Settings, href: '/admin/settings' },
 ];
 

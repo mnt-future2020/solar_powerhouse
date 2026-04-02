@@ -4,13 +4,22 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import axios from "@/lib/axios";
 
-const sections = [
+const iconMap: Record<string, React.ElementType> = {
+  "Information We Collect": Eye,
+  "How We Use Your Information": Database,
+  "Data Security": Lock,
+  "Sharing With Third Parties": UserCheck,
+  "Cookies & Tracking": Bell,
+  "Your Rights": RefreshCw,
+};
+
+const defaultSections = [
   {
     icon: Eye,
     title: "Information We Collect",
     content: [
       "Personal identification details (name, email address, phone number) provided when you request a solar consultation or quote.",
-      "Property information including address, roof area, electricity consumption, and sanction load — used solely to generate accurate solar system recommendations.",
+      "Property information including address, roof area, electricity consumption — used solely to generate accurate solar system recommendations.",
       "Technical data such as browser type, IP address, and pages visited, collected automatically to improve our website performance.",
       "Payment and billing information when you proceed with a solar installation order, processed securely through certified payment gateways.",
     ],
@@ -68,23 +77,35 @@ const sections = [
 ];
 
 export default function Policy() {
-  const [email, setEmail] = useState("privacy@solarpowerhouse.com");
+  const [email, setEmail] = useState("solarpowerhouse2020@gmail.com");
   const [companyName, setCompanyName] = useState("Solar Power House");
+  const [sections, setSections] = useState(defaultSections);
+  const [intro, setIntro] = useState("");
 
   useEffect(() => {
     axios.get('/settings')
       .then(response => {
-        if (response.data.email) {
-          setEmail(response.data.email);
-        }
-        if (response.data.companyName) {
-          setCompanyName(response.data.companyName);
-        }
+        if (response.data.email) setEmail(response.data.email);
+        if (response.data.companyName) setCompanyName(response.data.companyName);
       })
-      .catch(() => {
-        // Keep default values if fetch fails
-      });
+      .catch(() => {});
+
+    axios.get('/legal-pages/privacy')
+      .then(response => {
+        const data = response.data;
+        if (data && data.sections && data.sections.length > 0) {
+          setSections(data.sections.map((s: { title: string; points: string[] }) => ({
+            icon: iconMap[s.title] || Shield,
+            title: s.title,
+            content: s.points,
+          })));
+        }
+        if (data && data.intro) setIntro(data.intro);
+      })
+      .catch(() => {});
   }, []);
+
+  const defaultIntro = `${companyName} ("we", "our", "us") is committed to protecting your privacy. This policy explains what information we collect when you use our website, request a solar consultation, or engage us for solar panel installation, and how we handle that information. By using our services, you agree to the practices described below.`;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -103,7 +124,7 @@ export default function Policy() {
             Privacy <span className="text-amber-400">Policy</span>
           </h1>
           <p className="text-white/70 text-lg max-w-2xl">
-            How Solar Power House collects, uses, and protects your personal information in connection with solar installation and consultation services.
+            How {companyName} collects, uses, and protects your personal information in connection with solar installation and consultation services.
           </p>
           <p className="text-white/40 text-sm mt-4">Last updated: March 2026</p>
         </div>
@@ -114,7 +135,7 @@ export default function Policy() {
         {/* Intro */}
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6 mb-12">
           <p className="text-gray-700 leading-relaxed">
-            {companyName} ("we", "our", "us") is committed to protecting your privacy. This policy explains what information we collect when you use our website, request a solar consultation, or engage us for solar panel installation, and how we handle that information. By using our services, you agree to the practices described below.
+            {intro || defaultIntro}
           </p>
         </div>
 

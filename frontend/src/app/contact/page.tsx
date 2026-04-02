@@ -19,7 +19,7 @@ export default function ContactPage() {
   }, []);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-[#000c15]">
       <Header />
       <main className="flex-1 pt-24">
         <Contact />

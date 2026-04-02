@@ -204,15 +204,7 @@ export default function Footer() {
       </div>
 
       {/* Back to Top */}
-      {showTop && (
-        <button
-          onClick={scrollToTop}
-          className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 w-10 h-10 sm:w-11 sm:h-11 bg-[#0c1117] border border-white/10 hover:border-amber-400/30 flex items-center justify-center text-white/50 hover:text-amber-400 transition-all duration-200 z-50"
-          aria-label="Back to top"
-        >
-          <ArrowUp className="h-4 w-4" />
-        </button>
-      )}
+     
     </footer>
   );
 }

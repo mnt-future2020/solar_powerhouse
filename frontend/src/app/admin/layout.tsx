@@ -5,7 +5,8 @@ import { useRouter, usePathname } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import Sidebar from '@/components/Admin/Sidebar/Sidebar';
-import { LogOut, Loader2, Settings, User, Menu, X, Sun, ChevronRight } from 'lucide-react';
+import { LogOut, Loader2, Settings, User, Menu, X, Sun, ChevronRight, Globe, Lock, Eye, EyeOff } from 'lucide-react';
+import { useToast } from '@/components/ui/use-toast';
 import axios from '@/lib/axios';
 import { useAuth } from '@/contexts/AuthContext';
 import { cn } from '@/lib/utils';
@@ -19,6 +20,7 @@ const breadcrumbLabels: Record<string, string> = {
   portfolio: 'Portfolio',
   consultations: 'Consultations',
   contacts: 'Contacts',
+  'legal-pages': 'Legal Pages',
   settings: 'Settings',
   general: 'General',
   seo: 'SEO',
@@ -40,6 +42,7 @@ export default function AdminLayout({
   const [logo, setLogo] = useState('');
   const [companyName, setCompanyName] = useState('');
   const [badges, setBadges] = useState<Record<string, number>>({});
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -178,11 +181,25 @@ export default function AdminLayout({
                   </div>
                 )}
                 <button
+                  onClick={() => { setDropdownOpen(false); window.open('/', '_blank'); }}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+                >
+                  <Globe className="h-4 w-4 text-gray-400" />
+                  Website
+                </button>
+                <button
                   onClick={() => { setDropdownOpen(false); router.push('/admin/settings'); }}
                   className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
                 >
                   <Settings className="h-4 w-4 text-gray-400" />
                   Settings
+                </button>
+                <button
+                  onClick={() => { setDropdownOpen(false); setShowPasswordModal(true); }}
+                  className="w-full flex items-center gap-3 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+                >
+                  <Lock className="h-4 w-4 text-gray-400" />
+                  Change Password
                 </button>
                 <div className="border-t border-gray-100" />
                 <button
@@ -203,6 +220,121 @@ export default function AdminLayout({
             {children}
           </div>
         </main>
+      </div>
+
+      {showPasswordModal && (
+        <ChangePasswordModal onClose={() => setShowPasswordModal(false)} />
+      )}
+    </div>
+  );
+}
+
+// ── Change Password Modal ──
+function ChangePasswordModal({ onClose }: { onClose: () => void }) {
+  const { toast } = useToast();
+  const [saving, setSaving] = useState(false);
+  const [showCurrent, setShowCurrent] = useState(false);
+  const [showNew, setShowNew] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [form, setForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (form.newPassword.length < 6) {
+      toast({ title: 'Error', description: 'New password must be at least 6 characters', variant: 'destructive' });
+      return;
+    }
+    if (form.newPassword !== form.confirmPassword) {
+      toast({ title: 'Error', description: 'New passwords do not match', variant: 'destructive' });
+      return;
+    }
+    try {
+      setSaving(true);
+      await axios.put('/auth/change-password', {
+        currentPassword: form.currentPassword,
+        newPassword: form.newPassword,
+      });
+      toast({ title: 'Success', description: 'Password changed successfully' });
+      onClose();
+    } catch (error: any) {
+      toast({ title: 'Failed', description: error.response?.data?.message || 'Could not change password', variant: 'destructive' });
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const inputCls = 'w-full px-3 py-2.5 pr-10 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-slate-300 focus:border-slate-400 transition-all';
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" onClick={onClose}>
+      <div className="absolute inset-0 bg-[#0a0a0a]/60" />
+      <div
+        className="relative bg-white rounded-xl shadow-2xl w-full max-w-md p-6 sm:p-8 animate-in fade-in zoom-in-95 duration-200"
+        onClick={e => e.stopPropagation()}
+      >
+        <button onClick={onClose} className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors" aria-label="Close">
+          <X className="h-5 w-5" />
+        </button>
+
+        <div className="flex items-center gap-3 mb-6">
+          <div className="w-10 h-10 rounded-lg bg-slate-800 flex items-center justify-center">
+            <Lock className="h-5 w-5 text-amber-500" />
+          </div>
+          <div>
+            <h3 className="text-lg font-bold text-gray-900">Change Password</h3>
+            <p className="text-xs text-gray-400">Update your admin account password</p>
+          </div>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Current Password</label>
+            <div className="relative">
+              <input type={showCurrent ? 'text' : 'password'} value={form.currentPassword}
+                onChange={e => setForm(f => ({ ...f, currentPassword: e.target.value }))}
+                className={inputCls} placeholder="Enter current password" required />
+              <button type="button" onClick={() => setShowCurrent(!showCurrent)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                {showCurrent ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">New Password</label>
+            <div className="relative">
+              <input type={showNew ? 'text' : 'password'} value={form.newPassword}
+                onChange={e => setForm(f => ({ ...f, newPassword: e.target.value }))}
+                className={inputCls} placeholder="At least 6 characters" required minLength={6} />
+              <button type="button" onClick={() => setShowNew(!showNew)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                {showNew ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
+          </div>
+          <div>
+            <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Confirm New Password</label>
+            <div className="relative">
+              <input type={showConfirm ? 'text' : 'password'} value={form.confirmPassword}
+                onChange={e => setForm(f => ({ ...f, confirmPassword: e.target.value }))}
+                className={inputCls} placeholder="Re-enter new password" required />
+              <button type="button" onClick={() => setShowConfirm(!showConfirm)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
+                {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            </div>
+          </div>
+          <div className="flex items-center gap-3 pt-2">
+            <button type="button" onClick={onClose}
+              className="flex-1 px-4 py-2.5 rounded-lg border border-gray-200 text-gray-600 font-medium text-sm hover:bg-gray-50 transition-colors">
+              Cancel
+            </button>
+            <button type="submit" disabled={saving}
+              className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-semibold text-sm transition-colors disabled:opacity-50">
+              {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Lock className="h-4 w-4" />}
+              {saving ? 'Changing...' : 'Update Password'}
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   );

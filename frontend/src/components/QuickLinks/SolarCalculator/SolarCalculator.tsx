@@ -15,7 +15,7 @@ export default function SolarCalculator() {
     monthlyBill: '' as string | number,
     roofArea: '' as string | number,
     roofUnit: 'sqft' as 'sqft' | 'sqm',
-    sanctionLoad: '' as string | number,
+    plannedKw: '' as string,
   });
 
   const [results, setResults] = useState<{
@@ -32,7 +32,7 @@ export default function SolarCalculator() {
   const [showResultsModal, setShowResultsModal] = useState(false);
 
   const householdSubsidy = [
-    { range: "Up to 2 kW",            amount: "Rs. 30,000", perKw: true },
+    { range: "Up to 2 kW",            amount: "Rs. 60,000", perKw: true },
     { range: "Additional up to 3 kW", amount: "Rs. 18,000", perKw: true },
     { range: "Larger than 3 kW",      amount: "Rs. 78,000", perKw: false, suffix: "Total capped subsidy" },
   ];
@@ -41,21 +41,21 @@ export default function SolarCalculator() {
     const bill        = Number(formData.monthlyBill) || 0;
     const tariff      = Number(formData.tariffRate)  || 7;
     const roofRaw     = Number(formData.roofArea)    || 0;
-    const sanction    = Number(formData.sanctionLoad) || 0;
+    const plannedKw   = formData.plannedKw === 'above5' ? 5 : Number(formData.plannedKw) || 0;
     const roofSqft    = formData.roofUnit === 'sqm' ? roofRaw * 10.764 : roofRaw;
 
     const monthlyUnits      = tariff > 0 ? bill / tariff : 0;
     const capacityByBill    = monthlyUnits / 120;
     const capacityByRoof    = roofSqft   > 0 ? roofSqft / 120 : Infinity;
-    const capacityBySanction = sanction  > 0 ? sanction        : Infinity;
-    const kWp = Math.round(Math.min(capacityByBill, capacityByRoof, capacityBySanction) * 100) / 100;
+    const capacityByPlanned = plannedKw  > 0 ? plannedKw      : Infinity;
+    const kWp = Math.round(Math.min(capacityByBill, capacityByRoof, capacityByPlanned) * 100) / 100;
 
     const annualSavings  = Math.round(kWp * 120 * 12 * tariff);
     const billSavingsPct = bill > 0 ? Math.min(100, Math.round((annualSavings / (bill * 12)) * 100)) : 0;
 
     let subsidy = 0;
-    if (kWp <= 2)      subsidy = kWp * 30000;
-    else if (kWp <= 3) subsidy = 60000 + (kWp - 2) * 18000;
+    if (kWp <= 2)      subsidy = kWp * 60000;
+    else if (kWp <= 3) subsidy = 120000 + (kWp - 2) * 18000;
     else               subsidy = 78000;
     subsidy = Math.round(subsidy);
 
@@ -129,7 +129,7 @@ export default function SolarCalculator() {
                 </p>
                 <div className="flex flex-wrap gap-2 mt-2">
                   <span className="px-2.5 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-full text-emerald-400 text-xs font-medium">Up to ₹78,000 Subsidy</span>
-                  <span className="px-2.5 py-0.5 bg-sky-500/10 border border-sky-500/20 rounded-full text-sky-400 text-xs font-medium">6.75% Interest Rate</span>
+                  <span className="px-2.5 py-0.5 bg-sky-500/10 border border-sky-500/20 rounded-full text-sky-400 text-xs font-medium">6% Interest Rate</span>
                 </div>
               </div>
             </div>
@@ -256,16 +256,22 @@ export default function SolarCalculator() {
                 <p className="text-xs text-gray-400 mt-1">*Note: 1kW system requires ~120 sq.ft area</p>
               </div>
 
-              {/* Sanction Load */}
+              {/* Planned kW */}
               <div>
                 <label className="block text-xs font-semibold text-gray-500 mb-1">
-                  <Bolt className="inline h-3 w-3 mr-1" />SANCTION LOAD
+                  <Bolt className="inline h-3 w-3 mr-1" />PLANNED kW
                 </label>
-                <div className="relative">
-                  <Input type="number" value={formData.sanctionLoad} onChange={e => set('sanctionLoad', e.target.value)}
-                    placeholder="Enter sanction load" />
-                  <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 text-xs">kW</span>
-                </div>
+                <select
+                  value={formData.plannedKw}
+                  onChange={e => set('plannedKw', e.target.value)}
+                  className="w-full rounded-lg border border-gray-200 bg-white px-3 py-2.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-amber-500"
+                >
+                  <option value="">Select planned capacity</option>
+                  <option value="2">2 kW</option>
+                  <option value="3">3 kW</option>
+                  <option value="4">4 kW</option>
+                  <option value="above5">Above 5 kW</option>
+                </select>
               </div>
 
               {/* Submit */}

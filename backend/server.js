@@ -117,6 +117,7 @@ app.use('/api/consultations', require('./routes/consultations'));
 app.use('/api/settings', require('./routes/settings'));
 app.use('/api/bank-partners', require('./routes/bankPartners'));
 app.use('/api/portfolio', require('./routes/portfolio'));
+app.use('/api/legal-pages', require('./routes/legalPages'));
 
 // Only load upload route if dependencies are available
 try {

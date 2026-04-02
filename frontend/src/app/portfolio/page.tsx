@@ -187,7 +187,7 @@ export default function PortfolioPage() {
   }, {} as Record<string, number>);
 
   return (
-    <div className="min-h-screen flex flex-col bg-cream">
+    <div className="min-h-screen flex flex-col bg-navy">
       <Header />
 
       <main className="flex-1 pt-24">

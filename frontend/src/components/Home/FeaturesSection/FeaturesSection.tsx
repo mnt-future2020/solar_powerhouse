@@ -17,7 +17,7 @@ const features = [
   {
     icon: ShieldCheck,
     title: 'Lifetime Integrity',
-    description: 'Our Tier-1 equipment is engineered to withstand extreme conditions, ensuring 30+ years of uninterrupted performance.',
+    description: 'Our Tier-1 equipment is engineered to withstand extreme conditions, ensuring 25+ years of uninterrupted performance.',
     color: 'solar-teal',
     span: 'sm:col-span-2 md:col-span-2 md:row-span-1',
     image: '/assets/image/services/commercial.png'

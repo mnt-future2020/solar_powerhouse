@@ -6,6 +6,7 @@ import ServicesSection from "@/components/Home/ServicesSection/ServicesSection";
 import SchemesSection from "@/components/Home/SchemesSection/SchemesSection";
 import ConsultationSection from "@/components/Home/ConsultationSection/ConsultationSection";
 import QuickLinks from "@/components/Home/QuickLinks/QuickLinks";
+import HighlightsStrip from "@/components/Home/HighlightsStrip/HighlightsStrip";
 
 export default function Home() {
   return (
@@ -13,6 +14,7 @@ export default function Home() {
       <Header />
       <main >
         <HeroSection />
+        <HighlightsStrip />
         <QuickLinks />
         <ServicesSection />
         <SchemesSection />

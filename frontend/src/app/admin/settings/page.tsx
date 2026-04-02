@@ -9,7 +9,7 @@ import {
   Save, Building2, Mail, Phone, MapPin, Loader2,
   Search, Globe, LayoutGrid, Share2,
   Facebook, Twitter, Instagram, Linkedin,
-  Lock, Eye, EyeOff, Settings,
+  Settings,
 } from 'lucide-react';
 import axios from '@/lib/axios';
 import { cn } from '@/lib/utils';
@@ -187,116 +187,7 @@ function GeneralTab({ draft, set, setAddress }: {
         </Card>
       )}
 
-      {/* Password Change — always visible */}
-      <PasswordChangeCard />
     </div>
-  );
-}
-
-function PasswordChangeCard() {
-  const { toast } = useToast();
-  const [open, setOpen] = useState(false);
-  const [saving, setSaving] = useState(false);
-  const [showCurrent, setShowCurrent] = useState(false);
-  const [showNew, setShowNew] = useState(false);
-  const [showConfirm, setShowConfirm] = useState(false);
-  const [form, setForm] = useState({ currentPassword: '', newPassword: '', confirmPassword: '' });
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (form.newPassword.length < 6) {
-      toast({ title: 'Error', description: 'New password must be at least 6 characters', variant: 'destructive' });
-      return;
-    }
-    if (form.newPassword !== form.confirmPassword) {
-      toast({ title: 'Error', description: 'New passwords do not match', variant: 'destructive' });
-      return;
-    }
-    try {
-      setSaving(true);
-      await axios.put('/auth/change-password', {
-        currentPassword: form.currentPassword,
-        newPassword: form.newPassword,
-      });
-      toast({ title: 'Success', description: 'Password changed successfully' });
-      setForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
-      setOpen(false);
-    } catch (error: any) {
-      toast({ title: 'Failed', description: error.response?.data?.message || 'Could not change password', variant: 'destructive' });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  const pwInputCls = 'w-full px-3 py-2.5 pr-10 bg-white border border-gray-200 rounded-lg text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-amber-500/20 focus:border-amber-400 transition-all';
-
-  return (
-    <Card className="bg-white border border-gray-100 overflow-hidden">
-      <div className="flex items-center justify-between px-6 py-3.5 bg-slate-800">
-        <div className="flex items-center gap-2.5">
-          <Lock className="h-4 w-4 text-amber-500" />
-          <h2 className="text-sm font-semibold text-white">Change Password</h2>
-        </div>
-        {!open && (
-          <button onClick={() => setOpen(true)} className="text-sm font-medium text-amber-400 hover:text-amber-300 transition-colors">
-            Change
-          </button>
-        )}
-      </div>
-
-      {open && (
-        <CardContent className="p-6">
-          <form onSubmit={handleSubmit} className="max-w-md space-y-4">
-            <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Current Password</label>
-              <div className="relative">
-                <input type={showCurrent ? 'text' : 'password'} value={form.currentPassword}
-                  onChange={e => setForm(f => ({ ...f, currentPassword: e.target.value }))}
-                  className={pwInputCls} placeholder="Enter current password" required />
-                <button type="button" onClick={() => setShowCurrent(!showCurrent)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                  {showCurrent ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">New Password</label>
-              <div className="relative">
-                <input type={showNew ? 'text' : 'password'} value={form.newPassword}
-                  onChange={e => setForm(f => ({ ...f, newPassword: e.target.value }))}
-                  className={pwInputCls} placeholder="At least 6 characters" required minLength={6} />
-                <button type="button" onClick={() => setShowNew(!showNew)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                  {showNew ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
-            </div>
-            <div>
-              <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Confirm New Password</label>
-              <div className="relative">
-                <input type={showConfirm ? 'text' : 'password'} value={form.confirmPassword}
-                  onChange={e => setForm(f => ({ ...f, confirmPassword: e.target.value }))}
-                  className={pwInputCls} placeholder="Re-enter new password" required />
-                <button type="button" onClick={() => setShowConfirm(!showConfirm)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                  {showConfirm ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
-                </button>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 pt-2">
-              <button type="button" onClick={() => { setOpen(false); setForm({ currentPassword: '', newPassword: '', confirmPassword: '' }); }}
-                className="px-4 py-2.5 rounded-lg border border-gray-200 text-gray-600 font-medium text-sm hover:bg-gray-50 transition-colors">
-                Cancel
-              </button>
-              <Button type="submit" disabled={saving} className="bg-slate-800 hover:bg-slate-700 text-white font-semibold">
-                {saving ? <Loader2 className="h-4 w-4 mr-2 animate-spin" /> : <Lock className="h-4 w-4 mr-2" />}
-                {saving ? 'Changing...' : 'Update Password'}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      )}
-    </Card>
   );
 }
 

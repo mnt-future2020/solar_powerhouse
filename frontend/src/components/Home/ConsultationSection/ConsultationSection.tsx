@@ -40,7 +40,7 @@ type ModalState = {
 const benefits = [
   { icon: TrendingDown, title: 'Cut Bills by up to 80%',  desc: 'Drastically reduce your monthly electricity expenses from day one.' },
   { icon: Leaf,         title: 'Zero Carbon Footprint',   desc: 'Power your home or business with 100% clean, renewable energy.' },
-  { icon: Sun,          title: 'Govt. Subsidy Eligible',  desc: 'Avail up to 40% subsidy under national solar schemes.' },
+  { icon: Sun,          title: 'Govt. Subsidy Eligible',  desc: 'Avail up to 40% subsidy with collateral-free loans at just 6% interest rate.' },
   { icon: BadgeCheck,   title: 'Certified Installation',  desc: 'Every install is done by MNRE-certified solar professionals.' },
 ];
 

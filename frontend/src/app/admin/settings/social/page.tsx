@@ -56,7 +56,7 @@ export default function SocialLinksPage() {
     try {
       setLoading(true);
       const res = await axios.get('/settings/admin');
-      const links = res.data?.socialLinks || empty;
+      const links = res.data?.socialMedia || empty;
       setSaved(links);
       setDraft(links);
     } catch {
@@ -72,7 +72,7 @@ export default function SocialLinksPage() {
   const handleSave = async () => {
     try {
       setSaving(true);
-      await axios.put('/settings/general', { socialLinks: draft });
+      await axios.put('/settings/social', { socialMedia: draft });
       setSaved(draft);
       setEditing(false);
       toast({ title: 'Social links saved', description: 'Social media links updated successfully.' });

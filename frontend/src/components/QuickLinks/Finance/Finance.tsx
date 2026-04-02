@@ -30,7 +30,7 @@ interface Settings {
   phone: string;
 }
 
-const INTEREST_RATE = 0.07; // 7.00% annual rate
+const INTEREST_RATE = 0.06; // 6.00% annual rate
 const MAX_TENURE = 10; // years — matches loan terms table
 
 function BankLogo({ src, alt }: { src: string; alt: string }) {
@@ -232,7 +232,7 @@ export default function Finance() {
               <div className="grid grid-cols-5 text-white/70 text-xs sm:text-sm">
                 <div className="p-3 sm:p-4 border-r border-white/8">&lt;= 2</div>
                 <div className="p-3 sm:p-4 border-r border-white/8">5-10%</div>
-                <div className="p-3 sm:p-4 border-r border-white/8">7.00%</div>
+                <div className="p-3 sm:p-4 border-r border-white/8">6.00%</div>
                 <div className="p-3 sm:p-4 border-r border-white/8">Up to {MAX_TENURE}</div>
                 <div className="p-3 sm:p-4">Pan India</div>
               </div>

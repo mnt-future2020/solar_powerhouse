@@ -15,7 +15,7 @@ import {
 
 export default function SchemesSection() {
   const householdSubsidy = [
-    { range: "Up to 2 kW", amount: "Rs. 30,000", perKw: true },
+    { range: "Up to 2 kW", amount: "Rs. 60,000", perKw: true },
     { range: "Additional up to 3 kW", amount: "Rs. 18,000", perKw: true },
     { range: "Larger than 3 kW", amount: "Rs. 78,000", perKw: false, suffix: "Total capped subsidy" },
   ];
@@ -132,7 +132,7 @@ export default function SchemesSection() {
             {
               icon: Percent,
               title: "Easy Financing",
-              desc: "Access collateral-free loans at an attractive 6.75% interest rate with swift processing.",
+              desc: "Access collateral-free loans at an attractive 6% interest rate with swift processing.",
               accent: "text-sky-400",
               bg: "bg-sky-500/10",
             }
@@ -253,7 +253,7 @@ export default function SchemesSection() {
               <ul className="space-y-3">
                 {[
                   "Transparent application & swift processing",
-                  "Collateral free loan at 6.75% interest",
+                  "Collateral free loan at 6% interest",
                   "Replace electricity bills with savings",
                   "Government subsidy up to ₹78,000"
                 ].map((benefit, idx) => (

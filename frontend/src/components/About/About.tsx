@@ -47,16 +47,16 @@ const values = [
 ];
 
 const stats = [
-  { value: "1,200+", label: "Systems Deployed", color: "text-amber-400" },
-  { value: "99.9%", label: "Grid Reliability", color: "text-emerald-400" },
-  { value: "50 MW+", label: "Capacity Installed", color: "text-sky-400" },
-  { value: "10+", label: "Years Excellence", color: "text-orange-400" },
+  { value: "1 Crore", label: "Homes Approved for Subsidy", color: "text-amber-400" },
+  { value: "100%", label: "Renewable Energy Solutions", color: "text-emerald-400" },
+  { value: "₹78,000", label: "Max Subsidy Available", color: "text-sky-400" },
+  { value: "25 Yrs", label: "Panel Performance Warranty", color: "text-orange-400" },
 ];
 
 export default function About() {
   const [settings, setSettings] = useState<Settings>({
-    email: "info@solarpowerhouse.com",
-    phone: "+91 98765 43210"
+    email: "solarpowerhouse2020@gmail.com",
+    phone: "+91 9944888170"
   });
 
   useEffect(() => {

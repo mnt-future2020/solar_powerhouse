@@ -68,7 +68,7 @@ export default function QuickLinks() {
                   Financing Options
                 </h3>
                 <p className="text-white/50 text-sm">
-                  Flexible payment plans with government-backed subsidies.
+                  Flexible payment plans with government-backed subsidies at just 6% interest rate.
                 </p>
                 <div className="flex items-center gap-2 pt-2 text-teal-400 text-sm font-medium group-hover:gap-3 transition-all duration-200">
                   <span>View Plans</span>

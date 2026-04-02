@@ -3,6 +3,7 @@ import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
 import { AuthProvider } from "@/contexts/AuthContext";
 import MetadataProvider from "@/components/providers/MetadataProvider";
+import FloatingContactProvider from "@/components/providers/FloatingContactProvider";
 
 export const metadata: Metadata = {
   title: "Solar Power House - Leading Solar energy solutions",
@@ -20,6 +21,7 @@ export default function RootLayout({
         <AuthProvider>
           <MetadataProvider />
           {children}
+          <FloatingContactProvider />
           <Toaster />
         </AuthProvider>
       </body>
