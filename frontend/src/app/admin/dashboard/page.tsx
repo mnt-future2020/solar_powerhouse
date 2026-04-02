@@ -249,9 +249,9 @@ export default function AdminDashboard() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-64 gap-3">
-        <Sun className="h-5 w-5 animate-spin text-amber-400" />
-        <span className="text-sm text-gray-400">Loading dashboard...</span>
+      <div className="flex flex-col items-center justify-center h-64 gap-3">
+        <Loader2 className="h-6 w-6 animate-spin text-amber-500" />
+        <span className="text-sm text-gray-400">Loading...</span>
       </div>
     );
   }

@@ -79,6 +79,7 @@ export default function ServicesManagement() {
   const [deleteTarget, setDeleteTarget] = useState<Service | null>(null);
   const [deleting, setDeleting] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
   const [formData, setFormData] = useState({
@@ -100,6 +101,8 @@ export default function ServicesManagement() {
       setServices(res.data);
     } catch {
       toast({ title: 'Error', description: 'Failed to fetch services', variant: 'destructive' });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -188,6 +191,15 @@ export default function ServicesManagement() {
   const paginated = filtered.slice((page - 1) * LIMIT, page * LIMIT);
 
   useEffect(() => { setPage(1); }, [search]);
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center h-64 gap-3">
+        <Loader2 className="h-6 w-6 animate-spin text-amber-500" />
+        <span className="text-sm text-gray-400">Loading...</span>
+      </div>
+    );
+  }
 
   return (
     <>
