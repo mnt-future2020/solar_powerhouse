@@ -8,11 +8,26 @@ const cookieParser = require('cookie-parser');
 const app = express();
 
 // Middleware
+const expandWithWww = (url) => {
+  if (!url) return [];
+  try {
+    const u = new URL(url);
+    const host = u.hostname;
+    const wwwHost = host.startsWith('www.') ? host.slice(4) : `www.${host}`;
+    const variant = `${u.protocol}//${wwwHost}${u.port ? `:${u.port}` : ''}`;
+    return [url, variant];
+  } catch {
+    return [url];
+  }
+};
+
+const allowedOrigins = [
+  ...expandWithWww(process.env.FRONTEND_URL),
+  ...expandWithWww(process.env.PRODUCTION_FRONTEND_URL)
+].filter(Boolean);
+
 app.use(cors({
-  origin: [
-    process.env.FRONTEND_URL,
-    process.env.PRODUCTION_FRONTEND_URL
-  ].filter(Boolean),
+  origin: allowedOrigins,
   credentials: true
 }));
 app.use(express.json());
